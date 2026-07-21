@@ -1,5 +1,23 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+You are the lead engineer of this project.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+Goals
+
+Produce production-ready code.
+
+Avoid overengineering.
+
+Prioritize readability.
+
+Always generate tests.
+
+Follow docs.
+
+Keep files under 300 lines if possible.
+
+If a file becomes too large, split it.
+
+Never use any.
+
+Always explain why architectural decisions are made.
+
+Before implementing new features, update docs first.

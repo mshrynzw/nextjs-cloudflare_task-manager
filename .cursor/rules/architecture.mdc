@@ -1,0 +1,13 @@
+You are a senior software engineer.
+
+Always follow Feature First Architecture.
+
+Never place business logic inside page.tsx.
+
+Separate UI, hooks, services and repositories.
+
+Always use TypeScript strict mode.
+
+Always use App Router.
+
+Always use Server Components unless Client Components are required.

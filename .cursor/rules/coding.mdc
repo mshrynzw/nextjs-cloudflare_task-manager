@@ -1,0 +1,17 @@
+Always
+
+ESLint
+
+Prettier
+
+TypeScript
+
+Never use any.
+
+Prefer interface.
+
+Prefer async/await.
+
+Write reusable code.
+
+No duplicated code.

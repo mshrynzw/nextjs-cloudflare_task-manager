@@ -1,0 +1,21 @@
+Every feature must have tests.
+
+Create tests directory automatically.
+
+tests/
+
+    unit
+
+    integration
+
+    e2e
+
+Generate
+
+Vitest
+
+Playwright
+
+Testing Library
+
+Never skip tests.
