@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vantage — Settings</title>
+<meta name="description" content="Vantage. Clarity, from a distance." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:ital,wght@1,400;1,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="bg__base"></div>
+  <div class="bg__aurora bg__aurora--a"></div>
+  <div class="bg__aurora bg__aurora--b"></div>
+  <svg class="bg__noise"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#noiseFilter)"></rect></svg>
+</div>
+
+<div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+<div class="app-shell">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 6 L40 34" stroke="url(#markGradA)" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M24 6 L8 34" stroke="url(#markGradB)" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M13.5 26 L34.5 26" stroke="url(#markGradA)" stroke-width="3.4" stroke-linecap="round"/>
+            <circle cx="24" cy="6" r="3.2" fill="#F0C674"/>
+            <defs>
+              <linearGradient id="markGradA" x1="8" y1="6" x2="40" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9A85FF"/><stop offset="1" stop-color="#6E56E8"/></linearGradient>
+              <linearGradient id="markGradB" x1="24" y1="6" x2="8" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#B7A6FF"/><stop offset="1" stop-color="#7C64F0"/></linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="brand__word">Vantage</span>
+      </div>
+      <button class="sidebar__collapse" id="sidebarToggle" aria-label="サイドバーを折りたたむ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>
+      </button>
+    </div>
+
+    <nav class="nav" aria-label="メインナビゲーション">
+      <a href="#" class="nav__item" data-tooltip="Overview">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span class="nav__label">Overview</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Tasks">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="nav__label">Tasks</span>
+        <span class="nav__count">24</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Projects">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+        <span class="nav__label">Projects</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Team">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="nav__label">Team</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Calendar">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="nav__label">Calendar</span>
+      </a>
+    </nav>
+
+    <div class="nav__divider"></div>
+    <div class="nav__section-label">Workspace</div>
+
+    <nav class="nav">
+      <a href="#" class="nav__item is-active" data-tooltip="Settings">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="nav__label">Settings</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Help">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>
+        <span class="nav__label">Help</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="user-chip" id="profileTrigger" data-tooltip="Aria Whitfield">
+        <span class="avatar avatar--sm avatar--grad">AW</span>
+        <span class="user-chip__text">
+          <span class="user-chip__name">Aria Whitfield</span>
+          <span class="user-chip__role">Product Lead</span>
+        </span>
+        <svg class="user-chip__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <div class="main">
+
+    <header class="topbar">
+      <button class="icon-btn sidebar-mobile-toggle" id="mobileSidebarToggle" aria-label="メニュー">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+
+      <button class="search" id="cmdkTrigger">
+        <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="search__placeholder">設定を検索…</span>
+        <span class="kbd-hint"><kbd>⌘</kbd><kbd>K</kbd></span>
+      </button>
+
+      <div class="topbar__actions">
+        <div class="popover-wrap">
+          <button class="icon-btn" id="notifBtn" aria-label="通知">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="badge-dot" id="notifBadge"></span>
+          </button>
+          <div class="dropdown dropdown--notif" id="notifDropdown">
+            <div class="dropdown__header"><span>通知</span><button class="link link--ghost" id="clearNotifs">すべて既読にする</button></div>
+            <div class="dropdown__list" id="notifList">
+              <div class="notif-item"><span class="notif-item__dot"></span><span class="avatar avatar--xs">MS</span><div class="notif-item__body"><p><strong>Mika S.</strong> があなたをワークスペースに招待しました</p><span class="notif-item__time">1日前</span></div></div>
+              <div class="notif-item"><span class="avatar avatar--xs">TK</span><div class="notif-item__body"><p><strong>Tom K.</strong> がメンバー権限を更新しました</p><span class="notif-item__time">3日前</span></div></div>
+            </div>
+            <div class="dropdown__empty" id="notifEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><p>新しい通知はありません</p><span>すべて確認済みです</span></div>
+          </div>
+        </div>
+
+        <div class="popover-wrap">
+          <button class="profile-btn" id="profileBtn" aria-label="アカウントメニュー"><span class="avatar avatar--sm avatar--grad">AW</span></button>
+          <div class="dropdown dropdown--profile" id="profileDropdown">
+            <div class="dropdown__profile"><span class="avatar avatar--md avatar--grad">AW</span><div><p class="dropdown__profile-name">Aria Whitfield</p><p class="dropdown__profile-email">aria@vantage.app</p></div></div>
+            <div class="dropdown__divider"></div>
+            <a href="#" class="dropdown__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>プロフィール</a>
+            <a href="#" class="dropdown__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>設定</a>
+            <div class="dropdown__divider"></div>
+            <a href="#" class="dropdown__item dropdown__item--danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>ログアウト</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content content--settings" id="content">
+
+      <section class="settings-header" data-reveal>
+        <h1 class="settings-header__title">設定</h1>
+        <p class="settings-header__desc">アカウントとワークスペースを管理します。</p>
+      </section>
+
+      <div class="settings-layout">
+
+        <!-- Settings nav -->
+        <nav class="settings-nav" id="settingsNav" data-reveal>
+          <button class="settings-nav__item is-active" data-panel="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            プロフィール
+          </button>
+          <button class="settings-nav__item" data-panel="notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            通知
+          </button>
+          <button class="settings-nav__item" data-panel="theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+            テーマ
+          </button>
+          <button class="settings-nav__item" data-panel="security">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            セキュリティ
+          </button>
+          <button class="settings-nav__item" data-panel="api">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            API キー
+          </button>
+          <button class="settings-nav__item" data-panel="members">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            メンバー
+          </button>
+          <button class="settings-nav__item" data-panel="workspace">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+            ワークスペース
+          </button>
+          <span class="settings-nav__pill" id="navPill"></span>
+        </nav>
+
+        <!-- Panels -->
+        <div class="settings-content" id="settingsContent" data-reveal>
+
+          <!-- ===== Profile ===== -->
+          <section class="settings-panel" data-panel="profile">
+            <div class="settings-card">
+              <h2 class="settings-card__title">プロフィール写真</h2>
+              <p class="settings-card__desc">チームに表示されるあなたの写真です。</p>
+              <div class="avatar-editor">
+                <div class="avatar-editor__preview" id="avatarPreview">
+                  <span class="avatar avatar--xl avatar--grad">AW</span>
+                  <div class="avatar-editor__overlay">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4l2-2h4l2 2h4v16H4z"/><circle cx="12" cy="13" r="4"/></svg>
+                  </div>
+                </div>
+                <div class="avatar-editor__actions">
+                  <button class="btn btn--ghost btn--sm" id="uploadPhotoBtn">写真を変更</button>
+                  <button class="link link--ghost" id="removePhotoBtn">削除する</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">基本情報</h2>
+              <p class="settings-card__desc">チームメンバーに表示される情報です。</p>
+              <div class="settings-form">
+                <div class="field-row">
+                  <div class="field">
+                    <label class="field__label" for="profFirst">名</label>
+                    <div class="field__control"><input class="field__input" type="text" id="profFirst" value="Aria" /></div>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="profLast">姓</label>
+                    <div class="field__control"><input class="field__input" type="text" id="profLast" value="Whitfield" /></div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="profEmail">メールアドレス</label>
+                  <div class="field__control"><input class="field__input" type="email" id="profEmail" value="aria@vantage.app" /></div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="profRole">役職</label>
+                  <div class="field__control"><input class="field__input" type="text" id="profRole" value="Product Lead" /></div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="profBio">自己紹介</label>
+                  <div class="field__control field__control--textarea"><textarea class="field__input" id="profBio" rows="3">プロダクトデザインとフロントエンド開発を専門にしています。良いUIは説明を必要としないと信じています。</textarea></div>
+                </div>
+              </div>
+              <div class="settings-card__footer">
+                <button class="btn btn--primary" id="saveProfileBtn">
+                  <span class="btn__label">変更を保存</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== Notifications ===== -->
+          <section class="settings-panel" data-panel="notifications" hidden>
+            <div class="settings-card">
+              <h2 class="settings-card__title">通知チャネル</h2>
+              <p class="settings-card__desc">通知の受け取り方法を選択します。</p>
+              <div class="toggle-list" id="notifChannelList">
+                <div class="toggle-row" data-key="email">
+                  <div class="toggle-row__text"><p class="toggle-row__title">メール通知</p><p class="toggle-row__desc">重要な更新をメールで受け取ります</p></div>
+                  <button class="toggle-switch is-on" role="switch" aria-checked="true"><span class="toggle-switch__knob"></span></button>
+                </div>
+                <div class="toggle-row" data-key="push">
+                  <div class="toggle-row__text"><p class="toggle-row__title">プッシュ通知</p><p class="toggle-row__desc">デスクトップとモバイルに通知を送ります</p></div>
+                  <button class="toggle-switch is-on" role="switch" aria-checked="true"><span class="toggle-switch__knob"></span></button>
+                </div>
+                <div class="toggle-row" data-key="digest">
+                  <div class="toggle-row__text"><p class="toggle-row__title">週次ダイジェスト</p><p class="toggle-row__desc">毎週月曜日にサマリーを送信します</p></div>
+                  <button class="toggle-switch" role="switch" aria-checked="false"><span class="toggle-switch__knob"></span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">通知の種類</h2>
+              <p class="settings-card__desc">通知を受け取るイベントを選択します。</p>
+              <div class="toggle-list" id="notifTypeList">
+                <div class="toggle-row" data-key="mentions">
+                  <div class="toggle-row__text"><p class="toggle-row__title">メンション</p><p class="toggle-row__desc">誰かがあなたを @メンションしたとき</p></div>
+                  <button class="toggle-switch is-on" role="switch" aria-checked="true"><span class="toggle-switch__knob"></span></button>
+                </div>
+                <div class="toggle-row" data-key="assigned">
+                  <div class="toggle-row__text"><p class="toggle-row__title">タスク割り当て</p><p class="toggle-row__desc">新しいタスクが割り当てられたとき</p></div>
+                  <button class="toggle-switch is-on" role="switch" aria-checked="true"><span class="toggle-switch__knob"></span></button>
+                </div>
+                <div class="toggle-row" data-key="comments">
+                  <div class="toggle-row__text"><p class="toggle-row__title">コメント</p><p class="toggle-row__desc">担当タスクに新しいコメントがついたとき</p></div>
+                  <button class="toggle-switch" role="switch" aria-checked="false"><span class="toggle-switch__knob"></span></button>
+                </div>
+                <div class="toggle-row" data-key="due">
+                  <div class="toggle-row__text"><p class="toggle-row__title">期限のリマインド</p><p class="toggle-row__desc">期限の24時間前に通知します</p></div>
+                  <button class="toggle-switch is-on" role="switch" aria-checked="true"><span class="toggle-switch__knob"></span></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== Theme ===== -->
+          <section class="settings-panel" data-panel="theme" hidden>
+            <div class="settings-card">
+              <h2 class="settings-card__title">外観</h2>
+              <p class="settings-card__desc">インターフェースのテーマを選択します。</p>
+              <div class="theme-grid" id="themeGrid">
+                <button class="theme-card is-active" data-theme="dark">
+                  <span class="theme-card__preview theme-card__preview--dark"><span></span><span></span></span>
+                  <span class="theme-card__label">ダーク</span>
+                </button>
+                <button class="theme-card" data-theme="light">
+                  <span class="theme-card__preview theme-card__preview--light"><span></span><span></span></span>
+                  <span class="theme-card__label">ライト</span>
+                  <span class="theme-card__badge">近日公開</span>
+                </button>
+                <button class="theme-card" data-theme="system">
+                  <span class="theme-card__preview theme-card__preview--system"><span></span><span></span></span>
+                  <span class="theme-card__label">システム</span>
+                  <span class="theme-card__badge">近日公開</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">アクセントカラー</h2>
+              <p class="settings-card__desc">ボタンやハイライトに使用する色です。</p>
+              <div class="swatches" id="accentSwatches">
+                <button class="swatch is-active" style="--sw:#9a85ff" data-color="violet"></button>
+                <button class="swatch" style="--sw:#55d19b" data-color="green"></button>
+                <button class="swatch" style="--sw:#5cc8f2" data-color="blue"></button>
+                <button class="swatch" style="--sw:#f2b25c" data-color="amber"></button>
+                <button class="swatch" style="--sw:#ff8fa3" data-color="rose"></button>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">密度</h2>
+              <p class="settings-card__desc">リストやテーブルの余白を調整します。</p>
+              <div class="density-picker" id="densityPicker">
+                <button class="density-option" data-density="compact">コンパクト</button>
+                <button class="density-option is-active" data-density="comfortable">標準</button>
+                <button class="density-option" data-density="spacious">ゆったり</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== Security ===== -->
+          <section class="settings-panel" data-panel="security" hidden>
+            <div class="settings-card">
+              <h2 class="settings-card__title">パスワードを変更</h2>
+              <p class="settings-card__desc">定期的な変更を推奨します。</p>
+              <div class="settings-form">
+                <div class="field">
+                  <label class="field__label" for="pwCurrent">現在のパスワード</label>
+                  <div class="field__control"><input class="field__input" type="password" id="pwCurrent" placeholder="••••••••••" /></div>
+                </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label class="field__label" for="pwNew">新しいパスワード</label>
+                    <div class="field__control"><input class="field__input" type="password" id="pwNew" placeholder="••••••••••" /></div>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pwConfirm">確認</label>
+                    <div class="field__control"><input class="field__input" type="password" id="pwConfirm" placeholder="••••••••••" /></div>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-card__footer">
+                <button class="btn btn--primary" id="savePasswordBtn">
+                  <span class="btn__label">パスワードを更新</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <div class="toggle-row toggle-row--card">
+                <div class="toggle-row__text">
+                  <p class="toggle-row__title">2要素認証</p>
+                  <p class="toggle-row__desc">認証アプリを使ってログインを保護します</p>
+                </div>
+                <button class="toggle-switch" id="twoFaToggle" role="switch" aria-checked="false"><span class="toggle-switch__knob"></span></button>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">ログイン中のセッション</h2>
+              <p class="settings-card__desc">このアカウントでログインしているデバイスです。</p>
+              <div class="session-list" id="sessionList"></div>
+            </div>
+
+            <div class="settings-card settings-card--danger">
+              <h2 class="settings-card__title">危険な操作</h2>
+              <p class="settings-card__desc">アカウントを完全に削除します。この操作は取り消せません。</p>
+              <div class="settings-card__footer">
+                <button class="btn btn--danger-ghost" id="deleteAccountBtn">アカウントを削除</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== API Keys ===== -->
+          <section class="settings-panel" data-panel="api" hidden>
+            <div class="settings-card">
+              <div class="settings-card__head-row">
+                <div>
+                  <h2 class="settings-card__title">API キー</h2>
+                  <p class="settings-card__desc">プログラムからVantageにアクセスするためのキーです。</p>
+                </div>
+                <button class="btn btn--primary btn--sm" id="newApiKeyBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                  新規キーを発行
+                </button>
+              </div>
+              <div class="api-key-list" id="apiKeyList"></div>
+            </div>
+          </section>
+
+          <!-- ===== Members ===== -->
+          <section class="settings-panel" data-panel="members" hidden>
+            <div class="settings-card">
+              <div class="settings-card__head-row">
+                <div>
+                  <h2 class="settings-card__title">メンバー</h2>
+                  <p class="settings-card__desc" id="memberCountDesc">8 名がこのワークスペースに参加しています</p>
+                </div>
+                <button class="btn btn--primary btn--sm" id="inviteMemberBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                  招待する
+                </button>
+              </div>
+              <div class="field-search field-search--full">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input type="text" id="memberSearch" placeholder="名前またはメールで検索…" autocomplete="off" />
+              </div>
+              <div class="member-table" id="memberTable"></div>
+            </div>
+
+            <div class="settings-card">
+              <h2 class="settings-card__title">保留中の招待</h2>
+              <p class="settings-card__desc">まだ参加していないメンバーです。</p>
+              <div class="invite-list" id="inviteList"></div>
+              <div class="empty-state empty-state--inline" id="inviteEmpty">
+                <div class="empty-state__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg></div>
+                <h3>保留中の招待はありません</h3>
+                <p>新しいメンバーを招待するとここに表示されます。</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== Workspace ===== -->
+          <section class="settings-panel" data-panel="workspace" hidden>
+            <div class="settings-card">
+              <h2 class="settings-card__title">ワークスペース情報</h2>
+              <p class="settings-card__desc">組織全体に表示される情報です。</p>
+              <div class="settings-form">
+                <div class="field">
+                  <label class="field__label" for="wsName">ワークスペース名</label>
+                  <div class="field__control"><input class="field__input" type="text" id="wsName" value="Vantage Studio" /></div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="wsSlug">URL</label>
+                  <div class="field__control field__control--prefix">
+                    <span class="field__prefix">vantage.app/</span>
+                    <input class="field__input" type="text" id="wsSlug" value="vantage-studio" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label">プラン</label>
+                  <div class="plan-row">
+                    <span class="chip chip--soft">Pro プラン</span>
+                    <button class="link" id="upgradePlanLink">プランを変更</button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-card__footer">
+                <button class="btn btn--primary" id="saveWorkspaceBtn">
+                  <span class="btn__label">変更を保存</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-card settings-card--danger">
+              <h2 class="settings-card__title">危険な操作</h2>
+              <p class="settings-card__desc">ワークスペースとすべてのデータを完全に削除します。</p>
+              <div class="settings-card__footer">
+                <button class="btn btn--danger-ghost" id="deleteWorkspaceBtn">ワークスペースを削除</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ============ Row context/action menu (sessions / api keys / members) ============ -->
+<div class="dropdown dropdown--card-menu" id="rowMenu">
+  <button class="dropdown__item dropdown__item--danger" data-action="revoke"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>取り消す</button>
+</div>
+
+<!-- ============ Role dropdown (members) ============ -->
+<div class="dropdown dropdown--filter" id="roleDropdown">
+  <button class="dropdown__item role-option" data-role="Owner">Owner</button>
+  <button class="dropdown__item role-option" data-role="Admin">Admin</button>
+  <button class="dropdown__item role-option" data-role="Member">Member</button>
+  <button class="dropdown__item role-option" data-role="Viewer">Viewer</button>
+</div>
+
+<!-- ============ Command palette ============ -->
+<div class="cmdk-overlay" id="cmdkOverlay">
+  <div class="cmdk" id="cmdk">
+    <div class="cmdk__input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="cmdkInput" placeholder="設定を検索…" autocomplete="off" />
+      <kbd class="cmdk__esc">esc</kbd>
+    </div>
+    <div class="cmdk__list" id="cmdkList">
+      <div class="cmdk__group-label">設定セクション</div>
+      <button class="cmdk__item" data-goto="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>プロフィール</button>
+      <button class="cmdk__item" data-goto="notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>通知</button>
+      <button class="cmdk__item" data-goto="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>セキュリティ</button>
+      <button class="cmdk__item" data-goto="api"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>API キー</button>
+      <button class="cmdk__item" data-goto="members"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>メンバー</button>
+    </div>
+    <div class="cmdk__empty" id="cmdkEmpty" hidden><p>一致するコマンドがありません</p></div>
+  </div>
+</div>
+
+<!-- ============ Generic confirm dialog ============ -->
+<div class="dialog-overlay" id="confirmOverlay">
+  <div class="dialog" id="confirmDialog" role="dialog" aria-modal="true">
+    <button class="dialog__close" id="confirmClose" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="dialog__icon dialog__icon--danger" id="confirmIcon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+    </div>
+    <h2 class="dialog__title" id="confirmTitle">本当に削除しますか？</h2>
+    <p class="dialog__desc" id="confirmDesc">この操作は取り消せません。</p>
+    <div class="dialog__actions">
+      <button class="btn btn--ghost btn--block" id="confirmCancel">キャンセル</button>
+      <button class="btn btn--danger btn--block" id="confirmOk">
+        <span class="btn__label">削除する</span>
+        <span class="btn__spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ New API key dialog ============ -->
+<div class="dialog-overlay" id="apiKeyOverlay">
+  <div class="dialog" id="apiKeyDialog" role="dialog" aria-modal="true">
+    <button class="dialog__close" id="apiKeyClose" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+
+    <div id="apiKeyStepCreate">
+      <h2 class="dialog__title">新規APIキーを発行</h2>
+      <p class="dialog__desc">キーの名前を入力してください。用途がわかる名前を推奨します。</p>
+      <div class="field">
+        <label class="field__label" for="apiKeyName">キー名</label>
+        <div class="field__control"><input class="field__input" type="text" id="apiKeyName" placeholder="例）Production Server" /></div>
+      </div>
+      <button class="btn btn--primary btn--block" id="generateApiKeyBtn">
+        <span class="btn__label">キーを発行</span>
+        <span class="btn__spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div id="apiKeyStepReveal" hidden>
+      <div class="dialog__icon dialog__icon--success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2 class="dialog__title">キーが発行されました</h2>
+      <p class="dialog__desc">このキーは二度と表示されません。今すぐコピーして安全な場所に保管してください。</p>
+      <div class="key-reveal-box">
+        <code id="apiKeyRevealValue">vk_live_••••••••••••••••</code>
+        <button class="icon-btn icon-btn--sm" id="copyApiKeyBtn" data-tooltip="コピー">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </button>
+      </div>
+      <button class="btn btn--ghost btn--block" id="apiKeyDoneBtn">完了</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script type="module" src="script.js"></script>
+</body>
+</html>

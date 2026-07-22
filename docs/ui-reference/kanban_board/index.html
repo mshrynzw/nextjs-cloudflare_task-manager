@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vantage — Board</title>
+<meta name="description" content="Vantage. Clarity, from a distance." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:ital,wght@1,400;1,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="bg__base"></div>
+  <div class="bg__aurora bg__aurora--a"></div>
+  <div class="bg__aurora bg__aurora--b"></div>
+  <svg class="bg__noise"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#noiseFilter)"></rect></svg>
+</div>
+
+<div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+<div class="app-shell">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 6 L40 34" stroke="url(#markGradA)" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M24 6 L8 34" stroke="url(#markGradB)" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M13.5 26 L34.5 26" stroke="url(#markGradA)" stroke-width="3.4" stroke-linecap="round"/>
+            <circle cx="24" cy="6" r="3.2" fill="#F0C674"/>
+            <defs>
+              <linearGradient id="markGradA" x1="8" y1="6" x2="40" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9A85FF"/><stop offset="1" stop-color="#6E56E8"/></linearGradient>
+              <linearGradient id="markGradB" x1="24" y1="6" x2="8" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#B7A6FF"/><stop offset="1" stop-color="#7C64F0"/></linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="brand__word">Vantage</span>
+      </div>
+      <button class="sidebar__collapse" id="sidebarToggle" aria-label="サイドバーを折りたたむ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>
+      </button>
+    </div>
+
+    <nav class="nav" aria-label="メインナビゲーション">
+      <a href="#" class="nav__item" data-tooltip="Overview">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span class="nav__label">Overview</span>
+      </a>
+      <a href="#" class="nav__item is-active" data-tooltip="Tasks">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="nav__label">Tasks</span>
+        <span class="nav__count">24</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Projects">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+        <span class="nav__label">Projects</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Team">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="nav__label">Team</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Calendar">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="nav__label">Calendar</span>
+      </a>
+    </nav>
+
+    <div class="nav__divider"></div>
+    <div class="nav__section-label">Workspace</div>
+
+    <nav class="nav">
+      <a href="#" class="nav__item" data-tooltip="Settings">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="nav__label">Settings</span>
+      </a>
+      <a href="#" class="nav__item" data-tooltip="Help">
+        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>
+        <span class="nav__label">Help</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="user-chip" id="profileTrigger" data-tooltip="Aria Whitfield">
+        <span class="avatar avatar--sm avatar--grad">AW</span>
+        <span class="user-chip__text">
+          <span class="user-chip__name">Aria Whitfield</span>
+          <span class="user-chip__role">Product Lead</span>
+        </span>
+        <svg class="user-chip__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <div class="main">
+
+    <header class="topbar">
+      <button class="icon-btn sidebar-mobile-toggle" id="mobileSidebarToggle" aria-label="メニュー">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+
+      <button class="search" id="cmdkTrigger">
+        <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="search__placeholder">タスク、プロジェクト、メンバーを検索…</span>
+        <span class="kbd-hint"><kbd>⌘</kbd><kbd>K</kbd></span>
+      </button>
+
+      <div class="topbar__actions">
+        <div class="popover-wrap">
+          <button class="icon-btn" id="notifBtn" aria-label="通知">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="badge-dot" id="notifBadge"></span>
+          </button>
+          <div class="dropdown dropdown--notif" id="notifDropdown">
+            <div class="dropdown__header"><span>通知</span><button class="link link--ghost" id="clearNotifs">すべて既読にする</button></div>
+            <div class="dropdown__list" id="notifList">
+              <div class="notif-item"><span class="notif-item__dot"></span><span class="avatar avatar--xs">MS</span><div class="notif-item__body"><p><strong>Mika S.</strong> が「Hero セクション」をレビュー待ちに移動しました</p><span class="notif-item__time">8分前</span></div></div>
+              <div class="notif-item"><span class="notif-item__dot"></span><span class="avatar avatar--xs">TK</span><div class="notif-item__body"><p><strong>Tom K.</strong> があなたをカードに割り当てました</p><span class="notif-item__time">33分前</span></div></div>
+              <div class="notif-item"><span class="avatar avatar--xs">JL</span><div class="notif-item__body"><p><strong>Julia L.</strong> が「決済フロー」を完了しました</p><span class="notif-item__time">昨日</span></div></div>
+            </div>
+            <div class="dropdown__empty" id="notifEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><p>新しい通知はありません</p><span>すべて確認済みです</span></div>
+          </div>
+        </div>
+
+        <div class="popover-wrap">
+          <button class="profile-btn" id="profileBtn" aria-label="アカウントメニュー"><span class="avatar avatar--sm avatar--grad">AW</span></button>
+          <div class="dropdown dropdown--profile" id="profileDropdown">
+            <div class="dropdown__profile"><span class="avatar avatar--md avatar--grad">AW</span><div><p class="dropdown__profile-name">Aria Whitfield</p><p class="dropdown__profile-email">aria@vantage.app</p></div></div>
+            <div class="dropdown__divider"></div>
+            <a href="#" class="dropdown__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>プロフィール</a>
+            <a href="#" class="dropdown__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>設定</a>
+            <div class="dropdown__divider"></div>
+            <a href="#" class="dropdown__item dropdown__item--danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>ログアウト</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content content--board" id="content">
+
+      <!-- Page head -->
+      <section class="page-head">
+        <div>
+          <h1 class="page-head__title">タスクボード</h1>
+          <p class="page-head__date">「モバイルアプリ v2」プロジェクト · <span id="totalCount">24</span> 件のタスク</p>
+        </div>
+        <div class="page-head__actions">
+          <div class="assignee-filter" id="assigneeFilter"></div>
+          <button class="btn btn--primary" id="newTaskBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            新規タスク
+          </button>
+        </div>
+      </section>
+
+      <!-- Toolbar -->
+      <section class="toolbar" data-reveal>
+        <div class="field-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="boardSearch" placeholder="タスクを検索…" autocomplete="off" />
+          <button class="field-search__clear" id="searchClear" hidden aria-label="検索をクリア"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+
+        <div class="toolbar__right">
+          <div class="popover-wrap">
+            <button class="btn btn--ghost btn--sm" id="priorityBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg>
+              優先度
+              <span class="btn__count" id="priorityCount" hidden>0</span>
+            </button>
+            <div class="dropdown dropdown--filter" id="priorityDropdown">
+              <div class="dropdown__header"><span>優先度で絞り込み</span><button class="link link--ghost" id="priorityClear">クリア</button></div>
+              <div class="filter-list" id="priorityList">
+                <label class="filter-option"><input type="checkbox" value="urgent" /><span class="filter-option__box"></span><span class="priority-dot priority-dot--urgent"></span>Urgent</label>
+                <label class="filter-option"><input type="checkbox" value="high" /><span class="filter-option__box"></span><span class="priority-dot priority-dot--high"></span>High</label>
+                <label class="filter-option"><input type="checkbox" value="medium" /><span class="filter-option__box"></span><span class="priority-dot priority-dot--medium"></span>Medium</label>
+                <label class="filter-option"><input type="checkbox" value="low" /><span class="filter-option__box"></span><span class="priority-dot priority-dot--low"></span>Low</label>
+              </div>
+            </div>
+          </div>
+
+          <button class="icon-btn" id="boardMenuBtn" data-tooltip="ボード設定">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Board -->
+      <section class="board" id="board" data-reveal></section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ Card ••• dropdown ============ -->
+<div class="dropdown dropdown--card-menu" id="cardMenu">
+  <button class="dropdown__item" data-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>詳細を開く</button>
+  <button class="dropdown__item" data-action="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>編集</button>
+  <button class="dropdown__item" data-action="duplicate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製</button>
+  <div class="dropdown__divider"></div>
+  <button class="dropdown__item dropdown__item--danger" data-action="delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>削除</button>
+</div>
+
+<!-- ============ Column ••• dropdown ============ -->
+<div class="dropdown dropdown--card-menu" id="columnMenu">
+  <button class="dropdown__item" data-action="addtop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>先頭にタスクを追加</button>
+  <button class="dropdown__item" data-action="sort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"/></svg>優先度で並び替え</button>
+  <div class="dropdown__divider"></div>
+  <button class="dropdown__item dropdown__item--danger" data-action="clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>すべてクリア</button>
+</div>
+
+<!-- ============ Command palette ============ -->
+<div class="cmdk-overlay" id="cmdkOverlay">
+  <div class="cmdk" id="cmdk">
+    <div class="cmdk__input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="cmdkInput" placeholder="コマンドを入力、または検索…" autocomplete="off" />
+      <kbd class="cmdk__esc">esc</kbd>
+    </div>
+    <div class="cmdk__list" id="cmdkList">
+      <div class="cmdk__group-label">よく使う操作</div>
+      <button class="cmdk__item" data-toast="新規タスクを作成しました"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>新規タスクを作成 <kbd>T</kbd></button>
+      <button class="cmdk__item" data-toast="新規プロジェクトを作成しました"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>新規プロジェクトを作成 <kbd>P</kbd></button>
+      <div class="cmdk__group-label">移動</div>
+      <button class="cmdk__item" data-toast="Overview に移動しました"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Overview へ移動</button>
+      <button class="cmdk__item" data-toast="Projects に移動しました"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>Projects へ移動</button>
+    </div>
+    <div class="cmdk__empty" id="cmdkEmpty" hidden><p>一致するコマンドがありません</p></div>
+  </div>
+</div>
+
+<!-- ============ New task dialog ============ -->
+<div class="dialog-overlay" id="dialogOverlay">
+  <div class="dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <button class="dialog__close" id="dialogClose" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2 class="dialog__title" id="dialogTitle">新規タスク</h2>
+    <p class="dialog__desc">タイトルと優先度を設定してボードに追加します。</p>
+
+    <div class="field">
+      <label class="field__label" for="taskTitle">タスク名</label>
+      <div class="field__control"><input class="field__input" type="text" id="taskTitle" placeholder="例）ログイン画面のQA" /></div>
+    </div>
+
+    <div class="field">
+      <label class="field__label">優先度</label>
+      <div class="priority-picker" id="priorityPicker">
+        <button class="priority-option is-active" data-priority="low"><span class="priority-dot priority-dot--low"></span>Low</button>
+        <button class="priority-option" data-priority="medium"><span class="priority-dot priority-dot--medium"></span>Medium</button>
+        <button class="priority-option" data-priority="high"><span class="priority-dot priority-dot--high"></span>High</button>
+        <button class="priority-option" data-priority="urgent"><span class="priority-dot priority-dot--urgent"></span>Urgent</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field__label">追加先カラム</label>
+      <div class="field__control">
+        <select class="field__input field__select" id="taskColumn">
+          <option value="backlog">Backlog</option>
+          <option value="todo" selected>Todo</option>
+          <option value="progress">In Progress</option>
+          <option value="review">Review</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn--primary btn--block" id="createTaskBtn">
+      <span class="btn__label">タスクを作成</span>
+      <span class="btn__spinner" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script type="module" src="script.js"></script>
+</body>
+</html>
