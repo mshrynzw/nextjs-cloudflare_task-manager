@@ -952,6 +952,35 @@ Phase 3（Authentication / Authorization）を完了した。
 
 ### Change
 
+Phase 4（Backend / API）を完了した。
+
+### Reason
+
+UI 実装前に `/api/v1` の契約・認可・Service/Repository 境界を固定するため。
+
+### Decision
+
+- Route Handler → Zod → Service → Repository → Drizzle
+- Project / Task の DELETE は Soft Archive（`archived_at`）
+- Progress は Task 集計から算出（永続化しない）
+- POST `/projects` は `workspaceId` 省略時に所属 Workspace を自動選択
+- Settings / Notifications / Comments / Checklist も同レイヤーで実装
+
+### Impact
+
+Phase 5 以降の UI は API 経由でデータ操作できる。
+
+### Follow-up
+
+- Phase 5: Project List / Detail UI
+- Calendar / Analytics API は後続 Phase
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1349,14 +1378,14 @@ Development Log    ✓
 Phase 1 Env        ✓
 Phase 2 Database   ✓
 Phase 3 Auth       ✓
+Phase 4 API        ✓
 ```
 
 ## Planned
 
 ```text
-API Implementation
-Frontend Implementation
-Testing (feature-level)
+Frontend Implementation (Projects / Tasks UI)
+Testing (feature-level E2E)
 CI/CD
 Deployment (includes task-manager-prod D1)
 ```

@@ -103,7 +103,7 @@ APIはURLによるバージョニングを採用する。
 
 # 5. Authentication
 
-認証にはAuth.jsを使用する予定とする。
+認証にはAuth.jsを使用する。
 
 認証済みユーザーのみ利用可能なAPIでは、必ずSessionを検証する。
 
@@ -279,6 +279,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ```json
 {
+  "workspaceId": "workspace_01",
   "name": "Website Redesign",
   "description": "Company website redesign.",
   "status": "planning",
@@ -287,6 +288,8 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
   "color": "#4f7cff"
 }
 ```
+
+`workspaceId` は省略可能。省略時は、認証ユーザーが所属する Workspace を自動選択する。
 
 ### Response
 
@@ -351,11 +354,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ## DELETE /api/v1/projects/:projectId
 
-プロジェクトを削除する。
+プロジェクトをアーカイブする。
 
-削除前に権限を確認する。
+削除前に権限を確認する。Owner のみ実行可能。
 
-通常ユーザーは、自分が削除権限を持つプロジェクトのみ削除可能とする。
+実装では物理削除ではなく `archived_at` / `status=archived` による Soft Archive を行う。
 
 ### Response
 

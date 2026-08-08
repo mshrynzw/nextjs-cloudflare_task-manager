@@ -271,7 +271,7 @@ ApplicationのBackend Layerを完成させる。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -290,54 +290,54 @@ Repository
     ↓
 Drizzle
     ↓
-D1
+D1 / SQLite
 ```
 
 ## API
 
 ### Users
 
-- [ ] GET user
-- [ ] UPDATE user
+- [x] GET user
+- [x] UPDATE user
 
 ### Projects
 
-- [ ] GET projects
-- [ ] GET project
-- [ ] POST project
-- [ ] PATCH project
-- [ ] DELETE / archive project
+- [x] GET projects
+- [x] GET project
+- [x] POST project
+- [x] PATCH project
+- [x] DELETE / archive project
 
 ### Tasks
 
-- [ ] GET tasks
-- [ ] GET task
-- [ ] POST task
-- [ ] PATCH task
-- [ ] DELETE / archive task
-- [ ] Update status
-- [ ] Update position
-- [ ] Assign user
+- [x] GET tasks
+- [x] GET task
+- [x] POST task
+- [x] PATCH task
+- [x] DELETE / archive task
+- [x] Update status
+- [x] Update position
+- [x] Assign user
 
 ### Comments
 
-- [ ] GET comments
-- [ ] POST comment
-- [ ] PATCH comment
-- [ ] DELETE comment
+- [x] GET comments
+- [x] POST comment
+- [x] PATCH comment
+- [x] DELETE comment
 
 ### Checklist
 
-- [ ] GET checklist
-- [ ] POST checklist item
-- [ ] PATCH checklist item
-- [ ] DELETE checklist item
+- [x] GET checklist
+- [x] POST checklist item
+- [x] PATCH checklist item
+- [x] DELETE checklist item
 
 ### Notifications
 
-- [ ] GET notifications
-- [ ] Mark as read
-- [ ] Mark all as read
+- [x] GET notifications
+- [x] Mark as read
+- [x] Mark all as read
 
 ---
 

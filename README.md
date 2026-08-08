@@ -107,7 +107,7 @@ Phase 3 での実装順:
 
 ## Current Status
 
-Phase 3（Authentication）完了。次は Phase 4（Backend / API）。
+Phase 4（Backend / API）完了。次は Phase 5（Core Project Management UI）。
 
 ### Local Auth Setup
 

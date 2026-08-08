@@ -28,8 +28,7 @@ export default defineConfig({
     env: {
       ...process.env,
       AUTH_SECRET:
-        process.env.AUTH_SECRET ??
-        "playwright-dev-secret-at-least-32-chars!!",
+        process.env.AUTH_SECRET ?? "playwright-dev-secret-at-least-32-chars!!",
       AUTH_EMAIL_ENABLED: process.env.AUTH_EMAIL_ENABLED ?? "true",
     },
   },
