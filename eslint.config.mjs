@@ -20,6 +20,9 @@ const eslintConfig = defineConfig([
     "test-results/**",
     // Design prototypes are not production code.
     "docs/ui-reference/**",
+    // Generated Wrangler / OpenNext artifacts
+    "cloudflare-env.d.ts",
+    ".open-next/**",
   ]),
 ]);
 

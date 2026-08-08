@@ -998,9 +998,16 @@ binding: DB
 config: wrangler.jsonc
 ```
 
-本番用 `task-manager-prod` は Deployment 時に作成する。
+本番用 Database:
+
+```text
+name: task-manager-prod
+binding: DB
+config: wrangler.jsonc → env.production
+```
 
 ローカル検証では better-sqlite3（同一 Migration）も利用できる。
+`getDb()` は Cloudflare コンテキストがあれば D1、なければ SQLite にフォールバックする。
 
 ## 43.5 Validation
 
@@ -1034,20 +1041,45 @@ Developer
 GitHub
     │
     ▼
-CI
-    │
-    ├── Lint
-    ├── Type Check
-    ├── Unit Test
-    ├── Integration Test
-    └── Build
+CI (quality + e2e)
     │
     ▼
-Deployment
+Deploy (manual workflow_dispatch / local `pnpm deploy`)
     │
     ▼
-Production
+OpenNext build
+    │
+    ▼
+Cloudflare Workers
+    │
+    ├── Assets (ASSETS)
+    ├── D1 (task-manager-prod)
+    └── Secrets (AUTH_*)
 ```
+
+## 45.1 Runtime
+
+| 環境 | App runtime | Database |
+| --- | --- | --- |
+| `pnpm dev` | Next.js (Node) | SQLite (`.data/local.sqlite`) |
+| `pnpm preview:cf` | Workers (workerd) | D1 local / bound |
+| Production | Cloudflare Workers | D1 `task-manager-prod` |
+
+Hosting: `@opennextjs/cloudflare` → Worker `task-manager`  
+Default URL: `https://task-manager.<account>.workers.dev`（カスタムドメインは任意）
+
+## 45.2 Secrets
+
+Production secrets are set with Wrangler（never committed）:
+
+```text
+AUTH_SECRET
+AUTH_URL
+NEXT_PUBLIC_APP_URL
+```
+
+Optional OAuth secrets: `AUTH_GITHUB_*` / `AUTH_GOOGLE_*`  
+`AUTH_EMAIL_ENABLED` is a plain `vars` value in `wrangler.jsonc` production env.
 
 ---
 
@@ -1075,7 +1107,11 @@ E2E (Playwright)
 
 すべて成功した場合のみマージ可能とすることを目標とする。
 
-本番デプロイ（CD）は Phase 16 で行う。
+本番デプロイは `.github/workflows/deploy.yml`（`workflow_dispatch`）またはローカルの `pnpm deploy` で行う。
+GitHub Environment `production` に以下を設定する:
+
+- Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `AUTH_SECRET`
+- Vars: `APP_URL`（例: `https://task-manager.<subdomain>.workers.dev`）
 
 ---
 

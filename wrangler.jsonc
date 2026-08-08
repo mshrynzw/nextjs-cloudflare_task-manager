@@ -1,8 +1,25 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "task-manager",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-08-01",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "task-manager",
+    },
+  ],
+  "vars": {
+    // Avoid Next.js dynamic require of middleware-manifest.json on Workers
+    // (OpenNext / workerd limitation). App layouts still enforce auth().
+    "NEXT_PRIVATE_MINIMAL_MODE": "1",
+  },
+  // Local / preview default — development D1
   "d1_databases": [
     {
       "binding": "DB",
@@ -11,4 +28,34 @@
       "migrations_dir": "drizzle/migrations",
     },
   ],
+  "env": {
+    "production": {
+      "name": "task-manager",
+      "compatibility_date": "2026-08-01",
+      "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+      "main": ".open-next/worker.js",
+      "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS",
+      },
+      "services": [
+        {
+          "binding": "WORKER_SELF_REFERENCE",
+          "service": "task-manager",
+        },
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "task-manager-prod",
+          "database_id": "69660894-ce1e-4095-87fb-e1e065f95d1d",
+          "migrations_dir": "drizzle/migrations",
+        },
+      ],
+      "vars": {
+        "AUTH_EMAIL_ENABLED": "true",
+        "NEXT_PRIVATE_MINIMAL_MODE": "1"
+      },
+    },
+  },
 }

@@ -1073,7 +1073,7 @@ Production環境へDeployする。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -1083,14 +1083,23 @@ Production環境へDeployする。
 
 ## Infrastructure
 
-- [ ] Cloudflare account
-- [ ] D1
-- [ ] Application hosting
-- [ ] Environment variables
-- [ ] Production database
-- [ ] Domain
-- [ ] HTTPS
-- [ ] Security configuration
+- [x] Cloudflare account
+- [x] D1（`task-manager-prod`）
+- [x] Application hosting（OpenNext → Cloudflare Workers）
+- [x] Environment variables / Secrets（`wrangler secret`）
+- [x] Production database（migrations applied）
+- [x] Domain（`*.workers.dev` デフォルト。カスタムドメインは任意）
+- [x] HTTPS（workers.dev / Cloudflare 標準）
+- [x] Security configuration（既存セキュリティヘッダ + production HSTS）
+
+## Notes
+
+- Live: `https://task-manager.iq87io25.workers.dev`
+- Local: `pnpm dev`（SQLite） / Preview: `pnpm preview:cf`（Workers runtime）
+- Deploy: `pnpm deploy`（OpenNext build + `wrangler --env production`）
+- Prod migrate: `pnpm db:migrate:prod`
+- CD: `.github/workflows/deploy.yml`（`workflow_dispatch` + GitHub Environment `production`）
+- Windows では OpenNext の symlink 制限があるため `scripts/patch-opennext.mjs`（postinstall）を適用
 
 ---
 
@@ -1408,11 +1417,9 @@ Deployment
 
 Status:
 
-`PLANNED`
+`DONE`
 
 ---
-
-## Milestone 6 — Portfolio Ready
 
 ```text
 Demo Data

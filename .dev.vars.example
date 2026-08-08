@@ -1,0 +1,9 @@
+# Bindings / secrets for Wrangler / OpenNext local preview.
+# Copy to `.dev.vars` (gitignored). Do not put production secrets here.
+NEXTJS_ENV=development
+
+# Optional — override when testing auth against preview
+# AUTH_SECRET=
+# AUTH_URL=http://localhost:8787
+# NEXT_PUBLIC_APP_URL=http://localhost:8787
+# AUTH_EMAIL_ENABLED=true

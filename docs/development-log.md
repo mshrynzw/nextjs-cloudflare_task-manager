@@ -1816,6 +1816,36 @@ GitHub Actions で PR / Push 時の品質ゲート（Lint・Typecheck・Test・B
 
 ## Follow-ups
 
-- Phase 16 Deployment
-- 必要なら `format:check` を CI に追加（現状はリポジトリ全体の Prettier 差分が大きいため未導入）
 - Branch protection で required checks を有効化
+- 必要なら `format:check` を CI に追加（現状はリポジトリ全体の Prettier 差分が大きいため未導入）
+
+---
+
+# Phase 16 — Deployment
+
+## Date
+
+2026-08-08
+
+## Summary
+
+OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 production・Secrets・workers.dev HTTPS まで到達した。
+
+## Details
+
+- `@opennextjs/cloudflare` + Next.js 16.3.0
+- `wrangler.jsonc`: Worker `task-manager`、本番 D1 `task-manager-prod`、`env.production`
+- `getDb()`: Cloudflare コンテキストでは D1、ローカルは SQLite（better-sqlite3）
+- Production migrations 適用済み（`pnpm db:migrate:prod`）
+- Secrets: `AUTH_SECRET` / `AUTH_URL` / `NEXT_PUBLIC_APP_URL`
+- Live: `https://task-manager.iq87io25.workers.dev`
+- Workers 向け workaround: `NEXT_PRIVATE_MINIMAL_MODE=1`（middleware-manifest dynamic require 回避。認可は `app/(app)/layout.tsx` の `auth()` で担保）
+- Windows OpenNext ビルド用: `scripts/patch-opennext.mjs`（junction + sharp shim）
+- CD: `.github/workflows/deploy.yml`（`workflow_dispatch`）
+
+## Follow-ups
+
+- カスタムドメインの接続（任意）
+- GitHub Environment `production` に `CLOUDFLARE_API_TOKEN` / `APP_URL` を設定して Actions デプロイを有効化
+- OpenNext が middleware-manifest を正式サポートしたら `NEXT_PRIVATE_MINIMAL_MODE` を外し middleware を再有効化
+- R2 incremental cache（任意）
