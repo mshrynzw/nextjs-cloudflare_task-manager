@@ -1,30 +1,38 @@
 import { describe, expect, it } from "vitest";
-import { z } from "zod";
+import {
+  createProjectBodySchema,
+  createTaskBodySchema,
+  listProjectsQuerySchema,
+} from "@/lib/api/request-schemas";
 
 /**
- * Integration-style smoke test for the validation boundary used by APIs.
- * Phase 4 will expand this directory with Route Handler / service tests.
+ * Smoke coverage for the shared API validation boundary.
  */
-const createProjectInputSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  description: z.string().trim().max(500).optional(),
-});
-
-describe("API validation boundary smoke", () => {
-  it("accepts a valid project payload shape", () => {
-    const result = createProjectInputSchema.parse({
+describe("API validation boundary", () => {
+  it("accepts a valid project payload", () => {
+    const result = createProjectBodySchema.parse({
       name: "Website Redesign",
       description: "Portfolio landing page refresh",
     });
-
     expect(result.name).toBe("Website Redesign");
   });
 
   it("rejects an empty project name", () => {
-    expect(() =>
-      createProjectInputSchema.parse({
-        name: "   ",
-      }),
-    ).toThrow();
+    expect(() => createProjectBodySchema.parse({ name: "   " })).toThrow();
+  });
+
+  it("accepts task creation payloads used by the board", () => {
+    const result = createTaskBodySchema.parse({
+      title: "Design login",
+      status: "todo",
+      priority: "high",
+    });
+    expect(result.title).toBe("Design login");
+  });
+
+  it("clamps project list pagination through schema defaults", () => {
+    const result = listProjectsQuerySchema.parse({});
+    expect(result.page).toBe(1);
+    expect(result.limit).toBe(20);
   });
 });

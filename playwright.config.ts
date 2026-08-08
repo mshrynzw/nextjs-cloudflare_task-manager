@@ -1,14 +1,21 @@
+import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
+import {
+  DEMO_USER_EMAIL,
+  DEMO_USER_PASSWORD,
+} from "./lib/db/seed";
 
-const PORT = 3000;
+const PORT = 3100;
 const baseURL = `http://127.0.0.1:${PORT}`;
+const e2eDbPath = path.join(process.cwd(), ".data", "e2e.sqlite");
+const e2eDistDir = ".next-e2e";
 
 export default defineConfig({
   testDir: "tests/e2e",
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: "list",
   use: {
     baseURL,
@@ -21,15 +28,22 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm dev",
+    // Use production server + separate distDir so local `pnpm dev` can keep running.
+    command: `pnpm exec tsx scripts/seed-e2e.ts && pnpm exec next build && pnpm exec next start --port ${PORT}`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    reuseExistingServer: false,
+    timeout: 300_000,
     env: {
       ...process.env,
+      SQLITE_DB_PATH: e2eDbPath,
+      NEXT_DIST_DIR: e2eDistDir,
       AUTH_SECRET:
         process.env.AUTH_SECRET ?? "playwright-dev-secret-at-least-32-chars!!",
-      AUTH_EMAIL_ENABLED: process.env.AUTH_EMAIL_ENABLED ?? "true",
+      AUTH_EMAIL_ENABLED: "true",
+      AUTH_URL: baseURL,
+      NEXT_PUBLIC_APP_URL: baseURL,
+      E2E_USER_EMAIL: DEMO_USER_EMAIL,
+      E2E_USER_PASSWORD: DEMO_USER_PASSWORD,
     },
   },
 });

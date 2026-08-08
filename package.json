@@ -21,7 +21,8 @@
     "db:studio": "drizzle-kit studio",
     "db:migrate:local": "wrangler d1 migrations apply task-manager-dev --local",
     "db:migrate:remote": "wrangler d1 migrations apply task-manager-dev --remote",
-    "db:seed:local": "tsx scripts/seed-local.ts"
+    "db:seed:local": "tsx scripts/seed-local.ts",
+    "db:seed:e2e": "tsx scripts/seed-e2e.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

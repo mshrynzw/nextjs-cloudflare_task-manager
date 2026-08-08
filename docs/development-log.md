@@ -1667,3 +1667,32 @@ Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip
 ## Follow-ups
 
 - Phase 11 Testing（Unit / Integration / E2E の拡充）
+
+---
+
+# Phase 11 — Testing
+
+## Date
+
+2026-08-08
+
+## Summary
+
+Unit / Integration / E2E を拡充し、主要フローの回帰テスト基盤を整えた。
+
+## Details
+
+- Unit: request schemas, HTTP error mapping, roles/ids
+- Integration: outsider authorization, task move + comment
+- E2E: demo DB seed（`.data/e2e.sqlite`）+ login journey / logout / invalid credentials
+- `pnpm db:seed:e2e` と Playwright `webServer` 連携
+- E2E は `NEXT_DIST_DIR=.next-e2e` + `next build` / `next start`（port 3100）で、ローカル `pnpm dev` と共存可能
+- `AUTH_URL` / `NEXT_PUBLIC_APP_URL` を E2E baseURL に上書き
+
+## Notes
+
+- Create Project / Create Task / DnD の UI E2E は対話 UI が重いため、サービス層 Integration で代替。必要なら後続で追加。
+
+## Follow-ups
+
+- Phase 12 Security

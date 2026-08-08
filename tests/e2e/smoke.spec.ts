@@ -9,5 +9,16 @@ test.describe("login page smoke", () => {
         name: /sign in/i,
       }),
     ).toBeVisible();
+
+    await expect(page.getByLabel("Email").first()).toBeVisible();
+    await expect(page.getByLabel("Password").first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+  });
+
+  test("redirects unauthenticated users from dashboard to login", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+    await expect(page).toHaveURL(/\/login/);
   });
 });

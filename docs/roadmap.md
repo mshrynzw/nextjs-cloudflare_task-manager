@@ -770,7 +770,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -782,11 +782,11 @@ Analyticsは初期段階では既存データから算出する。
 
 対象
 
-- [ ] Utility
-- [ ] Validation
-- [ ] Service
-- [ ] Repository
-- [ ] Business Logic
+- [x] Utility（`cn`, ids, appearance, error messages, date helpers）
+- [x] Validation（request schemas / pagination）
+- [x] Service（既存 + 認可境界・task workflow は Integration）
+- [x] Repository（DB integration 経由）
+- [x] Business Logic（progress, board grouping, roles）
 
 ---
 
@@ -794,12 +794,12 @@ Analyticsは初期段階では既存データから算出する。
 
 対象
 
-- [ ] API
-- [ ] Database
-- [ ] Authentication
-- [ ] Authorization
-- [ ] Project
-- [ ] Task
+- [x] API validation boundary
+- [x] Database（migrate + in-memory SQLite）
+- [x] Authentication helpers / membership
+- [x] Authorization（outsider FORBIDDEN）
+- [x] Project（create / list / archive）
+- [x] Task（create / move / comment）
 
 ---
 
@@ -812,18 +812,24 @@ Login
  ↓
 Dashboard
  ↓
-Create Project
+Create Project  （UI 導線は Projects / Board。作成ダイアログは手動確認可）
  ↓
 Create Task
  ↓
-Move Task
+Move Task       （Integration で status/position を検証）
  ↓
 Task Detail
  ↓
-Complete Task
+Complete Task   （Integration）
  ↓
 Logout
 ```
+
+実装済み E2E:
+
+- Login smoke + unauthenticated redirect
+- Invalid credentials
+- Login → Dashboard → Projects → Project → Board → Task Detail → Logout（demo seed）
 
 ---
 
@@ -843,6 +849,15 @@ tests/
 ├── integration/
 └── e2e/
 ```
+
+E2E 用 DB:
+
+```text
+pnpm db:seed:e2e
+SQLITE_DB_PATH=.data/e2e.sqlite
+```
+
+`pnpm test:e2e` は seed 後に dev server を起動する。
 
 ---
 
