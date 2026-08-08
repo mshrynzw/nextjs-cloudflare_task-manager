@@ -25,7 +25,7 @@ const initialState: ProjectActionState = { status: "idle" };
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" loading={pending}>
       {pending ? "Creating…" : "Create project"}
     </Button>
   );

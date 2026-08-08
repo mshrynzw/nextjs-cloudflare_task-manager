@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { AppHeader } from "@/components/layout/app-header";
+import { SearchEmptyState } from "@/components/feedback/search-empty-state";
 import { StaggerItem } from "@/components/feedback/stagger-item";
 import { CreateProjectDialog } from "@/features/project/components/create-project-dialog";
 import { ProjectCard } from "@/features/project/components/project-card";
@@ -67,14 +68,11 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
 
         {result.data.length === 0 ? (
           query.search || query.status || query.priority ? (
-            <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 px-6 py-16 text-center">
-              <h2 className="text-lg font-medium text-zinc-100">
-                No matching projects
-              </h2>
-              <p className="mt-2 text-sm text-zinc-500">
-                Try clearing search or filters.
-              </p>
-            </div>
+            <SearchEmptyState
+              title="No matching projects"
+              description="Try clearing search or filters."
+              clearHref="/projects"
+            />
           ) : (
             <ProjectEmptyState />
           )

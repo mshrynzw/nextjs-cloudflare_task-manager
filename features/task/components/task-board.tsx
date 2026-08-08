@@ -38,8 +38,9 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { HelpCircle } from "lucide-react";
-interface TaskBoardProps {
+import { SearchEmptyState } from "@/components/feedback/search-empty-state";
+import { EmptyState } from "@/components/feedback/empty-state";
+import { HelpCircle, ListTodo } from "lucide-react";interface TaskBoardProps {
   projectId: string;
   initialTasks: BoardTask[];
   members: BoardMember[];
@@ -142,6 +143,20 @@ export function TaskBoard({
     return null;
   }, [activeId, board]);
 
+  const filteredCount = useMemo(
+    () =>
+      TASK_STATUSES.reduce(
+        (total, status) => total + filteredBoard[status].length,
+        0,
+      ),
+    [filteredBoard],
+  );
+  const totalCount = useMemo(
+    () =>
+      TASK_STATUSES.reduce((total, status) => total + board[status].length, 0),
+    [board],
+  );
+  const hasFilters = Boolean(search.trim() || priority);
   const persistMove = useCallback(
     (
       previous: Record<TaskStatus, BoardTask[]>,
@@ -356,18 +371,35 @@ export function TaskBoard({
         </p>
       ) : null}
 
-      <BoardColumnTabs
-        activeStatus={mobileStatus}
-        counts={{
-          backlog: filteredBoard.backlog.length,
-          todo: filteredBoard.todo.length,
-          in_progress: filteredBoard.in_progress.length,
-          review: filteredBoard.review.length,
-          done: filteredBoard.done.length,
-        }}
-        onSelect={setMobileStatus}
-      />
+      {totalCount > 0 ? (
+        <BoardColumnTabs
+          activeStatus={mobileStatus}
+          counts={{
+            backlog: filteredBoard.backlog.length,
+            todo: filteredBoard.todo.length,
+            in_progress: filteredBoard.in_progress.length,
+            review: filteredBoard.review.length,
+            done: filteredBoard.done.length,
+          }}
+          onSelect={setMobileStatus}
+        />
+      ) : null}
+      {totalCount === 0 ? (
+        <EmptyState
+          title="No tasks yet"
+          description="Use New Task above to create your first card."
+          icon={<ListTodo className="size-6" aria-hidden />}
+        />
+      ) : null}
 
+      {totalCount > 0 && filteredCount === 0 && hasFilters ? (
+        <SearchEmptyState
+          title="No matching tasks"
+          description="Try a different search or priority filter."
+        />
+      ) : null}
+
+      {totalCount > 0 && !(filteredCount === 0 && hasFilters) ? (
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -408,6 +440,7 @@ export function TaskBoard({
           ) : null}
         </DragOverlay>
       </DndContext>
+      ) : null}
 
       <CreateTaskDialog
         projectId={projectId}

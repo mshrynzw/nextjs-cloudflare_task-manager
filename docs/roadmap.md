@@ -716,7 +716,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -726,39 +726,39 @@ Analyticsは初期段階では既存データから算出する。
 
 ## Loading
 
-- [ ] Page Skeleton
-- [ ] Card Skeleton
-- [ ] Table Skeleton
-- [ ] Task Skeleton
-- [ ] Button Loading
+- [x] Page Skeleton
+- [x] Card Skeleton
+- [x] Table Skeleton
+- [x] Task Skeleton / Board Skeleton
+- [x] Button Loading（`loading` prop）
 
 ---
 
 ## Empty
 
-- [ ] Empty Project
-- [ ] Empty Task
-- [ ] Empty Notification
-- [ ] Empty Activity
-- [ ] Empty Search Result
+- [x] Empty Project
+- [x] Empty Task
+- [x] Empty Notification
+- [x] Empty Activity
+- [x] Empty Search Result
 
 ---
 
 ## Error
 
-- [ ] API Error
-- [ ] Database Error
-- [ ] Authentication Error
-- [ ] Permission Error
-- [ ] Network Error
+- [x] API Error（`getUserFacingError` + ErrorState）
+- [x] Database / Internal Error
+- [x] Authentication Error
+- [x] Permission Error（UI 文言。存在秘匿のためページは not-found へ）
+- [x] Network Error
 
 ---
 
 ## Recovery
 
-- [ ] Retry
-- [ ] Refresh
-- [ ] Back Navigation
+- [x] Retry（`error.tsx` reset）
+- [x] Refresh / Try again
+- [x] Back Navigation
 
 ---
 

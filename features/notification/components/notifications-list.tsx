@@ -2,6 +2,8 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { Bell } from "lucide-react";
+import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
 import {
   markAllNotificationsReadAction,
@@ -30,12 +32,11 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
 
   if (notifications.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 px-6 py-16 text-center">
-        <h2 className="text-lg font-medium text-zinc-100">No notifications</h2>
-        <p className="mt-2 text-sm text-zinc-500">
-          You&apos;re all caught up.
-        </p>
-      </div>
+      <EmptyState
+        title="No notifications"
+        description="You're all caught up. New activity will show up here."
+        icon={<Bell className="size-6" aria-hidden />}
+      />
     );
   }
 
@@ -46,7 +47,7 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
           type="button"
           variant="outline"
           size="sm"
-          disabled={isPending}
+          loading={isPending}
           onClick={() => {
             startTransition(async () => {
               await markAllNotificationsReadAction();
@@ -66,14 +67,14 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
               key={item.id}
               className={cn(
                 "flex items-start justify-between gap-3 px-4 py-4",
-                unread && "bg-violet-500/5",
+                unread && "bg-[color:var(--accent-soft)]",
               )}
             >
               <div className="min-w-0">
                 <p className="text-sm font-medium text-zinc-100">
                   {item.title}
                   {unread ? (
-                    <span className="ml-2 inline-block size-1.5 rounded-full bg-violet-400 align-middle" />
+                    <span className="ml-2 inline-block size-1.5 rounded-full bg-[color:var(--accent-1)] align-middle" />
                   ) : null}
                 </p>
                 {item.body ? (
@@ -89,7 +90,7 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  disabled={isPending}
+                  loading={isPending}
                   onClick={() => {
                     startTransition(async () => {
                       await markNotificationReadAction(item.id);

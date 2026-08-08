@@ -10,6 +10,9 @@ import {
 } from "@/features/project/components/project-badges";
 import { ProjectActionsMenu } from "@/features/project/components/project-actions-menu";
 import { ProgressBar } from "@/features/project/components/progress-bar";
+import { TaskEmptyState } from "@/features/task/components/task-empty-state";
+import { EmptyState } from "@/components/feedback/empty-state";
+import { Activity } from "lucide-react";
 import {
   formatProjectDeadline,
   getInitials,
@@ -168,16 +171,7 @@ export default async function ProjectDetailPage({
               </span>
             </div>
             {recentTasks.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-zinc-800 px-4 py-8 text-center text-sm text-zinc-500">
-                No tasks yet.{" "}
-                <Link
-                  href={`/projects/${project.id}/board`}
-                  className="text-violet-300 hover:underline"
-                >
-                  Open the board
-                </Link>{" "}
-                to create one.
-              </p>
+              <TaskEmptyState projectId={project.id} size="compact" />
             ) : (
               <ul className="divide-y divide-zinc-800/80">
                 {recentTasks.map((task) => (
@@ -237,10 +231,14 @@ export default async function ProjectDetailPage({
         </section>
 
         <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-          <h3 className="text-sm font-medium text-zinc-200">Activity</h3>
-          <p className="mt-3 rounded-xl border border-dashed border-zinc-800 px-4 py-8 text-center text-sm text-zinc-500">
-            Activity timeline will appear when task events are available.
-          </p>
+          <h3 className="mb-3 text-sm font-medium text-zinc-200">Activity</h3>
+          <EmptyState
+            size="compact"
+            className="border-0 bg-transparent px-0 py-8"
+            title="No activity yet"
+            description="Task events will appear here as your team works."
+            icon={<Activity className="size-5" aria-hidden />}
+          />
         </section>
       </main>
     </>

@@ -37,6 +37,9 @@ export function validationError(
   return new ApiError("VALIDATION_ERROR", message, 422, details);
 }
 
-export function conflict(message = "Conflict"): ApiError {
-  return new ApiError("CONFLICT", message, 409);
+export function internalError(
+  message = "Internal server error.",
+): ApiError {
+  return new ApiError("INTERNAL_ERROR", message, 500);
 }
+

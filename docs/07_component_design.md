@@ -317,7 +317,7 @@ features/**/components
 - Badge（`components/ui/badge.tsx`）
 - Avatar（`components/ui/avatar.tsx`）
 - ProgressBar（feature: project）
-- Skeleton / EmptyState / StaggerItem（`components/feedback/`）
+- Skeleton / EmptyState / StaggerItem / ErrorState / SearchEmptyState（`components/feedback/`）
 - Toast（`components/feedback/toast.tsx`）
 - Tooltip（`components/ui/tooltip.tsx` — Base UI）
 - Popover（`components/ui/popover.tsx` — Base UI）

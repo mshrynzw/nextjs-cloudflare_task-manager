@@ -1642,3 +1642,28 @@ Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip
 ## Follow-ups
 
 - Phase 10 Loading / Error / Empty の全面統一
+
+---
+
+# Phase 10 — Loading / Error / Empty States
+
+## Date
+
+2026-08-08
+
+## Summary
+
+主要画面の Loading / Empty / Error / Recovery を共有コンポーネントと route 境界で統一した。
+
+## Details
+
+- `EmptyState` / `ErrorState` / `SearchEmptyState` / 各種 Skeleton
+- `app/(app)/error.tsx` · `not-found.tsx` · `app/global-error.tsx`
+- Board / Project / Profile の `loading.tsx`
+- `getUserFacingError` で API / Network / 汎用エラーをユーザー向け文言に変換
+- Button `loading` prop
+- FORBIDDEN は引き続き `notFound()`（存在秘匿）。ErrorState は境界エラー・メッセージ表示用
+
+## Follow-ups
+
+- Phase 11 Testing（Unit / Integration / E2E の拡充）
