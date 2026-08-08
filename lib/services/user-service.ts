@@ -38,6 +38,8 @@ export async function getUserPublicProfile(
     throw notFound("User not found");
   }
 
+  const isSelf = actorUserId === userId;
+
   return {
     id: user.id,
     name: user.name,
@@ -46,9 +48,10 @@ export async function getUserPublicProfile(
     jobTitle: user.jobTitle,
     bio: user.bio,
     website: user.website,
-    role: user.role,
-    email: actorUserId === userId ? user.email : undefined,
-    hasPassword: Boolean(user.passwordHash),
+    // Keep privileged / auth-sensitive fields self-only.
+    role: isSelf ? user.role : undefined,
+    email: isSelf ? user.email : undefined,
+    hasPassword: isSelf ? Boolean(user.passwordHash) : undefined,
   };
 }
 

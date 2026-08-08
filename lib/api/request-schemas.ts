@@ -8,6 +8,18 @@ import {
   taskStatusSchema,
 } from "@/lib/api/schemas";
 
+const hexColorSchema = z
+  .string()
+  .regex(/^#[0-9A-Fa-f]{6}$/, "Color must be a hex value like #4f7cff");
+
+const httpUrlSchema = z
+  .string()
+  .url()
+  .refine(
+    (value) => value.startsWith("http://") || value.startsWith("https://"),
+    "URL must use http or https",
+  );
+
 export const listProjectsQuerySchema = paginationSchema.extend({
   search: z.string().max(200).optional(),
   status: projectStatusSchema.optional(),
@@ -22,7 +34,7 @@ export const createProjectBodySchema = z.object({
   description: z.string().trim().max(500).nullable().optional(),
   status: projectStatusSchema.default("planning"),
   priority: projectPrioritySchema.default("medium"),
-  color: z.string().min(1).max(32).default("#4f7cff"),
+  color: hexColorSchema.default("#4f7cff"),
   deadline: z.string().optional().nullable(),
 });
 
@@ -31,7 +43,7 @@ export const updateProjectBodySchema = z.object({
   description: z.string().trim().max(500).nullable().optional(),
   status: projectStatusSchema.optional(),
   priority: projectPrioritySchema.optional(),
-  color: z.string().min(1).max(32).optional(),
+  color: hexColorSchema.optional(),
   deadline: z.string().nullable().optional(),
 });
 
@@ -100,12 +112,12 @@ export const updateUserBodySchema = z.object({
   jobTitle: z.string().trim().max(100).nullable().optional(),
   bio: z.string().trim().max(1000).nullable().optional(),
   website: z
-    .union([z.string().url(), z.literal("")])
+    .union([httpUrlSchema, z.literal("")])
     .nullable()
     .optional()
     .transform((value) => (value === "" ? null : value)),
   image: z
-    .union([z.string().url(), z.literal("")])
+    .union([httpUrlSchema, z.literal("")])
     .nullable()
     .optional()
     .transform((value) => (value === "" ? null : value)),
@@ -117,9 +129,9 @@ export const changePasswordBodySchema = z.object({
 });
 
 export const updateSettingsBodySchema = z.object({
-  theme: z.string().optional(),
-  accentColor: z.string().optional(),
-  density: z.string().optional(),
+  theme: z.enum(["dark", "light", "system"]).optional(),
+  accentColor: z.enum(["violet", "blue", "emerald", "rose"]).optional(),
+  density: z.enum(["comfortable", "compact"]).optional(),
   animations: z.boolean().optional(),
   emailNotifications: z.boolean().optional(),
   inAppNotifications: z.boolean().optional(),

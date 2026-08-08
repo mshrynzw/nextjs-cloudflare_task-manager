@@ -4,7 +4,9 @@ import {
   createProjectBodySchema,
   createTaskBodySchema,
   listProjectsQuerySchema,
+  updateSettingsBodySchema,
   updateTaskPositionBodySchema,
+  updateUserBodySchema,
 } from "@/lib/api/request-schemas";
 
 describe("createProjectBodySchema", () => {
@@ -79,5 +81,38 @@ describe("changePasswordBodySchema", () => {
       newPassword: "NewPass34",
     });
     expect(parsed.newPassword).toBe("NewPass34");
+  });
+});
+
+describe("createProjectBodySchema color", () => {
+  it("rejects non-hex colors", () => {
+    expect(() =>
+      createProjectBodySchema.parse({ name: "A", color: "red" }),
+    ).toThrow();
+  });
+});
+
+describe("updateSettingsBodySchema", () => {
+  it("accepts known appearance enums", () => {
+    const parsed = updateSettingsBodySchema.parse({
+      theme: "dark",
+      accentColor: "violet",
+      density: "compact",
+    });
+    expect(parsed.theme).toBe("dark");
+  });
+
+  it("rejects unknown theme values", () => {
+    expect(() =>
+      updateSettingsBodySchema.parse({ theme: "neon" }),
+    ).toThrow();
+  });
+});
+
+describe("updateUserBodySchema", () => {
+  it("rejects non-http websites", () => {
+    expect(() =>
+      updateUserBodySchema.parse({ website: "javascript:alert(1)" }),
+    ).toThrow();
   });
 });

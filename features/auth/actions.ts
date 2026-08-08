@@ -11,11 +11,25 @@ import {
 import { createId, nowUnix } from "@/lib/db/id";
 import { userSettings, users } from "@/lib/db/schema";
 import { getDb } from "@/lib/db/server";
+import { getClientIp } from "@/lib/security/client-ip";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
 };
+
+const LOGIN_LIMIT = 10;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const REGISTER_LIMIT = 5;
+const REGISTER_WINDOW_MS = 60 * 60 * 1000;
+
+function rateLimited(retryAfterSeconds: number): AuthActionState {
+  return {
+    status: "error",
+    message: `Too many attempts. Try again in ${retryAfterSeconds} seconds.`,
+  };
+}
 
 export async function signInWithCredentials(
   _prev: AuthActionState,
@@ -40,9 +54,20 @@ export async function signInWithCredentials(
     };
   }
 
+  const ip = await getClientIp();
+  const emailKey = parsed.data.email.toLowerCase();
+  const limit = checkRateLimit(
+    `auth:login:${ip}:${emailKey}`,
+    LOGIN_LIMIT,
+    LOGIN_WINDOW_MS,
+  );
+  if (!limit.allowed) {
+    return rateLimited(limit.retryAfterSeconds);
+  }
+
   try {
     await signIn("credentials", {
-      email: parsed.data.email.toLowerCase(),
+      email: emailKey,
       password: parsed.data.password,
       redirectTo: "/dashboard",
     });
@@ -82,6 +107,16 @@ export async function registerWithCredentials(
     };
   }
 
+  const ip = await getClientIp();
+  const registerLimit = checkRateLimit(
+    `auth:register:${ip}`,
+    REGISTER_LIMIT,
+    REGISTER_WINDOW_MS,
+  );
+  if (!registerLimit.allowed) {
+    return rateLimited(registerLimit.retryAfterSeconds);
+  }
+
   const email = parsed.data.email.toLowerCase();
   const db = getDb();
   const existing = await db
@@ -91,9 +126,11 @@ export async function registerWithCredentials(
     .get();
 
   if (existing) {
+    // Avoid confirming that an account already exists.
     return {
       status: "error",
-      message: "An account with this email already exists.",
+      message:
+        "Unable to register with this email. Try signing in or use a different email.",
     };
   }
 

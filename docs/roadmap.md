@@ -869,7 +869,7 @@ Productionで安全に運用できる状態にする。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -877,17 +877,27 @@ Productionで安全に運用できる状態にする。
 
 ## Tasks
 
-- [ ] Authentication review
-- [ ] Authorization review
-- [ ] Input validation
-- [ ] XSS protection
-- [ ] SQL injection protection
-- [ ] CSRF protection
-- [ ] Rate limiting
-- [ ] Secure headers
-- [ ] Session security
-- [ ] Secret management
-- [ ] Environment variable review
+- [x] Authentication review
+- [x] Authorization review
+- [x] Input validation
+- [x] XSS protection
+- [x] SQL injection protection
+- [x] CSRF protection
+- [x] Rate limiting
+- [x] Secure headers
+- [x] Session security
+- [x] Secret management
+- [x] Environment variable review
+
+## Notes
+
+- Secure headers via `next.config.ts`（CSP / XFO / nosniff / Referrer-Policy / Permissions-Policy / HSTS in production）
+- Auth mutation rate limiting（login / register / password change）— in-memory（single process）
+- Cookie attributes explicit（HttpOnly / SameSite=Lax / Secure in production）
+- Same-origin check for cookie-authenticated API mutations
+- `parseAuthEnv` 起動時検証。GitHub は任意（Email-only / Google-only 可）
+- Public profile から他ユーザー向けに `hasPassword` / `email` / `role` を秘匿
+- Appearance / color / URL スキーマを厳格化
 
 ---
 

@@ -955,6 +955,9 @@ Phase 3 の認証実装順は次とする。
 3. Email + Password
 ```
 
+本番・ローカルともに **少なくとも1つの認証方式** が有効であること。
+GitHub は必須ではない（Email-only / Google-only も可）。
+
 GitHubを最初に有効化し、Google / Emailは後続で追加する。
 
 必要な主な変数:

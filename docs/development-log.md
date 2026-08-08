@@ -1696,3 +1696,36 @@ Unit / Integration / E2E を拡充し、主要フローの回帰テスト基盤�
 ## Follow-ups
 
 - Phase 12 Security
+
+---
+
+# Phase 12 — Security
+
+## Date
+
+2026-08-08
+
+## Summary
+
+Portfolio release 前のセキュリティ硬化として、ヘッダー・セッション・レート制限・Origin 検証・入力厳格化・秘密情報の起動時検証を実施した。
+
+## Details
+
+- `next.config.ts` に Secure Headers（CSP / X-Frame-Options / nosniff / Referrer-Policy / Permissions-Policy / HSTS）
+- Auth.js cookie 属性を明示（HttpOnly / SameSite=Lax / Secure in production）
+- `parseAuthEnv()` を `auth.ts` 起動時に実行。GitHub を任意化し Email-only を正式サポート
+- Login / Register / Password change に in-memory rate limit
+- `withApiAuth` で mutation の same-origin / allowlisted Origin を検証
+- Public profile の `hasPassword` / `email` / `role` を自己以外に非公開
+- Project color hex / Appearance enums / http(s) URL を Zod で厳格化
+- Register の既存メールメッセージを曖昧化し、authorize に dummy bcrypt 比較を追加
+
+## Notes
+
+- Rate limit は単一プロセス向け。Workers 水平展開時は Durable Object / KV へ置換予定
+- CSP は Next.js App Router 都合で `unsafe-inline` / `unsafe-eval` を暫定許可。nonce 化は後続
+
+## Follow-ups
+
+- Phase 13 Performance
+- CSP nonce / Workers 向け分散 rate limit

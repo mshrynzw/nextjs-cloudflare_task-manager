@@ -16,11 +16,19 @@ import {
   verificationTokens,
 } from "@/lib/db/schema";
 import { getDb } from "@/lib/db/server";
+import { parseAuthEnv } from "@/lib/env/schema";
+
+// Fail fast when required auth environment is missing or incomplete.
+parseAuthEnv(process.env);
 
 const credentialsSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(8).max(128),
 });
+
+/** Dummy hash used to keep password-check timing closer when the user is missing. */
+const DUMMY_PASSWORD_HASH =
+  "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.G2oQ.YHqKzqK2u";
 
 export function isEmailAuthEnabled(): boolean {
   return process.env.AUTH_EMAIL_ENABLED === "true";
@@ -69,15 +77,10 @@ function buildProviders() {
             .where(eq(users.email, parsed.data.email.toLowerCase()))
             .get();
 
-          if (!user?.passwordHash) {
-            return null;
-          }
+          const passwordHash = user?.passwordHash ?? DUMMY_PASSWORD_HASH;
+          const isValid = await compare(parsed.data.password, passwordHash);
 
-          const isValid = await compare(
-            parsed.data.password,
-            user.passwordHash,
-          );
-          if (!isValid) {
+          if (!user?.passwordHash || !isValid) {
             return null;
           }
 

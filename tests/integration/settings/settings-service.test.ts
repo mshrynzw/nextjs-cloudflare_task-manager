@@ -81,4 +81,23 @@ describe("settings and profile services", () => {
       }),
     ).rejects.toThrow(/incorrect/i);
   });
+
+  it("hides auth-sensitive fields from other viewers", async () => {
+    const { db, userId } = await seedUser();
+    const otherId = createId("user");
+    const timestamp = nowUnix();
+    await db.insert(users).values({
+      id: otherId,
+      email: "other@example.com",
+      name: "Other",
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+
+    const profile = await getUserPublicProfile(db, otherId, userId);
+    expect(profile.hasPassword).toBeUndefined();
+    expect(profile.email).toBeUndefined();
+    expect(profile.role).toBeUndefined();
+    expect(profile.name).toBe("Settings User");
+  });
 });

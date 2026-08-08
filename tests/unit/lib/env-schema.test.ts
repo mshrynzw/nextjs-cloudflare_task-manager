@@ -20,25 +20,52 @@ describe("parsePublicEnv", () => {
 });
 
 describe("parseAuthEnv", () => {
-  const validGitHubEnv = {
+  const base = {
     AUTH_SECRET: "a".repeat(32),
     AUTH_URL: "http://localhost:3000",
-    AUTH_GITHUB_ID: "github-client-id",
-    AUTH_GITHUB_SECRET: "github-client-secret",
   };
 
-  it("accepts GitHub-only configuration for the first auth rollout", () => {
-    const result = parseAuthEnv(validGitHubEnv);
+  it("accepts GitHub-only configuration", () => {
+    const result = parseAuthEnv({
+      ...base,
+      AUTH_GITHUB_ID: "github-client-id",
+      AUTH_GITHUB_SECRET: "github-client-secret",
+    });
 
     expect(result.AUTH_GITHUB_ID).toBe("github-client-id");
     expect(result.AUTH_EMAIL_ENABLED).toBe("false");
     expect(result.AUTH_GOOGLE_ID).toBeUndefined();
   });
 
+  it("accepts email-only configuration without GitHub", () => {
+    const result = parseAuthEnv({
+      ...base,
+      AUTH_EMAIL_ENABLED: "true",
+    });
+
+    expect(result.AUTH_EMAIL_ENABLED).toBe("true");
+    expect(result.AUTH_GITHUB_ID).toBeUndefined();
+  });
+
+  it("rejects when no auth method is configured", () => {
+    expect(() => parseAuthEnv(base)).toThrow();
+  });
+
+  it("requires both GitHub ID and secret when either is present", () => {
+    expect(() =>
+      parseAuthEnv({
+        ...base,
+        AUTH_EMAIL_ENABLED: "true",
+        AUTH_GITHUB_ID: "github-client-id",
+      }),
+    ).toThrow();
+  });
+
   it("requires both Google ID and secret when either is present", () => {
     expect(() =>
       parseAuthEnv({
-        ...validGitHubEnv,
+        ...base,
+        AUTH_EMAIL_ENABLED: "true",
         AUTH_GOOGLE_ID: "google-client-id",
       }),
     ).toThrow();
@@ -46,7 +73,7 @@ describe("parseAuthEnv", () => {
 
   it("accepts Google credentials when both values are provided", () => {
     const result = parseAuthEnv({
-      ...validGitHubEnv,
+      ...base,
       AUTH_GOOGLE_ID: "google-client-id",
       AUTH_GOOGLE_SECRET: "google-client-secret",
       AUTH_EMAIL_ENABLED: "true",

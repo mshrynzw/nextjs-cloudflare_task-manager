@@ -11,6 +11,8 @@ const protectedPrefixes = [
   "/profile",
 ];
 
+const isProd = process.env.NODE_ENV === "production";
+
 /**
  * Edge-compatible Auth.js config used by middleware.
  * Database adapter and Credentials live in auth.ts (Node runtime).
@@ -25,6 +27,19 @@ export const authConfig = {
     signIn: "/login",
   },
   trustHost: true,
+  cookies: {
+    sessionToken: {
+      name: isProd
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: isProd,
+      },
+    },
+  },
   callbacks: {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;

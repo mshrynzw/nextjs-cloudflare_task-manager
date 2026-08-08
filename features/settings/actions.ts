@@ -9,11 +9,15 @@ import {
   updateUserBodySchema,
 } from "@/lib/api/request-schemas";
 import { getDb } from "@/lib/db/server";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 import {
   changeUserPassword,
   patchSettings,
   updateCurrentUserProfile,
 } from "@/lib/services/user-service";
+
+const PASSWORD_CHANGE_LIMIT = 5;
+const PASSWORD_CHANGE_WINDOW_MS = 15 * 60 * 1000;
 
 export type SettingsActionState = {
   status: "idle" | "error" | "success";
@@ -140,6 +144,18 @@ export async function changePasswordAction(
   const userId = session?.user?.id;
   if (!userId) {
     return unauthorized();
+  }
+
+  const rate = checkRateLimit(
+    `auth:password:${userId}`,
+    PASSWORD_CHANGE_LIMIT,
+    PASSWORD_CHANGE_WINDOW_MS,
+  );
+  if (!rate.allowed) {
+    return {
+      status: "error",
+      message: `Too many attempts. Try again in ${rate.retryAfterSeconds} seconds.`,
+    };
   }
 
   const parsed = changePasswordBodySchema.safeParse({

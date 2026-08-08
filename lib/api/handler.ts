@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { toErrorResponse } from "@/lib/api/http";
 import { requireSessionUser } from "@/lib/auth/authorization";
 import { unauthorized } from "@/lib/api/errors";
+import { assertSameOriginMutation } from "@/lib/security/origin";
 
 type RouteContext = {
   params: Promise<Record<string, string>>;
@@ -18,6 +19,7 @@ type AuthenticatedHandler = (
 export function withApiAuth(handler: AuthenticatedHandler) {
   return async (request: NextRequest, context: RouteContext) => {
     try {
+      assertSameOriginMutation(request);
       const user = await requireSessionUser();
       if (!user.userId) {
         throw unauthorized();
