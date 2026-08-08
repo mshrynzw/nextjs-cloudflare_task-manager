@@ -285,6 +285,22 @@ Authorization
 What are you allowed to do?
 ```
 
+### Provider Rollout Order
+
+Phase 3 では次の順で有効化する。
+
+```text
+1. GitHub OAuth
+2. Google OAuth
+3. Email + Password
+```
+
+理由:
+
+- GitHubはポートフォリオ / 開発者デモに適し、SMTP不要で最速に導入できる
+- Googleは一般ユーザー向けの第2プロバイダとして追加する
+- Email + PasswordはLogin画面設計に合わせて最後に追加する（Forgot Password等は必要に応じて後続）
+
 ---
 
 # 16. Workspace Architecture
@@ -844,6 +860,35 @@ Frontend / Backend / Database / Authentication / Testingを含む総合的なWeb
 
 ### Change
 
+Phase 1（Development Environment）を完了した。
+
+### Reason
+
+実装フェーズに入る前に、開発ルール・環境変数戦略・テスト基盤・Git運用を固定するため。
+
+### Decision
+
+- AGENTS.md / Cursor Rules / VS Code settings を開発標準とする
+- テストは `tests/{unit,integration,e2e}` + Vitest / Playwright
+- 環境変数は `.env.example` + `lib/env/schema.ts` で管理する
+- Auth 実装順は GitHub → Google → Email
+- Git は Conventional Commits + feature branch（`.cursor/rules/git.mdc`）
+
+### Impact
+
+Phase 2（D1 / Drizzle）以降の実装を、同じ検証コマンドとドキュメント方針で進められる。
+
+### Follow-up
+
+- Phase 2: Cloudflare D1 作成と Drizzle セットアップ
+- Phase 3: Auth.js（GitHub から）
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1238,6 +1283,7 @@ Database Design    ✓
 UI Guideline       ✓
 Component Design   ✓
 Development Log    ✓
+Phase 1 Env        ✓
 ```
 
 ## Planned
@@ -1248,10 +1294,10 @@ Drizzle Setup
 Database Schema
 Migration
 Seed
-Authentication
+Authentication (GitHub → Google → Email)
 API Implementation
 Frontend Implementation
-Testing
+Testing (feature-level)
 CI/CD
 Deployment
 ```
