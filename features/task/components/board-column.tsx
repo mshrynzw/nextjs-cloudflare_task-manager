@@ -39,8 +39,8 @@ export function BoardColumn({
   return (
     <section
       className={cn(
-        "flex w-72 shrink-0 flex-col rounded-2xl border border-zinc-800/80 bg-zinc-900/40",
-        isOver && "border-violet-500/40 bg-violet-500/5",
+        "flex w-full flex-col rounded-2xl border border-zinc-800/80 bg-zinc-900/40 md:w-72 md:shrink-0",
+        isOver && "border-[color:var(--accent-ring)] bg-[color:var(--accent-soft)]",
       )}
     >
       <header className="flex items-center justify-between gap-2 border-b border-zinc-800/80 px-3 py-3">

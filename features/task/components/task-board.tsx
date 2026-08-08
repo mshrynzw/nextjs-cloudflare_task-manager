@@ -6,6 +6,7 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  TouchSensor,
   closestCorners,
   useSensor,
   useSensors,
@@ -15,6 +16,7 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "@/features/task/components/board-column";
+import { BoardColumnTabs } from "@/features/task/components/board-mobile-nav";
 import {
   CreateTaskButton,
   CreateTaskDialog,
@@ -29,7 +31,14 @@ import {
   type BoardTask,
   type TaskStatus,
 } from "@/features/task/types";
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { HelpCircle } from "lucide-react";
 interface TaskBoardProps {
   projectId: string;
   initialTasks: BoardTask[];
@@ -88,11 +97,15 @@ export function TaskBoard({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [createStatus, setCreateStatus] = useState<TaskStatus | null>(null);
+  const [mobileStatus, setMobileStatus] = useState<TaskStatus>("todo");
   const [isPending, startTransition] = useTransition();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 6 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 180, tolerance: 8 },
     }),
   );
 
@@ -309,9 +322,27 @@ export function TaskBoard({
   return (
     <div className={isPending ? "opacity-90" : undefined}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-zinc-500">
-          Drag cards between columns, or use the status menu on each card.
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-zinc-500">
+            Drag cards between columns, or use the status menu on each card.
+          </p>
+          <Popover>
+            <PopoverTrigger
+              className="inline-flex size-7 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200"
+              aria-label="Board tips"
+            >
+              <HelpCircle className="size-4" aria-hidden />
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-64">
+              <PopoverTitle>Board tips</PopoverTitle>
+              <PopoverDescription>
+                On mobile, switch columns with the tabs. Reorder within a column
+                by dragging after a short press. Status can always be changed
+                from the card menu.
+              </PopoverDescription>
+            </PopoverContent>
+          </Popover>
+        </div>
         <CreateTaskButton
           projectId={projectId}
           members={members}
@@ -325,6 +356,18 @@ export function TaskBoard({
         </p>
       ) : null}
 
+      <BoardColumnTabs
+        activeStatus={mobileStatus}
+        counts={{
+          backlog: filteredBoard.backlog.length,
+          todo: filteredBoard.todo.length,
+          in_progress: filteredBoard.in_progress.length,
+          review: filteredBoard.review.length,
+          done: filteredBoard.done.length,
+        }}
+        onSelect={setMobileStatus}
+      />
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -332,17 +375,26 @@ export function TaskBoard({
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-3 overflow-x-auto pb-4">
+        <div className="flex gap-3 overflow-x-auto pb-4 md:flex">
           {TASK_STATUSES.map((status) => (
-            <BoardColumn
+            <div
               key={status}
-              status={status}
-              tasks={filteredBoard[status]}
-              projectId={projectId}
-              members={members}
-              onStatusChange={handleStatusChange}
-              onAddTask={setCreateStatus}
-            />
+              className={
+                status === mobileStatus
+                  ? "w-full shrink-0 md:w-auto"
+                  : "hidden md:block"
+              }
+              data-column-status={status}
+            >
+              <BoardColumn
+                status={status}
+                tasks={filteredBoard[status]}
+                projectId={projectId}
+                members={members}
+                onStatusChange={handleStatusChange}
+                onAddTask={setCreateStatus}
+              />
+            </div>
           ))}
         </div>
         <DragOverlay>
@@ -360,7 +412,7 @@ export function TaskBoard({
       <CreateTaskDialog
         projectId={projectId}
         members={members}
-        defaultStatus={createStatus ?? "todo"}
+        defaultStatus={createStatus ?? mobileStatus}
         open={createStatus !== null}
         onOpenChange={(open) => {
           if (!open) {

@@ -3,9 +3,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TaskCard } from "@/features/task/components/task-card";
+import { TaskStatusMenu } from "@/features/task/components/task-status-menu";
 import {
-  TASK_STATUS_LABELS,
-  TASK_STATUSES,
   type BoardMember,
   type BoardTask,
   type TaskStatus,
@@ -51,22 +50,12 @@ export function SortableTaskCard({
         isDragging={isDragging}
         dragHandleProps={{ ...attributes, ...listeners }}
         statusSelect={
-          <label className="block">
-            <span className="sr-only">Change status for {task.title}</span>
-            <select
-              className="h-7 w-full rounded-md border border-zinc-800 bg-zinc-900 px-2 text-[11px] text-zinc-300 outline-none focus-visible:border-violet-500/50"
-              value={task.status}
-              onChange={(event) =>
-                onStatusChange(task.id, event.target.value as TaskStatus)
-              }
-            >
-              {TASK_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {TASK_STATUS_LABELS[status]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <TaskStatusMenu
+            taskId={task.id}
+            taskTitle={task.title}
+            status={task.status as TaskStatus}
+            onStatusChange={onStatusChange}
+          />
         }
       />
     </div>

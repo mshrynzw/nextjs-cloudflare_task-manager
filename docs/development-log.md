@@ -1576,3 +1576,69 @@ Security
 > 「設計から実装までちゃんと考えて作られている」
 
 と第三者から評価されるWeb Applicationを目指す。
+
+---
+
+# Phase 9 — UI / UX Polish（開始）
+
+## Date
+
+2026-08-08
+
+## Summary
+
+Phase 9 を開始し、Design Token・Appearance 適用・共有 UI・モバイル Drawer・Command Palette・CSS motion 基盤を実装した。
+
+## Decisions
+
+### Design tokens
+
+- UI guideline / `docs/ui-reference` の Vantage トークンを `app/globals.css` に導入。
+- shadcn セマンティック変数を dark-first に合わせ、`--accent-1` / `--accent-soft` などで accent 切替。
+
+### Appearance wiring
+
+- Phase 8 の user settings（theme / accent / density / animations）を App shell の `AppearanceProvider` 経由で `document.documentElement` に反映。
+- `data-animations="off"` と `prefers-reduced-motion` の両方でモーションを抑制。
+
+### Motion without GSAP
+
+- GSAP を導入せず CSS keyframes / transitions で page enter・drawer・card hover を実装。
+- 理由: 依存追加コスト、Edge バンドル、現状のモーション要件が CSS で十分。
+
+### Shared components
+
+- `components/ui`: Input / Select / Badge / Avatar / Card（Button は accent 連携強化）
+- `components/feedback`: Skeleton / EmptyState / Toast
+- `components/layout`: MobileNav drawer / CommandPalette / 共通 nav items
+
+## Follow-ups
+
+- Dialog / Dropdown / Tooltip / Popover の専用 primitive
+- List stagger animation（必要時）
+- Mobile Kanban の追加最適化
+- Phase 10 での Empty / Error 状態の全面統一
+
+---
+
+# Phase 9 — UI / UX Polish（完了）
+
+## Date
+
+2026-08-08
+
+## Summary
+
+Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip / Popover、リスト stagger、Mobile Kanban を実装した。
+
+## Details
+
+- Create Project / Create Task を `components/ui/dialog` に移行
+- Board priority filter と task status 変更を Dropdown Menu 化
+- Header に Tooltip、Board に Popover tips
+- Project list に `StaggerItem` 入場アニメーション
+- Mobile Kanban: タブで単一カラム切替、TouchSensor、フル幅カラム
+
+## Follow-ups
+
+- Phase 10 Loading / Error / Empty の全面統一

@@ -4,13 +4,12 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { useToast } from "@/components/feedback/toast";
 import {
   updateAppearanceAction,
   type SettingsActionState,
 } from "@/features/settings/actions";
-
-const fieldClassName =
-  "mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none focus-visible:border-violet-500/50 focus-visible:ring-2 focus-visible:ring-violet-500/30";
 
 const initialState: SettingsActionState = { status: "idle" };
 
@@ -34,6 +33,7 @@ interface AppearanceFormProps {
 
 export function AppearanceForm({ settings }: AppearanceFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
   const [state, formAction] = useActionState(
     updateAppearanceAction,
     initialState,
@@ -41,48 +41,49 @@ export function AppearanceForm({ settings }: AppearanceFormProps) {
 
   useEffect(() => {
     if (state.status === "success") {
+      toast(state.message ?? "Appearance saved", "success");
       router.refresh();
     }
-  }, [state.status, router]);
+  }, [state.status, state.message, router, toast]);
 
   return (
     <form action={formAction} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-3">
         <label className="block text-sm text-zinc-300">
           Theme
-          <select
+          <Select
             name="theme"
             defaultValue={settings.theme}
-            className={fieldClassName}
+            className="mt-1.5"
           >
             <option value="dark">Dark</option>
             <option value="light">Light</option>
             <option value="system">System</option>
-          </select>
+          </Select>
         </label>
         <label className="block text-sm text-zinc-300">
           Accent
-          <select
+          <Select
             name="accentColor"
             defaultValue={settings.accentColor}
-            className={fieldClassName}
+            className="mt-1.5"
           >
             <option value="violet">Violet</option>
             <option value="blue">Blue</option>
             <option value="emerald">Emerald</option>
             <option value="rose">Rose</option>
-          </select>
+          </Select>
         </label>
         <label className="block text-sm text-zinc-300">
           Density
-          <select
+          <Select
             name="density"
             defaultValue={settings.density}
-            className={fieldClassName}
+            className="mt-1.5"
           >
             <option value="comfortable">Comfortable</option>
             <option value="compact">Compact</option>
-          </select>
+          </Select>
         </label>
       </div>
       <label className="flex items-center gap-2 text-sm text-zinc-300">
@@ -95,16 +96,11 @@ export function AppearanceForm({ settings }: AppearanceFormProps) {
         Enable animations
       </label>
       <p className="text-xs text-zinc-500">
-        Preferences are saved to your account. Full visual theming lands in a
-        later polish phase.
+        Preferences apply across the app shell immediately after save (theme,
+        accent, density, and motion).
       </p>
       {state.status === "error" ? (
         <p className="text-sm text-rose-400" role="alert">
-          {state.message}
-        </p>
-      ) : null}
-      {state.status === "success" ? (
-        <p className="text-sm text-emerald-400" role="status">
           {state.message}
         </p>
       ) : null}

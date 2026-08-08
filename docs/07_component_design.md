@@ -308,18 +308,21 @@ features/**/components
 
 共通
 
-- Button
-- Card
-- Input
-- Select
-- Dialog
-- Badge
-- Avatar
-- ProgressBar
-- Skeleton
-- Toast
-- Tooltip
-- Popover
+- Button（`components/ui/button.tsx`）
+- Card（`components/ui/card.tsx`）
+- Input（`components/ui/input.tsx`）
+- Select（`components/ui/select.tsx`）
+- Dialog（`components/ui/dialog.tsx` — Base UI）
+- Dropdown Menu（`components/ui/dropdown-menu.tsx` — Base UI）
+- Badge（`components/ui/badge.tsx`）
+- Avatar（`components/ui/avatar.tsx`）
+- ProgressBar（feature: project）
+- Skeleton / EmptyState / StaggerItem（`components/feedback/`）
+- Toast（`components/feedback/toast.tsx`）
+- Tooltip（`components/ui/tooltip.tsx` — Base UI）
+- Popover（`components/ui/popover.tsx` — Base UI）
+- Command Palette（`components/layout/command-palette.tsx`）
+- MobileNav（`components/layout/mobile-nav.tsx`）
 
 画面専用
 

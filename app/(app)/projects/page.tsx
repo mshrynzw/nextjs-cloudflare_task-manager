@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { AppHeader } from "@/components/layout/app-header";
+import { StaggerItem } from "@/components/feedback/stagger-item";
 import { CreateProjectDialog } from "@/features/project/components/create-project-dialog";
 import { ProjectCard } from "@/features/project/components/project-card";
 import { ProjectEmptyState } from "@/features/project/components/project-empty-state";
@@ -80,8 +81,10 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
         ) : (
           <>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {result.data.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+              {result.data.map((project, index) => (
+                <StaggerItem key={project.id} index={index}>
+                  <ProjectCard project={project} />
+                </StaggerItem>
               ))}
             </div>
             <ProjectPagination

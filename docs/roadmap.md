@@ -626,7 +626,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -636,15 +636,15 @@ Analyticsは初期段階では既存データから算出する。
 
 # 15.1 Design System
 
-- [ ] Design Tokens
-- [ ] Colors
-- [ ] Typography
-- [ ] Spacing
-- [ ] Radius
-- [ ] Shadows
-- [ ] Motion
+- [x] Design Tokens
+- [x] Colors
+- [x] Typography
+- [x] Spacing
+- [x] Radius
+- [x] Shadows
+- [x] Motion
 
-`docs/08_ui-guideline.md` に準拠する。
+`docs/08_ui_guideline.md` / UI reference の Vantage tokens に準拠。Appearance 設定（theme / accent / density / animations）を `html` に反映。
 
 ---
 
@@ -652,34 +652,34 @@ Analyticsは初期段階では既存データから算出する。
 
 共通Componentを整理する。
 
-- [ ] Button
-- [ ] Input
-- [ ] Select
-- [ ] Dialog
-- [ ] Dropdown
-- [ ] Tooltip
-- [ ] Popover
-- [ ] Toast
-- [ ] Command Palette
-- [ ] Card
-- [ ] Badge
-- [ ] Avatar
-- [ ] Skeleton
+- [x] Button（accent token 連携）
+- [x] Input
+- [x] Select
+- [x] Dialog（Base UI + `components/ui/dialog.tsx`）
+- [x] Dropdown（Base UI Menu + `components/ui/dropdown-menu.tsx`）
+- [x] Tooltip
+- [x] Popover
+- [x] Toast
+- [x] Command Palette（Ctrl/Cmd+K）
+- [x] Card
+- [x] Badge
+- [x] Avatar
+- [x] Skeleton / EmptyState
 
 ---
 
 # 15.3 Animation
 
-GSAPを利用して以下を実装する。
+- [x] Initial Load（page-enter / ambient）
+- [x] Page Transition（軽量 CSS）
+- [x] Modal（drawer / command palette fade）
+- [x] Sidebar（active indicator）
+- [x] Card Hover
+- [x] Button Interaction
+- [x] List Animation（`StaggerItem`）
+- [x] Loading（route `loading.tsx` + Skeleton）
 
-- [ ] Initial Load
-- [ ] Page Transition
-- [ ] Modal
-- [ ] Sidebar
-- [ ] Card Hover
-- [ ] Button Interaction
-- [ ] List Animation
-- [ ] Loading
+> **Decision:** GSAP は未導入。バンドルコストと Cloudflare 互換性を優先し、CSS transitions / keyframes + `prefers-reduced-motion` / Appearance `animations` で実装。複雑なタイムラインが必要になった時点で GSAP を再検討する。
 
 過度なAnimationは禁止する。
 
@@ -689,22 +689,22 @@ GSAPを利用して以下を実装する。
 
 ### Desktop
 
-- [ ] Sidebar
-- [ ] Multi-column layout
-- [ ] Dense information
+- [x] Sidebar
+- [x] Multi-column layout
+- [x] Dense information（density setting）
 
 ### Tablet
 
-- [ ] Adaptive layout
-- [ ] Sidebar optimization
+- [x] Adaptive layout
+- [x] Sidebar optimization（md 以上で固定 Sidebar）
 
 ### Mobile
 
-- [ ] Mobile navigation
-- [ ] Single-column layout
-- [ ] Bottom navigation / Drawer
-- [ ] Touch interaction
-- [ ] Mobile Kanban
+- [x] Mobile navigation（Drawer）
+- [x] Single-column layout
+- [x] Bottom navigation / Drawer（Drawer 採用）
+- [x] Touch interaction（十分なタップ領域）
+- [x] Mobile Kanban（タブ切替 + 単一カラム + TouchSensor + status Dropdown）
 
 ---
 

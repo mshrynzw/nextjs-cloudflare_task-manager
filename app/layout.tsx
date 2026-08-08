@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Task Manager",
+  title: "Vantage — Task Manager",
   description: "Modern project and task management",
 };
 
@@ -25,9 +25,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      data-accent="violet"
+      data-density="comfortable"
+      data-animations="on"
+      data-theme="dark"
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col bg-[color:var(--bg-base)] text-[color:var(--text-primary)]">
+        {children}
+      </body>
     </html>
   );
 }
