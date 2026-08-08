@@ -430,9 +430,11 @@ User
 
 ## 15.1 Login / Sign-in flow（Cloudflare Workers）
 
-Credentials / OAuth の `signIn` はクライアントの `next-auth/react` 経由のみで行う。
+Credentials / OAuth の `signIn` と `signOut` はクライアントの `next-auth/react` 経由のみで行う。
 
 ログイン経路では Server Action を使わない。`/login` ページの Server Action は、既存セッション時の `redirect("/dashboard")` と組み合わさると 302 になり、クライアントが例外扱いするため。
+
+ログアウトも同様に、Server Action 内の Auth.js `signOut` は Workers 上で session cookie の削除が効かないことがあるため使わない。
 
 ```text
 Login Form (Client)
@@ -446,6 +448,18 @@ Login Form (Client)
          │
          ▼
       window.location → /dashboard
+```
+
+```text
+Sign out (Client)
+   │
+   └─ next-auth/react signOut → /api/auth/signout
+         │
+         ▼
+      Session cookie cleared
+         │
+         ▼
+      /login
 ```
 
 Auth.js は OpenNext 上で `getCloudflareContext({ async: true })` 経由の D1（`getDbAsync`）を使う。

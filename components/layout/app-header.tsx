@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import {
   Tooltip,
   TooltipContent,
@@ -65,16 +64,7 @@ export function AppHeader({
             <p className="text-zinc-500">{userEmail}</p>
           ) : null}
         </div>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/login" });
-          }}
-        >
-          <Button type="submit" variant="outline" size="sm">
-            Sign out
-          </Button>
-        </form>
+        <SignOutButton />
       </div>
     </header>
   );

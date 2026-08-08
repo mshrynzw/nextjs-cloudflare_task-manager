@@ -1875,3 +1875,4 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
   - ログイン rate limit は Credentials `authorize` 内で実施
 - `docs/04_architecture.md` §15.1 / `docs/06_api.md` を更新
 - 追記: E2E で `getDbAsync` が空 D1 を優先し `no such table: users` になる問題を、`SQLITE_DB_PATH` 明示時は SQLite 優先にすることで修正
+- 追記: ログアウトを `next-auth/react` `signOut` に変更（Server Action では session cookie が残る）
