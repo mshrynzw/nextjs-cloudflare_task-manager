@@ -66,8 +66,8 @@ Task Manager
 | SCR-002 | Dashboard      | `/dashboard`                  | Yes  | P0       | In Progress |
 | SCR-003 | Project List   | `/projects`                   | Yes  | P0       | Planned |
 | SCR-004 | Project Detail | `/projects/[projectId]`       | Yes  | P0       | Planned |
-| SCR-005 | Task Board     | `/projects/[projectId]/board` | Yes  | P0       | Planned |
-| SCR-006 | Task Detail    | `/tasks/[taskId]`             | Yes  | P0       | Planned |
+| SCR-005 | Task Board     | `/projects/[projectId]/board` | Yes  | P0       | Done |
+| SCR-006 | Task Detail    | `/projects/[projectId]/tasks/[taskId]` | Yes  | P0       | Done |
 | SCR-007 | Calendar       | `/calendar`                   | Yes  | P1       | Planned |
 | SCR-008 | Analytics      | `/analytics`                  | Yes  | P1       | Planned |
 | SCR-009 | Settings       | `/settings`                   | Yes  | P1       | Planned |

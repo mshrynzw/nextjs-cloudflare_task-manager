@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, like, sql } from "drizzle-orm";
+import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import { createId, nowUnix } from "@/lib/db/id";
 import { activities, tasks } from "@/lib/db/schema";
@@ -32,7 +32,10 @@ export async function listTasksForProject(
     conditions.push(eq(tasks.assigneeId, query.assigneeId));
   }
   if (query.search) {
-    conditions.push(like(tasks.title, `%${query.search}%`));
+    const pattern = `%${query.search}%`;
+    conditions.push(
+      or(like(tasks.title, pattern), like(tasks.description, pattern))!,
+    );
   }
 
   const orderColumn =

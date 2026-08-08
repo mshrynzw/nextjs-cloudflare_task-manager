@@ -410,7 +410,7 @@ Task Managementの主要機能を完成させる。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -420,16 +420,16 @@ Task Managementの主要機能を完成させる。
 
 # 12.1 Task Board
 
-- [ ] Kanban Board
-- [ ] Drag & Drop
-- [ ] Task creation
-- [ ] Task editing
-- [ ] Status change
-- [ ] Priority change
-- [ ] Assignee change
-- [ ] Position update
-- [ ] Optimistic update
-- [ ] Error recovery
+- [x] Kanban Board
+- [x] Drag & Drop
+- [x] Task creation
+- [x] Task editing
+- [x] Status change
+- [x] Priority change
+- [x] Assignee change
+- [x] Position update
+- [x] Optimistic update
+- [x] Error recovery
 
 Columns
 
@@ -445,29 +445,33 @@ Done
 
 # 12.2 Task Detail
 
-- [ ] Task title
-- [ ] Description
-- [ ] Status
-- [ ] Priority
-- [ ] Assignee
-- [ ] Due date
+- [x] Task title
+- [x] Description
+- [x] Status
+- [x] Priority
+- [x] Assignee
+- [x] Due date
 - [ ] Tags
-- [ ] Checklist
-- [ ] Comments
+- [x] Checklist
+- [x] Comments
 - [ ] Attachments
-- [ ] Activity history
+- [x] Activity history
+
+> Tags / Attachments は未実装。Activity は Empty State を配置（詳細タイムラインは後続）。
 
 ---
 
 # 12.3 Task Search
 
-- [ ] Search by title
-- [ ] Search by description
+- [x] Search by title
+- [x] Search by description
 - [ ] Search by tag
 - [ ] Filter by status
-- [ ] Filter by priority
+- [x] Filter by priority
 - [ ] Filter by assignee
 - [ ] Filter by due date
+
+> Board 上の検索・Priority フィルタを実装。Status はカラム分割で表現。Tag / Assignee / Due date フィルタは後続。
 
 ---
 

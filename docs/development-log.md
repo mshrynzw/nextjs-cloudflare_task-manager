@@ -1014,6 +1014,37 @@ Phase 4 API を利用し、認証後の Project List / Detail 画面を提供す
 
 ### Change
 
+Phase 6（Task Management UI）を実装した。
+
+### Reason
+
+Project 配下で Kanban によるタスク運用と、詳細編集（Checklist / Comments）を提供するため。
+
+### Decision
+
+- ルートは詳細設計に合わせ `/projects/[projectId]/board` と `/projects/[projectId]/tasks/[taskId]`
+- Stub の `dnd-kit@0.0.2` を削除し、`@dnd-kit/core` / `sortable` / `utilities` を導入
+- DnD は楽観的更新 + Server Action で永続化、失敗時にロールバック
+- キーボード利用者向けにカード上の Status select を併設
+- Tags / Attachments / Activity Timeline / 一部フィルタは後続
+
+### Impact
+
+Task Board / Task Detail が利用可能。次は Phase 7 Supporting Features。
+
+### Follow-up
+
+- Phase 7: Calendar / Dashboard / Analytics
+- Tags / Attachments
+- Activity Timeline API 連携
+- Assignee / Due date フィルタ
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1413,12 +1444,13 @@ Phase 2 Database   ✓
 Phase 3 Auth       ✓
 Phase 4 API        ✓
 Phase 5 Projects   ✓
+Phase 6 Tasks      ✓
 ```
 
 ## Planned
 
 ```text
-Phase 6 Task Board / Task Detail
+Phase 7 Supporting Features (Calendar / Dashboard / Analytics)
 Testing (feature-level E2E)
 CI/CD
 Deployment (includes task-manager-prod D1)

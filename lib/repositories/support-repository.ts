@@ -1,12 +1,20 @@
 import { and, asc, eq, isNull } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import { createId, nowUnix } from "@/lib/db/id";
-import { checklistItems, comments, notifications } from "@/lib/db/schema";
+import { checklistItems, comments, notifications, users } from "@/lib/db/schema";
 
 export async function listCommentsForTask(db: AppDatabase, taskId: string) {
   return db
-    .select()
+    .select({
+      id: comments.id,
+      content: comments.content,
+      authorId: comments.authorId,
+      createdAt: comments.createdAt,
+      authorName: users.name,
+      authorImage: users.image,
+    })
     .from(comments)
+    .leftJoin(users, eq(users.id, comments.authorId))
     .where(and(eq(comments.taskId, taskId), isNull(comments.deletedAt)))
     .orderBy(asc(comments.createdAt))
     .all();

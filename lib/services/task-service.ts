@@ -156,6 +156,8 @@ export async function getTaskDetail(
       id: item.id,
       content: item.content,
       authorId: item.authorId,
+      authorName: item.authorName,
+      authorImage: item.authorImage,
       createdAt: item.createdAt,
     })),
   };
@@ -377,6 +379,8 @@ export async function getComments(
     id: item.id,
     content: item.content,
     authorId: item.authorId,
+    authorName: item.authorName,
+    authorImage: item.authorImage,
     createdAt: item.createdAt,
   }));
 }

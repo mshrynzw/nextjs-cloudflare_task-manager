@@ -122,10 +122,10 @@ export default async function ProjectDetailPage({
             </div>
             <div className="flex items-center gap-2">
               <Link
-                href={`/projects/${project.id}#tasks`}
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+                href={`/projects/${project.id}/board`}
+                className={cn(buttonVariants({ size: "sm" }))}
               >
-                View tasks
+                Open board
               </Link>
               <ProjectActionsMenu
                 projectId={project.id}
@@ -169,7 +169,14 @@ export default async function ProjectDetailPage({
             </div>
             {recentTasks.length === 0 ? (
               <p className="rounded-xl border border-dashed border-zinc-800 px-4 py-8 text-center text-sm text-zinc-500">
-                No tasks yet. Task board arrives in Phase 6.
+                No tasks yet.{" "}
+                <Link
+                  href={`/projects/${project.id}/board`}
+                  className="text-violet-300 hover:underline"
+                >
+                  Open the board
+                </Link>{" "}
+                to create one.
               </p>
             ) : (
               <ul className="divide-y divide-zinc-800/80">
@@ -180,7 +187,12 @@ export default async function ProjectDetailPage({
                   >
                     <div className="min-w-0">
                       <p className="truncate text-sm text-zinc-100">
-                        {task.title}
+                        <Link
+                          href={`/projects/${project.id}/tasks/${task.id}`}
+                          className="hover:underline"
+                        >
+                          {task.title}
+                        </Link>
                       </p>
                       <p className="mt-0.5 text-xs text-zinc-500">
                         {TASK_STATUS_LABELS[task.status] ?? task.status}
