@@ -59,8 +59,9 @@ export default async function ProjectDetailPage({
   const tasks = await getTasksForProject(getDb(), userId, projectId, {
     sort: "updatedAt",
     order: "desc",
+    limit: 8,
   });
-  const recentTasks = tasks.slice(0, 8);
+  const recentTasks = tasks;
   const deadline = formatProjectDeadline(project.deadline);
   const overdue = isDeadlineOverdue(project.deadline);
   const openTasks =

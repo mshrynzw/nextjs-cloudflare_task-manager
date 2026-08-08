@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, inArray, isNull, lte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, ne, sql } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import {
   activities,
@@ -8,6 +8,7 @@ import {
   users,
 } from "@/lib/db/schema";
 
+/** Lean task rows for analytics / insights (no description). */
 export async function listAccessibleTasksForUser(
   db: AppDatabase,
   userId: string,
@@ -16,7 +17,6 @@ export async function listAccessibleTasksForUser(
     .select({
       id: tasks.id,
       title: tasks.title,
-      description: tasks.description,
       status: tasks.status,
       priority: tasks.priority,
       projectId: tasks.projectId,
@@ -38,6 +38,145 @@ export async function listAccessibleTasksForUser(
     )
     .where(and(isNull(tasks.archivedAt), isNull(projects.archivedAt)))
     .orderBy(desc(tasks.updatedAt))
+    .all();
+}
+
+export async function getAccessibleTaskKpis(
+  db: AppDatabase,
+  userId: string,
+  todayStart: number,
+  todayEnd: number,
+) {
+  const row = await db
+    .select({
+      total: sql<number>`count(*)`,
+      completed: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
+      open: sql<number>`sum(case when ${tasks.status} != 'done' then 1 else 0 end)`,
+      overdue: sql<number>`sum(case when ${tasks.status} != 'done' and ${tasks.dueDate} is not null and ${tasks.dueDate} < ${todayStart} then 1 else 0 end)`,
+      todayDue: sql<number>`sum(case when ${tasks.status} != 'done' and ${tasks.dueDate} is not null and ${tasks.dueDate} >= ${todayStart} and ${tasks.dueDate} <= ${todayEnd} then 1 else 0 end)`,
+      completedToday: sql<number>`sum(case when ${tasks.completedAt} is not null and ${tasks.completedAt} >= ${todayStart} and ${tasks.completedAt} <= ${todayEnd} then 1 else 0 end)`,
+    })
+    .from(tasks)
+    .innerJoin(projects, eq(projects.id, tasks.projectId))
+    .innerJoin(
+      projectMembers,
+      and(
+        eq(projectMembers.projectId, projects.id),
+        eq(projectMembers.userId, userId),
+      ),
+    )
+    .where(and(isNull(tasks.archivedAt), isNull(projects.archivedAt)))
+    .get();
+
+  return {
+    total: Number(row?.total ?? 0),
+    completed: Number(row?.completed ?? 0),
+    open: Number(row?.open ?? 0),
+    overdue: Number(row?.overdue ?? 0),
+    todayDue: Number(row?.todayDue ?? 0),
+    completedToday: Number(row?.completedToday ?? 0),
+  };
+}
+
+const taskSummarySelect = {
+  id: tasks.id,
+  title: tasks.title,
+  status: tasks.status,
+  priority: tasks.priority,
+  projectId: tasks.projectId,
+  projectName: projects.name,
+  dueDate: tasks.dueDate,
+};
+
+export async function listAccessibleOpenTasksDueBetween(
+  db: AppDatabase,
+  userId: string,
+  startUnix: number,
+  endUnix: number,
+  limit = 8,
+) {
+  return db
+    .select(taskSummarySelect)
+    .from(tasks)
+    .innerJoin(projects, eq(projects.id, tasks.projectId))
+    .innerJoin(
+      projectMembers,
+      and(
+        eq(projectMembers.projectId, projects.id),
+        eq(projectMembers.userId, userId),
+      ),
+    )
+    .where(
+      and(
+        isNull(tasks.archivedAt),
+        isNull(projects.archivedAt),
+        ne(tasks.status, "done"),
+        gte(tasks.dueDate, startUnix),
+        lte(tasks.dueDate, endUnix),
+      ),
+    )
+    .orderBy(asc(tasks.dueDate))
+    .limit(limit)
+    .all();
+}
+
+export async function listAccessibleOverdueTasks(
+  db: AppDatabase,
+  userId: string,
+  beforeUnix: number,
+  limit = 8,
+) {
+  return db
+    .select(taskSummarySelect)
+    .from(tasks)
+    .innerJoin(projects, eq(projects.id, tasks.projectId))
+    .innerJoin(
+      projectMembers,
+      and(
+        eq(projectMembers.projectId, projects.id),
+        eq(projectMembers.userId, userId),
+      ),
+    )
+    .where(
+      and(
+        isNull(tasks.archivedAt),
+        isNull(projects.archivedAt),
+        ne(tasks.status, "done"),
+        lt(tasks.dueDate, beforeUnix),
+      ),
+    )
+    .orderBy(asc(tasks.dueDate))
+    .limit(limit)
+    .all();
+}
+
+export async function listAccessibleUpcomingTasks(
+  db: AppDatabase,
+  userId: string,
+  afterUnix: number,
+  limit = 8,
+) {
+  return db
+    .select(taskSummarySelect)
+    .from(tasks)
+    .innerJoin(projects, eq(projects.id, tasks.projectId))
+    .innerJoin(
+      projectMembers,
+      and(
+        eq(projectMembers.projectId, projects.id),
+        eq(projectMembers.userId, userId),
+      ),
+    )
+    .where(
+      and(
+        isNull(tasks.archivedAt),
+        isNull(projects.archivedAt),
+        ne(tasks.status, "done"),
+        gte(tasks.dueDate, afterUnix + 1),
+      ),
+    )
+    .orderBy(asc(tasks.dueDate))
+    .limit(limit)
     .all();
 }
 

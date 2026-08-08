@@ -3,13 +3,7 @@ import { AppHeader } from "@/components/layout/app-header";
 import { SimpleBarChart } from "@/components/feedback/simple-bar-chart";
 import { StatCard } from "@/components/feedback/stat-card";
 import { getDb } from "@/lib/db/server";
-import {
-  getAnalyticsOverview,
-  getCompletionTrend,
-  getMemberWorkloadAnalytics,
-  getPriorityBreakdown,
-  getTaskDistribution,
-} from "@/lib/services/analytics-service";
+import { getAnalyticsPageData } from "@/lib/services/analytics-service";
 
 const STATUS_LABELS: Record<string, string> = {
   backlog: "Backlog",
@@ -36,16 +30,8 @@ const PRIORITY_COLORS: Record<string, string> = {
 export default async function AnalyticsPage() {
   const session = await auth();
   const userId = session!.user!.id!;
-  const db = getDb();
-
-  const [overview, trend, distribution, workload, priorities] =
-    await Promise.all([
-      getAnalyticsOverview(db, userId),
-      getCompletionTrend(db, userId, 14),
-      getTaskDistribution(db, userId),
-      getMemberWorkloadAnalytics(db, userId),
-      getPriorityBreakdown(db, userId),
-    ]);
+  const { overview, trend, distribution, workload, priorities } =
+    await getAnalyticsPageData(getDb(), userId);
 
   const trendMax = Math.max(
     ...trend.flatMap((item) => [item.created, item.completed]),

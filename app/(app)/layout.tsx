@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import { CommandPalette } from "@/components/layout/command-palette";
+import { CommandPaletteLazy } from "@/components/layout/command-palette-lazy";
 import { AppearanceProvider } from "@/components/providers/appearance-provider";
 import { ToastProvider } from "@/components/feedback/toast";
 import { getDb } from "@/lib/db/server";
@@ -48,7 +48,7 @@ export default async function AppLayout({
               {children}
             </div>
           </div>
-          <CommandPalette />
+          <CommandPaletteLazy />
         </div>
       </ToastProvider>
     </AppearanceProvider>

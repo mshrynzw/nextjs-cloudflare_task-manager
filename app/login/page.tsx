@@ -1,6 +1,14 @@
+import NextAuth from "next-auth";
 import { redirect } from "next/navigation";
-import { auth, isEmailAuthEnabled } from "@/auth";
+import { authConfig } from "@/auth.config";
 import { LoginForm } from "@/features/auth/components/login-form";
+import { isEmailAuthEnabled } from "@/lib/auth/flags";
+
+/**
+ * Edge-compatible session reader — no Drizzle adapter / SQLite open.
+ * Full `auth` from `@/auth` is used for mutations and OAuth.
+ */
+const { auth } = NextAuth(authConfig);
 
 export default async function LoginPage() {
   const session = await auth();

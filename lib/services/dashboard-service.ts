@@ -1,9 +1,12 @@
 import { fromUnixDate } from "@/lib/api/schemas";
 import type { AppDatabase } from "@/lib/db/client";
 import {
+  getAccessibleTaskKpis,
   getTaskCountsByProjectIds,
+  listAccessibleOpenTasksDueBetween,
+  listAccessibleOverdueTasks,
   listAccessibleProjectsForUser,
-  listAccessibleTasksForUser,
+  listAccessibleUpcomingTasks,
   listRecentActivitiesForUser,
 } from "@/lib/repositories/insights-repository";
 
@@ -27,38 +30,24 @@ function calcProgress(total: number, completed: number): number {
 }
 
 export async function getDashboardOverview(db: AppDatabase, userId: string) {
-  const [tasks, projects, activities] = await Promise.all([
-    listAccessibleTasksForUser(db, userId),
-    listAccessibleProjectsForUser(db, userId, 6),
-    listRecentActivitiesForUser(db, userId, 8),
-  ]);
-
   const todayStart = startOfDayUnix();
   const todayEnd = endOfDayUnix();
-  const openTasks = tasks.filter((task) => task.status !== "done");
 
-  const todayTasks = openTasks.filter(
-    (task) =>
-      task.dueDate !== null &&
-      task.dueDate >= todayStart &&
-      task.dueDate <= todayEnd,
-  );
-
-  const overdueTasks = openTasks.filter(
-    (task) => task.dueDate !== null && task.dueDate < todayStart,
-  );
-
-  const upcomingTasks = openTasks
-    .filter((task) => task.dueDate !== null && task.dueDate > todayEnd)
-    .slice(0, 8);
-
-  const completedTasks = tasks.filter((task) => task.status === "done");
-  const completedToday = completedTasks.filter(
-    (task) =>
-      task.completedAt !== null &&
-      task.completedAt >= todayStart &&
-      task.completedAt <= todayEnd,
-  );
+  const [kpis, todayTasks, overdueTasks, upcomingTasks, projects, activities] =
+    await Promise.all([
+      getAccessibleTaskKpis(db, userId, todayStart, todayEnd),
+      listAccessibleOpenTasksDueBetween(
+        db,
+        userId,
+        todayStart,
+        todayEnd,
+        8,
+      ),
+      listAccessibleOverdueTasks(db, userId, todayStart, 8),
+      listAccessibleUpcomingTasks(db, userId, todayEnd, 8),
+      listAccessibleProjectsForUser(db, userId, 6),
+      listRecentActivitiesForUser(db, userId, 8),
+    ]);
 
   const counts = await getTaskCountsByProjectIds(
     db,
@@ -76,16 +65,16 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
 
   return {
     kpis: {
-      todayTasks: todayTasks.length,
-      completedToday: completedToday.length,
-      completionRate: calcProgress(tasks.length, completedTasks.length),
-      overdueTasks: overdueTasks.length,
-      openTasks: openTasks.length,
+      todayTasks: kpis.todayDue,
+      completedToday: kpis.completedToday,
+      completionRate: calcProgress(kpis.total, kpis.completed),
+      overdueTasks: kpis.overdue,
+      openTasks: kpis.open,
       totalProjects: projects.length,
     },
-    todayTasks: todayTasks.slice(0, 8).map(serializeTaskSummary),
+    todayTasks: todayTasks.map(serializeTaskSummary),
     upcomingTasks: upcomingTasks.map(serializeTaskSummary),
-    overdueTasks: overdueTasks.slice(0, 8).map(serializeTaskSummary),
+    overdueTasks: overdueTasks.map(serializeTaskSummary),
     projects: projects.map((project) => {
       const stats = countMap.get(project.id) ?? { total: 0, completed: 0 };
       return {

@@ -11,6 +11,7 @@ import {
 } from "@/lib/db/schema";
 import {
   getAnalyticsOverview,
+  getAnalyticsPageData,
   getTaskDistribution,
 } from "@/lib/services/analytics-service";
 import { getCalendarEvents } from "@/lib/services/calendar-service";
@@ -134,10 +135,15 @@ describe("insights services", () => {
     const { db, userId } = await seedWorkspace();
     const overview = await getAnalyticsOverview(db, userId);
     const distribution = await getTaskDistribution(db, userId);
+    const page = await getAnalyticsPageData(db, userId);
 
     expect(overview.totalTasks).toBe(3);
     expect(overview.completedTasks).toBe(1);
     expect(distribution.find((item) => item.status === "done")?.count).toBe(1);
+    expect(page.overview.totalTasks).toBe(3);
+    expect(page.distribution.find((item) => item.status === "done")?.count).toBe(
+      1,
+    );
   });
 });
 

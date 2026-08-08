@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   addDays,
   addMonths,
@@ -43,6 +44,7 @@ const PRIORITY_DOT: Record<string, string> = {
 };
 
 export function CalendarView({ events, initialDate }: CalendarViewProps) {
+  const router = useRouter();
   const [cursor, setCursor] = useState(
     () => (initialDate ? new Date(initialDate) : new Date()),
   );
@@ -50,6 +52,12 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
   const [selected, setSelected] = useState<Date>(
     () => (initialDate ? new Date(initialDate) : new Date()),
   );
+
+  const navigateToMonth = (date: Date) => {
+    setCursor(date);
+    setSelected(date);
+    router.push(`/calendar?month=${format(date, "yyyy-MM")}`);
+  };
 
   const eventsByDay = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();
@@ -87,9 +95,11 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
               size="sm"
               onClick={() => {
                 if (view === "month") {
-                  setCursor((value) => subMonths(value, 1));
+                  navigateToMonth(subMonths(cursor, 1));
                 } else {
-                  setSelected((value) => addDays(value, -7));
+                  const next = addDays(selected, -7);
+                  setSelected(next);
+                  navigateToMonth(next);
                 }
               }}
             >
@@ -99,11 +109,7 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const today = new Date();
-                setCursor(today);
-                setSelected(today);
-              }}
+              onClick={() => navigateToMonth(new Date())}
             >
               Today
             </Button>
@@ -113,9 +119,11 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
               size="sm"
               onClick={() => {
                 if (view === "month") {
-                  setCursor((value) => addMonths(value, 1));
+                  navigateToMonth(addMonths(cursor, 1));
                 } else {
-                  setSelected((value) => addDays(value, 7));
+                  const next = addDays(selected, 7);
+                  setSelected(next);
+                  navigateToMonth(next);
                 }
               }}
             >

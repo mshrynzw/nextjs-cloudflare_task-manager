@@ -7,6 +7,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { authConfig } from "@/auth.config";
+import { isEmailAuthEnabled } from "@/lib/auth/flags";
 import { nowUnix } from "@/lib/db/id";
 import {
   accounts,
@@ -30,8 +31,37 @@ const credentialsSchema = z.object({
 const DUMMY_PASSWORD_HASH =
   "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.G2oQ.YHqKzqK2u";
 
-export function isEmailAuthEnabled(): boolean {
-  return process.env.AUTH_EMAIL_ENABLED === "true";
+type DrizzleAuthAdapter = ReturnType<typeof DrizzleAdapter>;
+
+/**
+ * Lazily open SQLite only when the adapter is first used (OAuth link / user create).
+ * Keeps JWT session reads from forcing a DB open at module import time.
+ */
+function createLazyDrizzleAdapter(): DrizzleAuthAdapter {
+  let cached: DrizzleAuthAdapter | undefined;
+
+  const resolve = (): DrizzleAuthAdapter => {
+    if (!cached) {
+      cached = DrizzleAdapter(getDb(), {
+        usersTable: users,
+        accountsTable: accounts,
+        sessionsTable: sessions,
+        verificationTokensTable: verificationTokens,
+      });
+    }
+    return cached;
+  };
+
+  return new Proxy({} as DrizzleAuthAdapter, {
+    get(_target, prop, receiver) {
+      const adapter = resolve();
+      const value = Reflect.get(adapter as object, prop, receiver);
+      if (typeof value === "function") {
+        return value.bind(adapter);
+      }
+      return value;
+    },
+  });
 }
 
 function buildProviders() {
@@ -100,12 +130,7 @@ function buildProviders() {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: DrizzleAdapter(getDb(), {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  adapter: createLazyDrizzleAdapter(),
   providers: buildProviders(),
   events: {
     async createUser({ user }) {
@@ -130,4 +155,4 @@ export async function hashPassword(password: string): Promise<string> {
   return hash(password, 12);
 }
 
-export { credentialsSchema };
+export { credentialsSchema, isEmailAuthEnabled };

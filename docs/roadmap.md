@@ -909,7 +909,7 @@ Productionで安全に運用できる状態にする。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -919,31 +919,31 @@ Productionで安全に運用できる状態にする。
 
 # 19.1 Initial Load
 
-- [ ] Server Components optimization
-- [ ] Client Component reduction
-- [ ] JavaScript bundle analysis
+- [x] Server Components optimization
+- [x] Client Component reduction
+- [x] JavaScript bundle analysis
 - [ ] Image optimization
 - [ ] Font optimization
-- [ ] Cache strategy
+- [x] Cache strategy
 
 ---
 
 # 19.2 Database
 
-- [ ] Query optimization
-- [ ] Index review
-- [ ] N+1 prevention
-- [ ] Pagination
-- [ ] SELECT field optimization
+- [x] Query optimization
+- [x] Index review
+- [x] N+1 prevention
+- [x] Pagination
+- [x] SELECT field optimization
 
 ---
 
 # 19.3 API
 
-- [ ] Response size optimization
-- [ ] Caching
-- [ ] Error handling
-- [ ] Rate limiting
+- [x] Response size optimization
+- [x] Caching
+- [x] Error handling
+- [x] Rate limiting
 
 ---
 
@@ -960,6 +960,19 @@ Productionで安全に運用できる状態にする。
 | API Response      | < 500ms target |
 
 実際のProduction環境では計測結果を基準に改善する。
+
+## Notes
+
+- Dashboard: SQL KPI + limit 付きリスト（全タスク hydrate 廃止）
+- Analytics: `getAnalyticsPageData` でフルスキャン 1 回に集約
+- Login: `auth.config` ベースのセッション読取 + lazy Drizzle adapter
+- Board / Project list / Project detail: 並列取得・recent tasks `limit`
+- Notifications: 最新 50 件・必要カラムのみ
+- Calendar: `?month=` URL 駆動でサーバ再取得
+- Command Palette: Client wrapper + `dynamic(..., { ssr: false })`
+- 未使用 `@tanstack/react-query*` / `react-hook-form` 削除、`shadcn` は devDependency
+
+Image / Font の追加最適化と Production Web Vitals 計測はデプロイ後に継続。
 
 ---
 

@@ -687,6 +687,19 @@ Performanceを重要な設計要件とする。
 ```text
 Browser
  ↓
+Login Page
+ ↓
+Auth.js JWT session read（adapter なし / DB なし）
+ ↓
+Login UI
+```
+
+実装上は `app/login/page.tsx` が `NextAuth(authConfig)` のみを使い、
+`auth.ts` の Drizzle adapter は Proxy で初回利用時まで `getDb()` を遅延する。
+
+```text
+Browser
+ ↓
 CDN / Edge
  ↓
 Login Page

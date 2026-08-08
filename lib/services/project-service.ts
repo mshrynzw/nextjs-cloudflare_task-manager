@@ -39,10 +39,11 @@ export async function getProjects(
   query: ListProjectsQuery,
 ) {
   const { rows, total } = await listProjectsForUser(db, userId, query);
-  const counts = await getTaskCountsByProject(
-    db,
-    rows.map((row) => row.project.id),
-  );
+  const projectIds = rows.map((row) => row.project.id);
+  const [counts, members] = await Promise.all([
+    getTaskCountsByProject(db, projectIds),
+    listMembersForProjects(db, projectIds),
+  ]);
   const countMap = new Map(
     counts.map((item) => [
       item.projectId,
@@ -53,8 +54,6 @@ export async function getProjects(
     ]),
   );
 
-  const projectIds = rows.map((row) => row.project.id);
-  const members = await listMembersForProjects(db, projectIds);
   const membersByProject = new Map<
     string,
     Array<{ id: string; name: string | null; image: string | null; role: string }>
@@ -112,8 +111,11 @@ export async function getProject(
     throw notFound("Project not found");
   }
 
-  const [counts] = await getTaskCountsByProject(db, [projectId]);
-  const members = await listProjectMembers(db, projectId);
+  const [countsRows, members] = await Promise.all([
+    getTaskCountsByProject(db, [projectId]),
+    listProjectMembers(db, projectId),
+  ]);
+  const [counts] = countsRows;
   const total = Number(counts?.total ?? 0);
   const completed = Number(counts?.completed ?? 0);
 

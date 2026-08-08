@@ -10,6 +10,7 @@ export interface ListTasksQuery {
   search?: string;
   sort?: "updatedAt" | "dueDate" | "position" | "title";
   order?: "asc" | "desc";
+  limit?: number;
 }
 
 export async function listTasksForProject(
@@ -48,12 +49,17 @@ export async function listTasksForProject(
           : tasks.updatedAt;
   const orderBy = query.order === "asc" ? asc(orderColumn) : desc(orderColumn);
 
-  return db
+  const base = db
     .select()
     .from(tasks)
     .where(and(...conditions))
-    .orderBy(orderBy)
-    .all();
+    .orderBy(orderBy);
+
+  if (query.limit !== undefined) {
+    return base.limit(query.limit).all();
+  }
+
+  return base.all();
 }
 
 export async function findTaskById(db: AppDatabase, taskId: string) {

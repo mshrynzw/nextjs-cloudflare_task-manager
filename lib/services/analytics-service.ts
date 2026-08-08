@@ -12,6 +12,10 @@ const TASK_STATUSES = [
   "done",
 ] as const;
 
+type AnalyticsTask = Awaited<
+  ReturnType<typeof listAccessibleTasksForUser>
+>[number];
+
 function dayKeyFromUnix(unix: number): string {
   return new Date(unix * 1000).toISOString().slice(0, 10);
 }
@@ -23,16 +27,14 @@ function calcRate(total: number, completed: number): number {
   return Math.round((completed / total) * 100);
 }
 
-export async function getAnalyticsOverview(
-  db: AppDatabase,
-  userId: string,
-  projectId?: string,
-) {
-  const tasks = await listAccessibleTasksForUser(db, userId);
-  const scoped = projectId
-    ? tasks.filter((task) => task.projectId === projectId)
-    : tasks;
+function scopeTasks(tasks: AnalyticsTask[], projectId?: string) {
+  if (!projectId) {
+    return tasks;
+  }
+  return tasks.filter((task) => task.projectId === projectId);
+}
 
+function buildOverview(scoped: AnalyticsTask[]) {
   const completed = scoped.filter((task) => task.status === "done");
   const todayStart = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
   const overdue = scoped.filter(
@@ -68,17 +70,7 @@ export async function getAnalyticsOverview(
   };
 }
 
-export async function getCompletionTrend(
-  db: AppDatabase,
-  userId: string,
-  days = 14,
-  projectId?: string,
-) {
-  const tasks = await listAccessibleTasksForUser(db, userId);
-  const scoped = projectId
-    ? tasks.filter((task) => task.projectId === projectId)
-    : tasks;
-
+function buildCompletionTrend(scoped: AnalyticsTask[], days: number) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -108,20 +100,79 @@ export async function getCompletionTrend(
   return trend;
 }
 
+function buildTaskDistribution(scoped: AnalyticsTask[]) {
+  return TASK_STATUSES.map((status) => ({
+    status,
+    count: scoped.filter((task) => task.status === status).length,
+  }));
+}
+
+function buildPriorityBreakdown(scoped: AnalyticsTask[]) {
+  return (["high", "medium", "low"] as const).map((priority) => ({
+    priority,
+    count: scoped.filter((task) => task.priority === priority).length,
+  }));
+}
+
+/**
+ * Single-flight analytics load for the Analytics page.
+ * Avoids repeating the full accessible-task scan four times.
+ */
+export async function getAnalyticsPageData(
+  db: AppDatabase,
+  userId: string,
+  options?: { projectId?: string; days?: number },
+) {
+  const days = options?.days ?? 14;
+  const projectId = options?.projectId;
+
+  const [tasks, workloadRows] = await Promise.all([
+    listAccessibleTasksForUser(db, userId),
+    listMemberWorkload(db, userId, projectId),
+  ]);
+
+  const scoped = scopeTasks(tasks, projectId);
+
+  return {
+    overview: buildOverview(scoped),
+    trend: buildCompletionTrend(scoped, days),
+    distribution: buildTaskDistribution(scoped),
+    priorities: buildPriorityBreakdown(scoped),
+    workload: workloadRows.map((row) => ({
+      userId: row.userId,
+      name: row.name ?? "Member",
+      assignedTasks: Number(row.assignedTasks),
+      completedTasks: Number(row.completedTasks),
+    })),
+  };
+}
+
+export async function getAnalyticsOverview(
+  db: AppDatabase,
+  userId: string,
+  projectId?: string,
+) {
+  const tasks = await listAccessibleTasksForUser(db, userId);
+  return buildOverview(scopeTasks(tasks, projectId));
+}
+
+export async function getCompletionTrend(
+  db: AppDatabase,
+  userId: string,
+  days = 14,
+  projectId?: string,
+) {
+  const tasks = await listAccessibleTasksForUser(db, userId);
+  return buildCompletionTrend(scopeTasks(tasks, projectId), days);
+}
+
 export async function getTaskDistribution(
   db: AppDatabase,
   userId: string,
   projectId?: string,
 ) {
   const tasks = await listAccessibleTasksForUser(db, userId);
-  const scoped = projectId
-    ? tasks.filter((task) => task.projectId === projectId)
-    : tasks;
-
-  return TASK_STATUSES.map((status) => ({
-    status,
-    count: scoped.filter((task) => task.status === status).length,
-  }));
+  return buildTaskDistribution(scopeTasks(tasks, projectId));
 }
 
 export async function getMemberWorkloadAnalytics(
@@ -144,14 +195,7 @@ export async function getPriorityBreakdown(
   projectId?: string,
 ) {
   const tasks = await listAccessibleTasksForUser(db, userId);
-  const scoped = projectId
-    ? tasks.filter((task) => task.projectId === projectId)
-    : tasks;
-
-  return (["high", "medium", "low"] as const).map((priority) => ({
-    priority,
-    count: scoped.filter((task) => task.priority === priority).length,
-  }));
+  return buildPriorityBreakdown(scopeTasks(tasks, projectId));
 }
 
 /** Used by unit tests / diagnostics — keep date helper pure. */

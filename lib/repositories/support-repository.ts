@@ -1,4 +1,4 @@
-import { and, asc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import { createId, nowUnix } from "@/lib/db/id";
 import { checklistItems, comments, notifications, users } from "@/lib/db/schema";
@@ -131,12 +131,25 @@ export async function deleteChecklistItem(
 export async function listNotificationsForUser(
   db: AppDatabase,
   userId: string,
+  options?: { limit?: number },
 ) {
+  const limit = Math.min(Math.max(options?.limit ?? 50, 1), 100);
+
   return db
-    .select()
+    .select({
+      id: notifications.id,
+      type: notifications.type,
+      title: notifications.title,
+      body: notifications.body,
+      entityType: notifications.entityType,
+      entityId: notifications.entityId,
+      readAt: notifications.readAt,
+      createdAt: notifications.createdAt,
+    })
     .from(notifications)
     .where(eq(notifications.userId, userId))
-    .orderBy(asc(notifications.createdAt))
+    .orderBy(desc(notifications.createdAt))
+    .limit(limit)
     .all();
 }
 

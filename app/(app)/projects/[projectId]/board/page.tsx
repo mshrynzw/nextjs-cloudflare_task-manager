@@ -37,8 +37,17 @@ export default async function ProjectBoardPage({
   const userId = session!.user!.id!;
 
   let project;
+  let tasks;
   try {
-    project = await getProject(getDb(), userId, projectId);
+    [project, tasks] = await Promise.all([
+      getProject(getDb(), userId, projectId),
+      getTasksForProject(getDb(), userId, projectId, {
+        sort: "position",
+        order: "asc",
+        search: search || undefined,
+        priority: priority || undefined,
+      }),
+    ]);
   } catch (error) {
     if (
       error instanceof ApiError &&
@@ -48,13 +57,6 @@ export default async function ProjectBoardPage({
     }
     throw error;
   }
-
-  const tasks = await getTasksForProject(getDb(), userId, projectId, {
-    sort: "position",
-    order: "asc",
-    search: search || undefined,
-    priority: priority || undefined,
-  });
 
   const boardTasks: BoardTask[] = tasks.map((task) => ({
     id: task.id,

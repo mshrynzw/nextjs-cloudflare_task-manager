@@ -1729,3 +1729,37 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 
 - Phase 13 Performance
 - CSP nonce / Workers 向け分散 rate limit
+
+---
+
+# Phase 13 — Performance
+
+## Date
+
+2026-08-08
+
+## Summary
+
+初回アクセスと主要画面のデータ取得を見直し、全タスク hydrate / 多重スキャン / ウォーターフォールを削減した。
+
+## Details
+
+- Dashboard: `getAccessibleTaskKpis` + limit 付き today/overdue/upcoming クエリ
+- Analytics: `getAnalyticsPageData` でタスク取得を 1 回に集約（ページ側）
+- Login: `NextAuth(authConfig)` のみでセッション確認。Drizzle adapter は Proxy で遅延初期化
+- Board: project + tasks を `Promise.all`
+- Projects list / Project detail: counts·members 並列、recent tasks `limit: 8`
+- Notifications: 最新 50・必要カラムのみ・新しい順
+- Calendar 月移動を `?month=` URL 駆動にしてサーバ再取得
+- Command Palette を `next/dynamic`（ssr: false）
+- 未使用 deps 削除（TanStack Query / react-hook-form）。shadcn を devDependency へ
+
+## Notes
+
+- Image / Font の追加最適化と Production での Web Vitals 計測は Phase 15 Deployment 前後で継続
+- Profile の全タスク集計は後続で assignee 限定クエリへ置換可
+
+## Follow-ups
+
+- Phase 14 Accessibility
+- Production Web Vitals / bundle 計測

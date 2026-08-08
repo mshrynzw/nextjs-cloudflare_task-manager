@@ -47,6 +47,7 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
       />
       <main className="flex-1 px-4 py-6 sm:px-6">
         <CalendarView
+          key={format(anchor, "yyyy-MM")}
           events={events}
           initialDate={format(anchor, "yyyy-MM-dd")}
         />
