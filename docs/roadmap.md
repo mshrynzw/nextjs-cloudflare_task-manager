@@ -483,7 +483,7 @@ Project / Task Managementを補完する機能を実装する。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -493,38 +493,42 @@ Project / Task Managementを補完する機能を実装する。
 
 # 13.1 Calendar
 
-- [ ] Monthly Calendar
-- [ ] Weekly Calendar
-- [ ] Task display
-- [ ] Due date display
-- [ ] Event interaction
-- [ ] Task navigation
+- [x] Monthly Calendar
+- [x] Weekly Calendar
+- [x] Task display
+- [x] Due date display
+- [x] Event interaction
+- [x] Task navigation
+
+> Day view は後続。Month / Week + Agenda を実装。
 
 ---
 
 # 13.2 Dashboard
 
-- [ ] Today's Tasks
-- [ ] Completed Tasks
-- [ ] Completion Rate
-- [ ] Upcoming Tasks
-- [ ] Overdue Tasks
-- [ ] Project Progress
-- [ ] Recent Activity
+- [x] Today's Tasks
+- [x] Completed Tasks
+- [x] Completion Rate
+- [x] Upcoming Tasks
+- [x] Overdue Tasks
+- [x] Project Progress
+- [x] Recent Activity
 - [ ] Mini Calendar
-- [ ] Quick Actions
+- [x] Quick Actions
+
+> Mini Calendar は独立 Calendar 画面へ誘導する Quick Action で代替。
 
 ---
 
 # 13.3 Analytics
 
-- [ ] Completion Rate
-- [ ] Completed Tasks
-- [ ] Overdue Tasks
-- [ ] Project Progress
-- [ ] Completion Trend
-- [ ] Workload
-- [ ] Charts
+- [x] Completion Rate
+- [x] Completed Tasks
+- [x] Overdue Tasks
+- [x] Project Progress
+- [x] Completion Trend
+- [x] Workload
+- [x] Charts
 
 Analyticsは初期段階では既存データから算出する。
 
@@ -532,14 +536,16 @@ Analyticsは初期段階では既存データから算出する。
 
 # 13.4 Notifications
 
-- [ ] Notification list
-- [ ] Unread state
-- [ ] Mark as read
-- [ ] Mark all as read
-- [ ] Task assignment
+- [x] Notification list
+- [x] Unread state
+- [x] Mark as read
+- [x] Mark all as read
+- [x] Task assignment
 - [ ] Mention
 - [ ] Comment
 - [ ] Due date notification
+
+> 一覧・既読は実装済み。Mention / Comment / Due 通知の自動生成は後続（assignment は seed / API 既存）。
 
 ---
 

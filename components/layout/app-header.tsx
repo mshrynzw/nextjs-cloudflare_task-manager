@@ -27,7 +27,7 @@ export function AppHeader({
       </div>
 
       <div className="flex items-center gap-3">
-        <nav className="flex items-center gap-2 md:hidden" aria-label="Mobile">
+          <nav className="flex items-center gap-2 md:hidden" aria-label="Mobile">
           <Link
             href="/dashboard"
             className="rounded-lg px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
@@ -39,6 +39,12 @@ export function AppHeader({
             className="rounded-lg px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
           >
             Projects
+          </Link>
+          <Link
+            href="/calendar"
+            className="rounded-lg px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+          >
+            Calendar
           </Link>
         </nav>
         <div className="hidden text-right text-xs sm:block">

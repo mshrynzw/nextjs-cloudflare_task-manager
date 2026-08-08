@@ -1,0 +1,111 @@
+"use client";
+
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  markAllNotificationsReadAction,
+  markNotificationReadAction,
+} from "@/features/notification/actions";
+import { cn } from "@/lib/utils";
+
+export interface NotificationItem {
+  id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  entityType: string | null;
+  entityId: string | null;
+  readAt: number | null;
+  createdAt: number;
+}
+
+interface NotificationsListProps {
+  notifications: NotificationItem[];
+}
+
+export function NotificationsList({ notifications }: NotificationsListProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  if (notifications.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 px-6 py-16 text-center">
+        <h2 className="text-lg font-medium text-zinc-100">No notifications</h2>
+        <p className="mt-2 text-sm text-zinc-500">
+          You&apos;re all caught up.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={isPending}
+          onClick={() => {
+            startTransition(async () => {
+              await markAllNotificationsReadAction();
+              router.refresh();
+            });
+          }}
+        >
+          Mark all as read
+        </Button>
+      </div>
+
+      <ul className="divide-y divide-zinc-800/80 overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/40">
+        {notifications.map((item) => {
+          const unread = item.readAt === null;
+          return (
+            <li
+              key={item.id}
+              className={cn(
+                "flex items-start justify-between gap-3 px-4 py-4",
+                unread && "bg-violet-500/5",
+              )}
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-zinc-100">
+                  {item.title}
+                  {unread ? (
+                    <span className="ml-2 inline-block size-1.5 rounded-full bg-violet-400 align-middle" />
+                  ) : null}
+                </p>
+                {item.body ? (
+                  <p className="mt-1 text-sm text-zinc-500">{item.body}</p>
+                ) : null}
+                <p className="mt-2 text-[11px] tabular-nums text-zinc-600">
+                  {new Date(item.createdAt * 1000).toLocaleString()} ·{" "}
+                  {item.type}
+                </p>
+              </div>
+              {unread ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={isPending}
+                  onClick={() => {
+                    startTransition(async () => {
+                      await markNotificationReadAction(item.id);
+                      router.refresh();
+                    });
+                  }}
+                >
+                  Mark read
+                </Button>
+              ) : (
+                <span className="shrink-0 text-xs text-zinc-600">Read</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}

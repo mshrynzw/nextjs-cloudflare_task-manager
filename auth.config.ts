@@ -6,6 +6,7 @@ const protectedPrefixes = [
   "/tasks",
   "/calendar",
   "/analytics",
+  "/notifications",
   "/settings",
   "/profile",
 ];

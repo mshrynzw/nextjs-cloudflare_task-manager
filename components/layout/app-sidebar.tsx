@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BarChart3,
+  Bell,
   CalendarDays,
   FolderKanban,
   LayoutDashboard,
-  ListTodo,
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,8 +20,9 @@ const NAV_ITEMS: Array<{
 }> = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/projects", label: "Projects", icon: FolderKanban },
-  { href: "/tasks", label: "Tasks", icon: ListTodo, disabled: true },
-  { href: "/calendar", label: "Calendar", icon: CalendarDays, disabled: true },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/settings", label: "Settings", icon: Settings, disabled: true },
 ];
 

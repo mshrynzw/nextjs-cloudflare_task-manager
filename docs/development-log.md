@@ -1045,6 +1045,37 @@ Task Board / Task Detail が利用可能。次は Phase 7 Supporting Features。
 
 ### Change
 
+Phase 7（Supporting Features）を実装した。
+
+### Reason
+
+Project / Task を補完する Dashboard・Calendar・Analytics・Notifications を提供するため。
+
+### Decision
+
+- 既存 Task / Project / Activity / Notification から Server 側で集計（専用集計テーブルなし）
+- Calendar / Analytics API（`/api/v1/calendar/events`, `/api/v1/analytics/*`）を追加
+- Charts は追加依存なしの CSS バーチャート
+- Notifications は既存 Service + Server Actions で既読操作
+- Mini Calendar / Day view / 通知自動生成の一部は後続
+
+### Impact
+
+`/dashboard` `/calendar` `/analytics` `/notifications` が利用可能。次は Phase 8 Settings / Profile。
+
+### Follow-up
+
+- Phase 8: Settings / Profile
+- Mini Calendar on Dashboard
+- Calendar Day view
+- Mention / Due date notification generation
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1445,12 +1476,13 @@ Phase 3 Auth       ✓
 Phase 4 API        ✓
 Phase 5 Projects   ✓
 Phase 6 Tasks      ✓
+Phase 7 Support    ✓
 ```
 
 ## Planned
 
 ```text
-Phase 7 Supporting Features (Calendar / Dashboard / Analytics)
+Phase 8 Settings / Profile
 Testing (feature-level E2E)
 CI/CD
 Deployment (includes task-manager-prod D1)
