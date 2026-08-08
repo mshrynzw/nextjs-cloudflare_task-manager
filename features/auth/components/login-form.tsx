@@ -4,13 +4,13 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
-  POST_AUTH_REDIRECT,
   registerWithCredentials,
   signInWithCredentials,
   signInWithGitHub,
   signInWithGoogle,
   type AuthActionState,
 } from "@/features/auth/actions";
+import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
 
 const initialState: AuthActionState = { status: "idle" };
 

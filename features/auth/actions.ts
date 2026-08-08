@@ -13,8 +13,7 @@ import { userSettings, users } from "@/lib/db/schema";
 import { getDb } from "@/lib/db/server";
 import { getClientIp } from "@/lib/security/client-ip";
 import { checkRateLimit } from "@/lib/security/rate-limit";
-
-export const POST_AUTH_REDIRECT = "/dashboard";
+import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
 
 export type AuthActionState = {
   status: "idle" | "error" | "success";
