@@ -1841,7 +1841,7 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 - Live: `https://task-manager.iq87io25.workers.dev`
 - Workers 向け workaround: `NEXT_PRIVATE_MINIMAL_MODE=1`（middleware-manifest dynamic require 回避。認可は `app/(app)/layout.tsx` の `auth()` で担保）
 - Windows OpenNext ビルド用: `scripts/patch-opennext.mjs`（junction + sharp shim）
-- CD: `.github/workflows/deploy.yml`（`workflow_dispatch`）
+- CD: `.github/workflows/deploy.yml`（CI 成功後の自動 Deploy + `workflow_dispatch`）
 
 ## Follow-ups
 

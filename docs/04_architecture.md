@@ -1044,7 +1044,7 @@ GitHub
 CI (quality + e2e)
     │
     ▼
-Deploy (manual workflow_dispatch / local `pnpm deploy`)
+Deploy (CI success on master/main, or workflow_dispatch / local `pnpm deploy`)
     │
     ▼
 OpenNext build
@@ -1107,7 +1107,12 @@ E2E (Playwright)
 
 すべて成功した場合のみマージ可能とすることを目標とする。
 
-本番デプロイは `.github/workflows/deploy.yml`（`workflow_dispatch`）またはローカルの `pnpm deploy` で行う。
+本番デプロイは `.github/workflows/deploy.yml` で行う。
+
+- `master` / `main` への Push 後、**CI 成功時に自動 Deploy**
+- 手動実行: Actions → Deploy → `workflow_dispatch`
+- ローカル: `pnpm deploy`
+
 GitHub Environment `production` に以下を設定する:
 
 - Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `AUTH_SECRET`

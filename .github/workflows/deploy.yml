@@ -2,6 +2,11 @@ name: Deploy
 
 on:
   workflow_dispatch:
+  # Deploy only after CI succeeds on the default branches.
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master, main]
 
 concurrency:
   group: deploy-production
@@ -19,9 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: production
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Deploy the exact commit that passed CI (not a newer tip).
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

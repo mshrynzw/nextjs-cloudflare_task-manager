@@ -1098,7 +1098,7 @@ Production環境へDeployする。
 - Local: `pnpm dev`（SQLite） / Preview: `pnpm preview:cf`（Workers runtime）
 - Deploy: `pnpm deploy`（OpenNext build + `wrangler --env production`）
 - Prod migrate: `pnpm db:migrate:prod`
-- CD: `.github/workflows/deploy.yml`（`workflow_dispatch` + GitHub Environment `production`）
+- CD: `.github/workflows/deploy.yml`（`master`/`main` で CI 成功後に自動 Deploy + `workflow_dispatch` + Environment `production`）
 - Windows では OpenNext の symlink 制限があるため `scripts/patch-opennext.mjs`（postinstall）を適用
 
 ---
