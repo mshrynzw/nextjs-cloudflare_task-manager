@@ -1328,19 +1328,24 @@ DrizzleのSchemaは以下のようにFeatureまたはDatabase領域で管理す�
 ```text
 lib/db/
 ├── index.ts
+├── client.ts
+├── id.ts
+├── seed.ts
 ├── schema/
 │   ├── users.ts
 │   ├── workspaces.ts
 │   ├── projects.ts
 │   ├── tasks.ts
-│   ├── comments.ts
+│   ├── tags.ts
 │   ├── activities.ts
 │   ├── notifications.ts
 │   └── settings.ts
-└── migrations/
+└── migrations/   # generated under drizzle/migrations/
 ```
 
 実装時にプロジェクトの既存Directory Structureと整合させる。
+
+現在の実装では Migration 出力先を `drizzle/migrations/` としている。
 
 ---
 
@@ -1588,22 +1593,22 @@ Migration適用後に既存データが壊れないことを確認する。
 
 # 69. Current Status
 
-現在のRepositoryでは、Database Schemaはまだ実装段階ではない。
-
-現在の `package.json` にはDrizzle ORMおよびCloudflare D1関連パッケージはまだ導入されていない。
-
-したがって、本ドキュメントはDatabaseの設計仕様として扱う。
-
-実装開始時に以下を追加する。
+Phase 2 で以下を実装済み。
 
 ```text
+Cloudflare D1 (task-manager-dev)
+wrangler.jsonc (binding: DB)
 Drizzle ORM
-Cloudflare D1 configuration
-Database Schema
-Migration
-Seed
-Database Tests
+lib/db/schema/
+drizzle/migrations/
+Seed (lib/db/seed.ts / pnpm db:seed:local)
+Database integration tests
 ```
+
+Auth.js 用テーブル（`accounts` / `sessions` / `verification_tokens`）と
+Attachments / Time Entries は未実装（それぞれ Phase 3 / 将来拡張）。
+
+本番用 D1（`task-manager-prod`）は Deployment 時に作成する。
 
 ---
 

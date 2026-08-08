@@ -889,6 +889,37 @@ Phase 2（D1 / Drizzle）以降の実装を、同じ検証コマンドとドキ�
 
 ### Change
 
+Phase 2（Database Foundation）を完了した。
+
+### Reason
+
+Auth / API / UI 実装の前に、D1 と Drizzle のスキーマ・Migration・Seed・テスト基盤を固定するため。
+
+### Decision
+
+- 開発用 D1 名: `task-manager-dev`（database_id: `ecc7cba5-daef-4e4e-b6a2-e2eb031d89eb`）
+- Binding 名: `DB`
+- Schema は `lib/db/schema/`、Migration は `drizzle/migrations/`
+- Auth.js 用 `accounts` / `sessions` / `verification_tokens` は Phase 3 で Adapter 仕様に合わせて追加
+- Attachments / Time Entries は将来拡張として Phase 2 では未作成
+- 本番用 `task-manager-prod` は Deployment 時に作成
+- ローカルテストは better-sqlite3 + 同一 Migration（`foreign_keys=ON`）
+
+### Impact
+
+Repository / Service / Auth 実装を同じ Schema 上で進められる。
+
+### Follow-up
+
+- Phase 3: Auth.js（GitHub → Google → Email）と Auth tables
+- Deployment: `task-manager-prod` 作成
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1284,22 +1315,18 @@ UI Guideline       ✓
 Component Design   ✓
 Development Log    ✓
 Phase 1 Env        ✓
+Phase 2 Database   ✓
 ```
 
 ## Planned
 
 ```text
-D1 Setup
-Drizzle Setup
-Database Schema
-Migration
-Seed
 Authentication (GitHub → Google → Email)
 API Implementation
 Frontend Implementation
 Testing (feature-level)
 CI/CD
-Deployment
+Deployment (includes task-manager-prod D1)
 ```
 
 ---

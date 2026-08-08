@@ -176,54 +176,50 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 
 ## Status
 
-`PLANNED`
-
-## Priority
-
-`P0`
+`DONE`
 
 ## Tasks
 
 ### Cloudflare
 
-- [ ] Cloudflare account configuration
-- [ ] D1 database creation
-- [ ] Local D1 configuration
-- [ ] Development database
-- [ ] Production database
+- [x] Cloudflare account configuration
+- [x] D1 database creation (`task-manager-dev`)
+- [x] Local D1 configuration
+- [x] Development database
+- [ ] Production database (`task-manager-prod` — create at deployment)
 
 ### Drizzle
 
-- [ ] Install Drizzle ORM
-- [ ] Configure Drizzle
-- [ ] Create schema
-- [ ] Configure migrations
-- [ ] Configure seed
+- [x] Install Drizzle ORM
+- [x] Configure Drizzle
+- [x] Create schema
+- [x] Configure migrations
+- [x] Configure seed
 
 ### Schema
 
-- [ ] Users
-- [ ] Workspaces
-- [ ] Workspace Members
-- [ ] Projects
-- [ ] Project Members
-- [ ] Tasks
-- [ ] Checklist Items
-- [ ] Tags
-- [ ] Project Tags
-- [ ] Task Tags
-- [ ] Comments
-- [ ] Activities
-- [ ] Notifications
-- [ ] User Settings
+- [x] Users
+- [x] Workspaces
+- [x] Workspace Members
+- [x] Projects
+- [x] Project Members
+- [x] Tasks
+- [x] Checklist Items
+- [x] Tags
+- [x] Project Tags
+- [x] Task Tags
+- [x] Comments
+- [x] Activities
+- [x] Notifications
+- [x] User Settings
 
 ### Tests
 
-- [ ] Database connection test
-- [ ] Migration test
-- [ ] CRUD test
-- [ ] Foreign Key test
-- [ ] Authorization data test
+- [x] Database connection test
+- [x] Migration test
+- [x] CRUD test
+- [x] Foreign Key test
+- [x] Authorization data test
 
 ---
 

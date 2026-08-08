@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "task-manager",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "task-manager-dev",
+      "database_id": "ecc7cba5-daef-4e4e-b6a2-e2eb031d89eb",
+      "migrations_dir": "drizzle/migrations",
+    },
+  ],
+}
