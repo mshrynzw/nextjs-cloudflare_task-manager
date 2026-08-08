@@ -1018,18 +1018,26 @@ GitHubへのPush / Pull Requestから自動的に品質チェックを行える�
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Tasks
 
-- [ ] GitHub Actions
-- [ ] Lint
-- [ ] Type Check
-- [ ] Unit Test
-- [ ] Integration Test
-- [ ] E2E Test
-- [ ] Build
-- [ ] Deployment
+- [x] GitHub Actions
+- [x] Lint
+- [x] Type Check
+- [x] Unit Test
+- [x] Integration Test
+- [x] E2E Test
+- [x] Build
+- [ ] Deployment（Phase 16 で実施）
+
+## Notes
+
+- Workflow: `.github/workflows/ci.yml`
+- `quality` job: lint → typecheck → unit → integration → build
+- `e2e` job: Playwright Chromium（`quality` 成功後）
+- CI 用 Auth env は workflow `env` で注入（秘密はリポジトリに含めない）
+- CD / Cloudflare 本番デプロイは Phase 16
 
 ---
 

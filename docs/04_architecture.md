@@ -1053,18 +1053,29 @@ Production
 
 # 46. CI/CD
 
-GitHub Actionsを利用する予定とする。
+GitHub Actions を利用する。
 
-Pull Request時
+Workflow: `.github/workflows/ci.yml`
+
+Pull Request / `main`・`master` への Push 時:
 
 ```text
 Lint
+ ↓
 Type Check
-Test
+ ↓
+Unit Test
+ ↓
+Integration Test
+ ↓
 Build
+ ↓
+E2E (Playwright)
 ```
 
-を実行する。
+すべて成功した場合のみマージ可能とすることを目標とする。
+
+本番デプロイ（CD）は Phase 16 で行う。
 
 ---
 

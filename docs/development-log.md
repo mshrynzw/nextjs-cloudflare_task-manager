@@ -1792,3 +1792,30 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 
 - Phase 15 CI/CD
 - axe ベースの自動監査（任意）
+
+---
+
+# Phase 15 — CI/CD
+
+## Date
+
+2026-08-08
+
+## Summary
+
+GitHub Actions で PR / Push 時の品質ゲート（Lint・Typecheck・Test・Build・E2E）を導入した。
+
+## Details
+
+- `.github/workflows/ci.yml`
+  - `quality`: pnpm lint / typecheck / test:unit / test:integration / build
+  - `e2e`: Playwright Chromium（quality 成功後）
+- Node 22 + pnpm 10、`AUTH_*` は CI 用ダミーを workflow env で注入
+- 失敗時に Playwright report / test-results を artifact アップロード
+- 本番デプロイ（CD）は Phase 16 に分離
+
+## Follow-ups
+
+- Phase 16 Deployment
+- 必要なら `format:check` を CI に追加（現状はリポジトリ全体の Prettier 差分が大きいため未導入）
+- Branch protection で required checks を有効化
