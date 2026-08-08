@@ -759,13 +759,12 @@ AGENTS.md
 docs/
 ├── 01_requirements.md
 ├── 02_basic_design.md
-├── 03_detail_design/
-├── architecture.md
-├── database.md
-├── api.md
-├── ui-guideline.md
+├── `03_detail-design/*.md`
+├── 04_architecture.md
+├── 05_database.md
+├── 06api.md
 ├── 07_component_design.md
-└── development-log.md
+└── 08_ui-guideline.md
 ```
 
 Cursorは実装前に関連する設計書を確認する。
