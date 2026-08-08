@@ -74,7 +74,13 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
                 <p className="text-sm font-medium text-zinc-100">
                   {item.title}
                   {unread ? (
-                    <span className="ml-2 inline-block size-1.5 rounded-full bg-[color:var(--accent-1)] align-middle" />
+                    <>
+                      <span
+                        className="ml-2 inline-block size-1.5 rounded-full bg-[color:var(--accent-1)] align-middle"
+                        aria-hidden
+                      />
+                      <span className="sr-only">Unread</span>
+                    </>
                   ) : null}
                 </p>
                 {item.body ? (

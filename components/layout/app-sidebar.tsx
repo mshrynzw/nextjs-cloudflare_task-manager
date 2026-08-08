@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, focusRingClass } from "@/lib/utils";
 import { APP_NAV_ITEMS } from "@/components/layout/nav-items";
 
 export function AppSidebar() {
@@ -35,6 +35,7 @@ export function AppSidebar() {
                 href={item.href}
                 className={cn(
                   "relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors",
+                  focusRingClass,
                   isActive
                     ? "bg-[color:var(--accent-soft)] text-[color:var(--text-primary)]"
                     : "text-[color:var(--text-secondary)] hover:bg-white/5 hover:text-[color:var(--text-primary)]",

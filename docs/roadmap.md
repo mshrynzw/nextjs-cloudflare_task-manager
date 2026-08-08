@@ -984,22 +984,31 @@ Keyboard / Screen Reader / Reduced Motionなどを考慮したUIを実現する�
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Tasks
 
-- [ ] Semantic HTML
-- [ ] Keyboard navigation
-- [ ] Focus management
-- [ ] Focus visible
-- [ ] ARIA labels
-- [ ] Color contrast
-- [ ] Form accessibility
-- [ ] Dialog accessibility
-- [ ] Command Palette accessibility
-- [ ] Reduced motion
+- [x] Semantic HTML
+- [x] Keyboard navigation
+- [x] Focus management
+- [x] Focus visible
+- [x] ARIA labels
+- [x] Color contrast
+- [x] Form accessibility
+- [x] Dialog accessibility
+- [x] Command Palette accessibility
+- [x] Reduced motion
 
----
+## Notes
+
+- Skip link + `#main-content`、Settings `<main>`
+- Command Palette: focus trap / 矢印キー / Escape / フォーカス復帰
+- Mobile drawer: dialog + trap + フォーカス復帰
+- Project actions → Base UI DropdownMenu
+- Calendar priority / unread notifications にテキスト情報を追加
+- Board tabs: `aria-controls` / 矢印キー、Add に具体的な aria-label
+- `--text-muted` を AA 寄りに調整、ヘッダー説明は `--text-secondary`
+- Unit: focus-trap helpers / E2E: a11y-smoke（skip + palette）
 
 # 21. Phase 15 — CI/CD
 

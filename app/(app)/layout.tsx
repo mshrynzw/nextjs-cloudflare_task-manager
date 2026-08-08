@@ -1,3 +1,4 @@
+import { SkipToMain } from "@/components/layout/skip-to-main";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
@@ -38,13 +39,18 @@ export default async function AppLayout({
     <AppearanceProvider settings={appearance}>
       <ToastProvider>
         <div className="relative flex min-h-screen text-[color:var(--text-primary)]">
+          <SkipToMain />
           <div
             aria-hidden
             className="app-ambient pointer-events-none absolute inset-0"
           />
           <div className="relative z-10 flex min-h-screen w-full">
             <AppSidebar />
-            <div className="page-enter flex min-w-0 flex-1 flex-col">
+            <div
+              id="main-content"
+              tabIndex={-1}
+              className="page-enter flex min-w-0 flex-1 flex-col outline-none"
+            >
               {children}
             </div>
           </div>

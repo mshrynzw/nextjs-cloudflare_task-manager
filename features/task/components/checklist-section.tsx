@@ -114,12 +114,16 @@ export function ChecklistSection({
       )}
 
       <form action={formAction} className="flex gap-2">
+        <label className="sr-only" htmlFor="checklist-new-item">
+          Add checklist item
+        </label>
         <input
+          id="checklist-new-item"
           name="title"
           required
           maxLength={200}
           placeholder="Add an item…"
-          className="h-9 flex-1 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 text-sm text-zinc-100 outline-none focus-visible:border-violet-500/50"
+          className="h-9 flex-1 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 text-sm text-zinc-100 outline-none focus-visible:border-violet-500/50 focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)]"
         />
         <AddButton />
       </form>

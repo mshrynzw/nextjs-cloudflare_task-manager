@@ -1763,3 +1763,32 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 
 - Phase 14 Accessibility
 - Production Web Vitals / bundle 計測
+
+---
+
+# Phase 14 — Accessibility
+
+## Date
+
+2026-08-08
+
+## Summary
+
+キーボード・スクリーンリーダー・フォーカス管理を中心に、主要 UI のアクセシビリティを強化した。
+
+## Details
+
+- Skip link + `#main-content`、Settings を `<main>` 化
+- `focusRingClass` をナビ / リンクに適用
+- Command Palette: trap・矢印選択・Escape・復帰
+- Mobile drawer: dialog・trap・復帰
+- Project actions を DropdownMenu へ移行
+- Calendar / Notifications の色のみ表現を補完
+- Board tabs / Add / Checklist label / Create Task description
+- `--text-muted` コントラスト改善
+- focus-trap helpers + Playwright a11y smoke
+
+## Follow-ups
+
+- Phase 15 CI/CD
+- axe ベースの自動監査（任意）

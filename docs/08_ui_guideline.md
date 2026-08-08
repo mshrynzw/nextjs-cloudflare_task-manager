@@ -443,11 +443,20 @@ Keyboard Navigation
 
 Focus Ring
 
-必須
+必須（`focusRingClass` / Button・Input の focus-visible）
 
 aria-label
 
-必須
+必須（特に icon-only コントロール）
+
+## 実装ルール
+
+- Skip link: 「Skip to main content」→ `#main-content`
+- Landmark: 主要コンテンツは `<main>`。Settings も例外にしない
+- Dialog / Menu: Base UI（Escape・フォーカストラップ）を優先
+- カスタムオーバーレイ（Command Palette / Mobile drawer）は trap + フォーカス復帰
+- 色だけで状態を伝えない（優先度・未読などはテキスト / `sr-only` を併記）
+- Reduced motion: `prefers-reduced-motion` と Appearance の `data-animations="off"` で非必須アニメを抑制
 
 ---
 

@@ -43,6 +43,12 @@ const PRIORITY_DOT: Record<string, string> = {
   low: "bg-zinc-400",
 };
 
+const PRIORITY_LABEL: Record<string, string> = {
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+};
+
 export function CalendarView({ events, initialDate }: CalendarViewProps) {
   const router = useRouter();
   const [cursor, setCursor] = useState(
@@ -202,14 +208,19 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                     <li
                       key={event.id}
                       className="truncate rounded px-1 py-0.5 text-[10px] text-zinc-300"
-                      title={event.title}
+                      title={`${event.title} (${PRIORITY_LABEL[event.priority] ?? event.priority})`}
                     >
                       <span
                         className={cn(
                           "mr-1 inline-block size-1.5 rounded-full",
                           PRIORITY_DOT[event.priority] ?? "bg-zinc-500",
                         )}
+                        aria-hidden
                       />
+                      <span className="sr-only">
+                        {PRIORITY_LABEL[event.priority] ?? event.priority}{" "}
+                        priority.{" "}
+                      </span>
                       {event.title}
                     </li>
                   ))}

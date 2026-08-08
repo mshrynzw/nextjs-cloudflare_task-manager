@@ -1,39 +1,55 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { trapTabKey } from "@/lib/ui/focus-trap";
+import { cn, focusRingClass } from "@/lib/utils";
 import { APP_NAV_ITEMS } from "@/components/layout/nav-items";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const titleId = useId();
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (!open) {
       return;
     }
+
+    const previousOverflow = document.body.style.overflow;
+    const trigger = triggerRef.current;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        event.preventDefault();
         setOpen(false);
+        return;
+      }
+      if (drawerRef.current) {
+        trapTabKey(event, drawerRef.current);
       }
     }
+
     document.addEventListener("keydown", onKeyDown);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
     };
   }, [open]);
 
   return (
     <div className="md:hidden" key={pathname}>
       <Button
+        ref={triggerRef}
         type="button"
         variant="outline"
         size="icon-sm"
@@ -52,9 +68,13 @@ export function MobileNav() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             aria-label="Close navigation"
             onClick={() => setOpen(false)}
+            tabIndex={-1}
           />
-          <nav
+          <div
+            ref={drawerRef}
             id="mobile-nav-drawer"
+            role="dialog"
+            aria-modal="true"
             aria-labelledby={titleId}
             className="animate-in-slide absolute inset-y-0 left-0 flex w-[min(100%,20rem)] flex-col border-r border-[color:var(--border-subtle)] bg-[color:var(--bg-elevated)] p-4 shadow-[var(--shadow-pop)]"
           >
@@ -63,6 +83,7 @@ export function MobileNav() {
                 Vantage
               </p>
               <Button
+                ref={closeButtonRef}
                 type="button"
                 variant="ghost"
                 size="icon-sm"
@@ -72,7 +93,7 @@ export function MobileNav() {
                 <X aria-hidden />
               </Button>
             </div>
-            <div className="flex flex-col gap-1">
+            <nav aria-label="Mobile" className="flex flex-col gap-1">
               {APP_NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive =
@@ -85,6 +106,7 @@ export function MobileNav() {
                     onClick={() => setOpen(false)}
                     className={cn(
                       "flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-sm transition-colors",
+                      focusRingClass,
                       isActive
                         ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-1)]"
                         : "text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-100",
@@ -96,8 +118,8 @@ export function MobileNav() {
                   </Link>
                 );
               })}
-            </div>
-          </nav>
+            </nav>
+          </div>
         </div>
       ) : null}
     </div>

@@ -411,6 +411,9 @@ export function TaskBoard({
           {TASK_STATUSES.map((status) => (
             <div
               key={status}
+              id={`board-panel-${status}`}
+              role="tabpanel"
+              aria-labelledby={`board-tab-${status}`}
               className={
                 status === mobileStatus
                   ? "w-full shrink-0 md:w-auto"

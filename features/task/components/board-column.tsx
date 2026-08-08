@@ -53,7 +53,8 @@ export function BoardColumn({
         <button
           type="button"
           onClick={() => onAddTask(status)}
-          className="rounded-lg px-2 py-1 text-xs text-violet-300 hover:bg-zinc-800"
+          className="rounded-lg px-2 py-1 text-xs text-violet-300 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)]"
+          aria-label={`Add task to ${TASK_STATUS_LABELS[status]}`}
         >
           Add
         </button>

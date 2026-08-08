@@ -6,6 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
+  DialogDescription,
   DialogPopup,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -171,6 +172,9 @@ export function CreateTaskDialog({
       {open ? (
         <DialogPopup>
           <DialogTitle>Create task</DialogTitle>
+          <DialogDescription>
+            Add a task to this project. You can change status and assignee later.
+          </DialogDescription>
           <CreateTaskForm
             key={`${projectId}-${defaultStatus}-${String(open)}`}
             projectId={projectId}

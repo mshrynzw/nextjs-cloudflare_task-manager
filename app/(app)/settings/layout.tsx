@@ -17,10 +17,10 @@ export default async function SettingsLayout({
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
-      <div className="flex flex-1 flex-col gap-6 px-4 py-6 lg:flex-row sm:px-6">
+      <main className="flex flex-1 flex-col gap-6 px-4 py-6 lg:flex-row sm:px-6">
         <SettingsNav />
         <div className="min-w-0 flex-1">{children}</div>
-      </div>
+      </main>
     </>
   );
 }

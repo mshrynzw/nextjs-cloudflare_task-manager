@@ -31,7 +31,7 @@ export function AppHeader({
             {title}
           </h1>
           {description ? (
-            <p className="mt-1 text-sm text-[color:var(--text-muted)]">
+            <p className="mt-1 text-sm text-[color:var(--text-secondary)]">
               {description}
             </p>
           ) : null}
@@ -57,7 +57,7 @@ export function AppHeader({
         <div className="hidden text-right text-xs sm:block">
           <Link
             href="/profile"
-            className="font-medium text-zinc-200 hover:text-[color:var(--accent-1)]"
+            className="font-medium text-zinc-200 hover:text-[color:var(--accent-1)] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)]"
           >
             {userName ?? userEmail ?? "User"}
           </Link>

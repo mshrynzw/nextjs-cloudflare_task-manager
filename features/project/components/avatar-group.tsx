@@ -30,6 +30,7 @@ export function AvatarGroup({
       {visible.map((member) => (
         <li
           key={member.id}
+          aria-label={member.name ?? "Member"}
           title={member.name ?? "Member"}
           className="flex size-7 items-center justify-center rounded-full border-2 border-zinc-950 bg-zinc-700 text-[10px] font-semibold text-zinc-100"
         >
@@ -41,12 +42,15 @@ export function AvatarGroup({
               className="size-full rounded-full object-cover"
             />
           ) : (
-            getInitials(member.name)
+            <span aria-hidden>{getInitials(member.name)}</span>
           )}
         </li>
       ))}
       {overflow > 0 ? (
-        <li className="flex size-7 items-center justify-center rounded-full border-2 border-zinc-950 bg-zinc-800 text-[10px] font-medium text-zinc-300">
+        <li
+          aria-label={`${overflow} more members`}
+          className="flex size-7 items-center justify-center rounded-full border-2 border-zinc-950 bg-zinc-800 text-[10px] font-medium text-zinc-300"
+        >
           +{overflow}
         </li>
       ) : null}

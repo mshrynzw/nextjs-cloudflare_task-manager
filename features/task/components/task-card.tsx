@@ -91,10 +91,11 @@ export function TaskCard({
         ) : null}
         {assignee ? (
           <span
+            aria-label={assignee.name ?? "Assignee"}
             title={assignee.name ?? "Assignee"}
             className="ml-auto flex size-6 items-center justify-center rounded-full bg-zinc-800 text-[10px] font-semibold text-zinc-200"
           >
-            {getInitials(assignee.name)}
+            <span aria-hidden>{getInitials(assignee.name)}</span>
           </span>
         ) : null}
       </div>
