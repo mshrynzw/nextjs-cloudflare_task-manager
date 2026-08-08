@@ -1864,5 +1864,10 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 
 ## Details
 
-- 原因: Auth.js / Next.js の Server Action 内リダイレクト（302）が Workers 上の `useActionState` と不相容
-- 対応: `signIn({ redirect: false })` 後は `{ status: "success" }` を返し、クライアントで `window.location.assign("/dashboard")` する
+- 症状: Sign In 後に「Something went wrong / An unexpected response was received from the server」。Cookie は付与され、リロードすると Dashboard に入れる
+- 原因: Auth.js の Server Action 内 `signIn` / リダイレクトが、OpenNext on Workers 上で Server Action レスポンスと不相容
+- 対応:
+  - `features/auth/components/login-form.tsx`: `next-auth/react` の `signIn` + `window.location.assign("/dashboard")`
+  - `features/auth/actions.ts`: `prepareCredentialsSignIn` / `registerWithCredentials` のみ（検証・rate limit・ユーザー作成）
+  - リダイレクト先定数は `features/auth/constants.ts`（`"use server"` ファイルから非 async 定数を export しない）
+- `docs/04_architecture.md` §15.1 に Workers 向けログインフローを追記

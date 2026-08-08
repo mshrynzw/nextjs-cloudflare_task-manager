@@ -1,12 +1,10 @@
 "use server";
 
-import { AuthError } from "next-auth";
 import { eq } from "drizzle-orm";
 import {
   credentialsSchema,
   hashPassword,
   isEmailAuthEnabled,
-  signIn,
 } from "@/auth";
 import { createId, nowUnix } from "@/lib/db/id";
 import { userSettings, users } from "@/lib/db/schema";
@@ -18,61 +16,9 @@ import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
 export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
+  email?: string;
   redirectTo?: string;
 };
-
-/**
- * Auth.js / Next.js redirects inside Server Actions return raw 302 responses that
- * break React `useActionState` on Cloudflare Workers ("unexpected response").
- * Sign in without redirect and let the client navigate after a success state.
- */
-async function signInCredentialsWithoutRedirect(
-  email: string,
-  password: string,
-  invalidMessage: string,
-): Promise<AuthActionState> {
-  try {
-    // Server `signIn` with `redirect: false` returns a callback/error URL string.
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (typeof result === "string") {
-      const url = new URL(result, "http://localhost");
-      if (url.searchParams.has("error")) {
-        return {
-          status: "error",
-          message: invalidMessage,
-        };
-      }
-    } else if (
-      result &&
-      typeof result === "object" &&
-      "error" in result &&
-      result.error
-    ) {
-      return {
-        status: "error",
-        message: invalidMessage,
-      };
-    }
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return {
-        status: "error",
-        message: invalidMessage,
-      };
-    }
-    throw error;
-  }
-
-  return {
-    status: "success",
-    redirectTo: POST_AUTH_REDIRECT,
-  };
-}
 
 const LOGIN_LIMIT = 10;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
@@ -86,8 +32,12 @@ function rateLimited(retryAfterSeconds: number): AuthActionState {
   };
 }
 
-export async function signInWithCredentials(
-  _prev: AuthActionState,
+/**
+ * Validate credentials input and apply login rate limits.
+ * Does not call Auth.js `signIn` — that must run on the client via `next-auth/react`
+ * because server `signIn` breaks Server Action responses on Cloudflare Workers.
+ */
+export async function prepareCredentialsSignIn(
   formData: FormData,
 ): Promise<AuthActionState> {
   if (!isEmailAuthEnabled()) {
@@ -120,15 +70,17 @@ export async function signInWithCredentials(
     return rateLimited(limit.retryAfterSeconds);
   }
 
-  return signInCredentialsWithoutRedirect(
-    emailKey,
-    parsed.data.password,
-    "Invalid email or password.",
-  );
+  return {
+    status: "success",
+    email: emailKey,
+    redirectTo: POST_AUTH_REDIRECT,
+  };
 }
 
+/**
+ * Create an account only. Client must call `next-auth/react` `signIn` afterwards.
+ */
 export async function registerWithCredentials(
-  _prev: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
   if (!isEmailAuthEnabled()) {
@@ -196,17 +148,9 @@ export async function registerWithCredentials(
     updatedAt: timestamp,
   });
 
-  return signInCredentialsWithoutRedirect(
+  return {
+    status: "success",
     email,
-    parsed.data.password,
-    "Account created, but sign-in failed. Try signing in.",
-  );
-}
-
-export async function signInWithGitHub() {
-  await signIn("github", { redirectTo: "/dashboard" });
-}
-
-export async function signInWithGoogle() {
-  await signIn("google", { redirectTo: "/dashboard" });
+    redirectTo: POST_AUTH_REDIRECT,
+  };
 }

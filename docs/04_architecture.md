@@ -411,7 +411,7 @@ docs/database.md
 
 # 15. Authentication Architecture
 
-認証にはAuth.jsを採用予定とする。
+認証にはAuth.jsを採用する。
 
 ```text
 Browser
@@ -427,6 +427,28 @@ User
 ```
 
 認証情報をClient Componentに直接保存しない。
+
+## 15.1 Login / Sign-in flow（Cloudflare Workers）
+
+Credentials / OAuth の `signIn` はクライアントの `next-auth/react` 経由で行う。
+
+Server Action 内の Auth.js `signIn` や `redirect()` は、OpenNext on Workers 上で Server Action レスポンスを壊し、ログイン UI に「unexpected response」を出すため使わない。
+
+```text
+Login Form (Client)
+   │
+   ├─ Server Action: 入力検証 / rate limit / ユーザー作成
+   │
+   └─ next-auth/react signIn → /api/auth/*
+         │
+         ▼
+      Session cookie
+         │
+         ▼
+      window.location → /dashboard
+```
+
+認可は引き続き Server Component / Route Handler 上の `auth()` で行う。
 
 ---
 
