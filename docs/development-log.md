@@ -1864,5 +1864,5 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 
 ## Details
 
-- 原因: Auth.js `signIn` のデフォルト 302 が React Server Actions と不相容
-- 対応: `redirect: false` でサインイン後、Next.js `redirect("/dashboard")` を使用
+- 原因: Auth.js / Next.js の Server Action 内リダイレクト（302）が Workers 上の `useActionState` と不相容
+- 対応: `signIn({ redirect: false })` 後は `{ status: "success" }` を返し、クライアントで `window.location.assign("/dashboard")` する

@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
+  POST_AUTH_REDIRECT,
   registerWithCredentials,
   signInWithCredentials,
   signInWithGitHub,
@@ -28,6 +29,16 @@ interface LoginFormProps {
   googleEnabled: boolean;
 }
 
+function usePostAuthRedirect(state: AuthActionState): void {
+  useEffect(() => {
+    if (state.status !== "success") {
+      return;
+    }
+    // Full navigation avoids broken Server Action redirect handling on Workers.
+    window.location.assign(state.redirectTo ?? POST_AUTH_REDIRECT);
+  }, [state]);
+}
+
 export function LoginForm({
   emailEnabled,
   githubEnabled,
@@ -41,6 +52,9 @@ export function LoginForm({
     registerWithCredentials,
     initialState,
   );
+
+  usePostAuthRedirect(signInState);
+  usePostAuthRedirect(registerState);
 
   return (
     <div className="flex w-full max-w-md flex-col gap-6">

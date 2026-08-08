@@ -2,7 +2,6 @@
 
 import { AuthError } from "next-auth";
 import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import {
   credentialsSchema,
   hashPassword,
@@ -15,19 +14,20 @@ import { getDb } from "@/lib/db/server";
 import { getClientIp } from "@/lib/security/client-ip";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 
-const POST_AUTH_REDIRECT = "/dashboard";
+export const POST_AUTH_REDIRECT = "/dashboard";
 
 export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
+  redirectTo?: string;
 };
 
 /**
- * Auth.js `signIn` with default redirect returns a raw 302 that breaks
- * React Server Actions on Workers ("unexpected response from the server").
- * Use `redirect: false` then Next.js `redirect()` instead.
+ * Auth.js / Next.js redirects inside Server Actions return raw 302 responses that
+ * break React `useActionState` on Cloudflare Workers ("unexpected response").
+ * Sign in without redirect and let the client navigate after a success state.
  */
-async function signInCredentialsAndRedirect(
+async function signInCredentialsWithoutRedirect(
   email: string,
   password: string,
   invalidMessage: string,
@@ -48,7 +48,12 @@ async function signInCredentialsAndRedirect(
           message: invalidMessage,
         };
       }
-    } else if (result && typeof result === "object" && "error" in result && result.error) {
+    } else if (
+      result &&
+      typeof result === "object" &&
+      "error" in result &&
+      result.error
+    ) {
       return {
         status: "error",
         message: invalidMessage,
@@ -64,7 +69,10 @@ async function signInCredentialsAndRedirect(
     throw error;
   }
 
-  redirect(POST_AUTH_REDIRECT);
+  return {
+    status: "success",
+    redirectTo: POST_AUTH_REDIRECT,
+  };
 }
 
 const LOGIN_LIMIT = 10;
@@ -113,7 +121,7 @@ export async function signInWithCredentials(
     return rateLimited(limit.retryAfterSeconds);
   }
 
-  return signInCredentialsAndRedirect(
+  return signInCredentialsWithoutRedirect(
     emailKey,
     parsed.data.password,
     "Invalid email or password.",
@@ -189,7 +197,7 @@ export async function registerWithCredentials(
     updatedAt: timestamp,
   });
 
-  return signInCredentialsAndRedirect(
+  return signInCredentialsWithoutRedirect(
     email,
     parsed.data.password,
     "Account created, but sign-in failed. Try signing in.",
