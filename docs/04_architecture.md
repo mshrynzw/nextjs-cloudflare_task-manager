@@ -972,7 +972,21 @@ AUTH_EMAIL_ENABLED
 
 実際の環境変数はプロジェクトのDeployment環境に合わせて定義する。
 
-## 43.4 Validation
+## 43.4 Cloudflare D1
+
+開発用 Database:
+
+```text
+name: task-manager-dev
+binding: DB
+config: wrangler.jsonc
+```
+
+本番用 `task-manager-prod` は Deployment 時に作成する。
+
+ローカル検証では better-sqlite3（同一 Migration）も利用できる。
+
+## 43.5 Validation
 
 外部入力と同様に、環境変数も Schema で検証する。
 
