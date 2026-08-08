@@ -70,8 +70,8 @@ Task Manager
 | SCR-006 | Task Detail    | `/projects/[projectId]/tasks/[taskId]` | Yes  | P0       | Done |
 | SCR-007 | Calendar       | `/calendar`                   | Yes  | P1       | Done |
 | SCR-008 | Analytics      | `/analytics`                  | Yes  | P1       | Done |
-| SCR-009 | Settings       | `/settings`                   | Yes  | P1       | Planned |
-| SCR-010 | Profile        | `/profile`                    | Yes  | P1       | Planned |
+| SCR-009 | Settings       | `/settings`                   | Yes  | P1       | Done |
+| SCR-010 | Profile        | `/profile/[userId]`           | Yes  | P1       | Done |
 | SCR-011 | Mobile Layout  | Responsive UI                 | Yes  | P0       | Planned |
 
 ---

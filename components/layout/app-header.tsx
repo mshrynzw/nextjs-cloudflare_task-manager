@@ -46,6 +46,12 @@ export function AppHeader({
           >
             Calendar
           </Link>
+          <Link
+            href="/settings"
+            className="rounded-lg px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+          >
+            Settings
+          </Link>
         </nav>
         <div className="hidden text-right text-xs sm:block">
           <p className="font-medium text-zinc-200">

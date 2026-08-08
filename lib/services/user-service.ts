@@ -1,7 +1,16 @@
-import { forbidden, notFound } from "@/lib/api/errors";
+import { compare, hash } from "bcryptjs";
+import { eq } from "drizzle-orm";
+import { fromUnixDate } from "@/lib/api/schemas";
+import { forbidden, notFound, validationError } from "@/lib/api/errors";
 import type { AppDatabase } from "@/lib/db/client";
 import {
+  userSettings,
+  workspaceMembers,
+  workspaces,
+} from "@/lib/db/schema";
+import {
   findUserById,
+  updateUserPasswordHash,
   updateUserProfile,
 } from "@/lib/repositories/user-repository";
 import {
@@ -13,6 +22,11 @@ import {
   findUserSettings,
   updateUserSettings,
 } from "@/lib/repositories/settings-repository";
+import {
+  listAccessibleProjectsForUser,
+  listAccessibleTasksForUser,
+  listRecentActivitiesForUser,
+} from "@/lib/repositories/insights-repository";
 
 export async function getUserPublicProfile(
   db: AppDatabase,
@@ -34,6 +48,62 @@ export async function getUserPublicProfile(
     website: user.website,
     role: user.role,
     email: actorUserId === userId ? user.email : undefined,
+    hasPassword: Boolean(user.passwordHash),
+  };
+}
+
+export async function getProfilePageData(
+  db: AppDatabase,
+  actorUserId: string,
+  userId: string,
+) {
+  const profile = await getUserPublicProfile(db, actorUserId, userId);
+  const [tasks, projects, activities] = await Promise.all([
+    listAccessibleTasksForUser(db, actorUserId),
+    listAccessibleProjectsForUser(db, actorUserId, 12),
+    listRecentActivitiesForUser(db, actorUserId, 8),
+  ]);
+
+  const assignedTasks = tasks
+    .filter((task) => task.assigneeId === userId)
+    .slice(0, 8)
+    .map((task) => ({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+      priority: task.priority,
+      projectId: task.projectId,
+      projectName: task.projectName,
+      dueDate: fromUnixDate(task.dueDate),
+    }));
+
+  const completedAssigned = tasks.filter(
+    (task) => task.assigneeId === userId && task.status === "done",
+  ).length;
+  const totalAssigned = tasks.filter(
+    (task) => task.assigneeId === userId,
+  ).length;
+
+  return {
+    profile,
+    isOwnProfile: actorUserId === userId,
+    stats: {
+      assignedTasks: totalAssigned,
+      completedTasks: completedAssigned,
+      projects: projects.length,
+    },
+    assignedTasks,
+    projects: projects.slice(0, 6),
+    activities: activities
+      .filter((item) => item.userId === userId)
+      .slice(0, 6)
+      .map((item) => ({
+        id: item.id,
+        action: item.action,
+        projectId: item.projectId,
+        projectName: item.projectName,
+        createdAt: item.createdAt,
+      })),
   };
 }
 
@@ -70,6 +140,31 @@ export async function updateCurrentUserProfile(
   };
 }
 
+export async function changeUserPassword(
+  db: AppDatabase,
+  userId: string,
+  input: { currentPassword: string; newPassword: string },
+) {
+  const user = await findUserById(db, userId);
+  if (!user) {
+    throw notFound("User not found");
+  }
+  if (!user.passwordHash) {
+    throw validationError(
+      "Password change is only available for email accounts.",
+    );
+  }
+
+  const isValid = await compare(input.currentPassword, user.passwordHash);
+  if (!isValid) {
+    throw validationError("Current password is incorrect.");
+  }
+
+  const passwordHash = await hash(input.newPassword, 12);
+  await updateUserPasswordHash(db, userId, passwordHash);
+  return { updated: true };
+}
+
 export async function getNotifications(db: AppDatabase, userId: string) {
   const rows = await listNotificationsForUser(db, userId);
   return rows.map((row) => ({
@@ -102,11 +197,41 @@ export async function readAllNotifications(db: AppDatabase, userId: string) {
 }
 
 export async function getSettings(db: AppDatabase, userId: string) {
-  const settings = await findUserSettings(db, userId);
+  let settings = await findUserSettings(db, userId);
+  if (!settings) {
+    const timestamp = Math.floor(Date.now() / 1000);
+    await db
+      .insert(userSettings)
+      .values({
+        userId,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      })
+      .onConflictDoNothing();
+    settings = await findUserSettings(db, userId);
+  }
   if (!settings) {
     throw notFound("Settings not found");
   }
-  return settings;
+  return serializeSettings(settings);
+}
+
+function serializeSettings(
+  settings: NonNullable<Awaited<ReturnType<typeof findUserSettings>>>,
+) {
+  return {
+    userId: settings.userId,
+    theme: settings.theme,
+    accentColor: settings.accentColor,
+    density: settings.density,
+    animations: Boolean(settings.animations),
+    emailNotifications: Boolean(settings.emailNotifications),
+    inAppNotifications: Boolean(settings.inAppNotifications),
+    taskNotifications: Boolean(settings.taskNotifications),
+    mentionNotifications: Boolean(settings.mentionNotifications),
+    dueSoonNotifications: Boolean(settings.dueSoonNotifications),
+    updatedAt: settings.updatedAt,
+  };
 }
 
 export async function patchSettings(
@@ -166,5 +291,19 @@ export async function patchSettings(
     throw notFound("Settings not found");
   }
 
-  return updated;
+  return serializeSettings(updated);
+}
+
+export async function getUserWorkspaces(db: AppDatabase, userId: string) {
+  return db
+    .select({
+      id: workspaces.id,
+      name: workspaces.name,
+      slug: workspaces.slug,
+      role: workspaceMembers.role,
+    })
+    .from(workspaceMembers)
+    .innerJoin(workspaces, eq(workspaces.id, workspaceMembers.workspaceId))
+    .where(eq(workspaceMembers.userId, userId))
+    .all();
 }

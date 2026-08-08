@@ -23,7 +23,7 @@ const NAV_ITEMS: Array<{
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/notifications", label: "Notifications", icon: Bell },
-  { href: "/settings", label: "Settings", icon: Settings, disabled: true },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function AppSidebar() {

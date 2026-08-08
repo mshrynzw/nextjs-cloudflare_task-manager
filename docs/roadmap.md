@@ -557,7 +557,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -567,14 +567,16 @@ Analyticsは初期段階では既存データから算出する。
 
 # 14.1 Profile
 
-- [ ] Display name
-- [ ] Username
-- [ ] Avatar
-- [ ] Bio
-- [ ] Job title
-- [ ] Website
-- [ ] Activity
-- [ ] Statistics
+- [x] Display name
+- [x] Username
+- [x] Avatar
+- [x] Bio
+- [x] Job title
+- [x] Website
+- [x] Activity
+- [x] Statistics
+
+> Avatar は URL 入力（ファイルアップロードは後続）。
 
 ---
 
@@ -582,31 +584,37 @@ Analyticsは初期段階では既存データから算出する。
 
 ### Account
 
-- [ ] Profile settings
-- [ ] Email
-- [ ] Password / Authentication
+- [x] Profile settings
+- [x] Email
+- [x] Password / Authentication
+
+> Email は表示のみ。変更・削除は後続。
 
 ### Appearance
 
-- [ ] Theme
-- [ ] Accent color
-- [ ] UI density
-- [ ] Animation settings
+- [x] Theme
+- [x] Accent color
+- [x] UI density
+- [x] Animation settings
+
+> 設定値の永続化まで実装。画面全体へのテーマ適用は Phase 9 Polish で強化。
 
 ### Notifications
 
-- [ ] Email notifications
-- [ ] In-app notifications
-- [ ] Task notifications
-- [ ] Mention notifications
-- [ ] Due date notifications
+- [x] Email notifications
+- [x] In-app notifications
+- [x] Task notifications
+- [x] Mention notifications
+- [x] Due date notifications
 
 ### Workspace
 
-- [ ] Workspace information
+- [x] Workspace information
 - [ ] Members
 - [ ] Roles
 - [ ] Permissions
+
+> Workspace 一覧と自身の Role 表示まで。Members / Roles 管理 UI は後続。
 
 ---
 

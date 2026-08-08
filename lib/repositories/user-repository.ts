@@ -29,3 +29,19 @@ export async function updateUserProfile(
     .returning()
     .get();
 }
+
+export async function updateUserPasswordHash(
+  db: AppDatabase,
+  userId: string,
+  passwordHash: string,
+) {
+  return db
+    .update(users)
+    .set({
+      passwordHash,
+      updatedAt: nowUnix(),
+    })
+    .where(eq(users.id, userId))
+    .returning()
+    .get();
+}

@@ -99,8 +99,21 @@ export const updateUserBodySchema = z.object({
   username: z.string().trim().max(50).nullable().optional(),
   jobTitle: z.string().trim().max(100).nullable().optional(),
   bio: z.string().trim().max(1000).nullable().optional(),
-  website: z.string().url().nullable().optional(),
-  image: z.string().url().nullable().optional(),
+  website: z
+    .union([z.string().url(), z.literal("")])
+    .nullable()
+    .optional()
+    .transform((value) => (value === "" ? null : value)),
+  image: z
+    .union([z.string().url(), z.literal("")])
+    .nullable()
+    .optional()
+    .transform((value) => (value === "" ? null : value)),
+});
+
+export const changePasswordBodySchema = z.object({
+  currentPassword: z.string().min(8).max(128),
+  newPassword: z.string().min(8).max(128),
 });
 
 export const updateSettingsBodySchema = z.object({

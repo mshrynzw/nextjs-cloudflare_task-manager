@@ -1076,6 +1076,39 @@ Project / Task を補完する Dashboard・Calendar・Analytics・Notifications 
 
 ### Change
 
+Phase 8（Settings / Profile）を実装した。
+
+### Reason
+
+ユーザープロフィール閲覧・編集と、Appearance / Notifications / Security 設定を提供するため。
+
+### Decision
+
+- `/profile/[userId]` で公開プロフィール + 統計 / 担当タスク / Activity
+- `/settings/*` でカテゴリ別設定（Profile / Appearance / Notifications / Security / Account / Workspace / About）
+- Settings の boolean は API / Service 層で正規化
+- Password change は Email 認証アカウントのみ
+- Avatar は URL 入力、Workspace Members 管理は後続
+- Appearance の永続化は実装、グローバルテーマ適用は Phase 9 で強化
+
+### Impact
+
+Settings / Profile が利用可能。次は Phase 9 UI / UX Polish。
+
+### Follow-up
+
+- Phase 9: Design System / Visual Polish
+- Avatar file upload
+- Email change / account deletion
+- Workspace member management
+- Theme tokens の画面全体適用
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1477,12 +1510,13 @@ Phase 4 API        ✓
 Phase 5 Projects   ✓
 Phase 6 Tasks      ✓
 Phase 7 Support    ✓
+Phase 8 Settings   ✓
 ```
 
 ## Planned
 
 ```text
-Phase 8 Settings / Profile
+Phase 9 UI / UX Polish
 Testing (feature-level E2E)
 CI/CD
 Deployment (includes task-manager-prod D1)
