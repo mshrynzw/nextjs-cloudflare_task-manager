@@ -1141,11 +1141,11 @@ READMEには以下を記載する。
 docs/
 ├── 01_requirements.md
 ├── 02_basic-design.md
-├── 03_detail-design/
+├── `03_detail-design/*.md`
 ├── 04_architecture.md
 ├── 05_database.md
 ├── 06_api.md
-├── 08_component_design.md
+├── 07_component_design.md
 ├── 09_ui-guideline.md
 ├── development-log.md
 ├── product.md

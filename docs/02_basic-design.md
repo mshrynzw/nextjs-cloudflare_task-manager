@@ -332,7 +332,7 @@ Profile
 
 本設計書をもとに、以下を作成する。
 
-- 03_detail_design.md
+- `03_detail-design/*.md`
 - 04_database.md
 - 05_api.md
 - 06_screen_design.md

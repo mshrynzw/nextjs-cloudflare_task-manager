@@ -389,7 +389,7 @@ Task Manager は、案件獲得用ポートフォリオとして制作するタ�
 - 05_database.md
 - 06_api.md
 - 07_screen_design.md
-- 08_component_design.md
+- 07_component_design.md
 - 09_ui_guideline.md
 - 10_directory_structure.md
 - 11_development_rules.md
