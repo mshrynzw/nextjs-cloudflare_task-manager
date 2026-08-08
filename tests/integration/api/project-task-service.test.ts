@@ -8,6 +8,7 @@ import {
 } from "@/lib/db/schema";
 import {
   createProjectForUser,
+  deleteProjectForUser,
   getProjects,
 } from "@/lib/services/project-service";
 import {
@@ -70,6 +71,34 @@ describe("project and task services", () => {
     expect(listed.data).toHaveLength(1);
     expect(listed.data[0]?.name).toBe("API Project");
     expect(listed.data[0]?.progress).toBe(0);
+    expect(listed.data[0]?.members).toHaveLength(1);
+  });
+
+  it("hides archived projects from the default list", async () => {
+    const { db, userId, workspaceId } = await seedActor();
+    const created = await createProjectForUser(db, userId, {
+      workspaceId,
+      name: "Soon Archived",
+      status: "active",
+      priority: "low",
+      color: "#222222",
+    });
+
+    await deleteProjectForUser(db, userId, created.id!);
+
+    const listed = await getProjects(db, userId, {
+      page: 1,
+      limit: 20,
+    });
+    expect(listed.data).toHaveLength(0);
+
+    const archived = await getProjects(db, userId, {
+      page: 1,
+      limit: 20,
+      status: "archived",
+    });
+    expect(archived.data).toHaveLength(1);
+    expect(archived.data[0]?.name).toBe("Soon Archived");
   });
 
   it("creates a task and updates status with activity side effects", async () => {

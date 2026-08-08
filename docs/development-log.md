@@ -981,6 +981,39 @@ Phase 5 以降の UI は API 経由でデータ操作できる。
 
 ### Change
 
+Phase 5（Core Project Management UI）を実装した。
+
+### Reason
+
+Phase 4 API を利用し、認証後の Project List / Detail 画面を提供するため。
+
+### Decision
+
+- `app/(app)` レイアウトで Sidebar / Header を共通化
+- Server Components で Service 層を直接呼び出し（初期表示）
+- 検索・Filter・Sort は URL Search Params
+- Create / Archive は Server Actions
+- Progress は Task 集計から算出（DB 非保存）
+- 既定の Project List は Soft Archive 済みを除外
+- Activity / フル Project Settings は Empty / 簡易メニューで先行対応
+
+### Impact
+
+`/projects` と `/projects/[projectId]` が利用可能。次は Phase 6 Task Board。
+
+### Follow-up
+
+- Phase 6: Task Board / Task Detail
+- Project Settings 編集 UI
+- Activity Timeline 連携
+- Card / List View 切替
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1379,12 +1412,13 @@ Phase 1 Env        ✓
 Phase 2 Database   ✓
 Phase 3 Auth       ✓
 Phase 4 API        ✓
+Phase 5 Projects   ✓
 ```
 
 ## Planned
 
 ```text
-Frontend Implementation (Projects / Tasks UI)
+Phase 6 Task Board / Task Detail
 Testing (feature-level E2E)
 CI/CD
 Deployment (includes task-manager-prod D1)

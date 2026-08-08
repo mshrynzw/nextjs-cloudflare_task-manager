@@ -14,6 +14,7 @@ import {
   createProject,
   findProjectById,
   getTaskCountsByProject,
+  listMembersForProjects,
   listProjectMembers,
   listProjectsForUser,
   removeProjectMember,
@@ -52,6 +53,23 @@ export async function getProjects(
     ]),
   );
 
+  const projectIds = rows.map((row) => row.project.id);
+  const members = await listMembersForProjects(db, projectIds);
+  const membersByProject = new Map<
+    string,
+    Array<{ id: string; name: string | null; image: string | null; role: string }>
+  >();
+  for (const member of members) {
+    const list = membersByProject.get(member.projectId) ?? [];
+    list.push({
+      id: member.id,
+      name: member.name,
+      image: member.image,
+      role: member.role,
+    });
+    membersByProject.set(member.projectId, list);
+  }
+
   return {
     data: rows.map(({ project }) => {
       const stats = countMap.get(project.id) ?? { total: 0, completed: 0 };
@@ -68,6 +86,7 @@ export async function getProjects(
         completedTaskCount: stats.completed,
         workspaceId: project.workspaceId,
         updatedAt: project.updatedAt,
+        members: membersByProject.get(project.id) ?? [],
       };
     }),
     meta: {
@@ -108,6 +127,8 @@ export async function getProject(
     progress: calcProgress(total, completed),
     deadline: fromUnixDate(project.deadline),
     workspaceId: project.workspaceId,
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
     members,
     taskSummary: {
       total,

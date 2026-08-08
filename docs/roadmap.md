@@ -349,7 +349,7 @@ Project Managementのコア機能を完成させる。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -359,28 +359,31 @@ Project Managementのコア機能を完成させる。
 
 ## 11.1 Project List
 
-- [ ] Project List
-- [ ] Search
-- [ ] Filter
-- [ ] Sort
-- [ ] Status filter
-- [ ] Priority filter
-- [ ] Create Project
-- [ ] Archive Project
-- [ ] Project Card
-- [ ] Progress display
+- [x] Project List
+- [x] Search
+- [x] Filter
+- [x] Sort
+- [x] Status filter
+- [x] Priority filter
+- [x] Create Project
+- [x] Archive Project
+- [x] Project Card
+- [x] Progress display
 
 ---
 
 ## 11.2 Project Detail
 
-- [ ] Project information
-- [ ] Project description
-- [ ] Project members
-- [ ] Task overview
-- [ ] Progress
-- [ ] Activity
+- [x] Project information
+- [x] Project description
+- [x] Project members
+- [x] Task overview
+- [x] Progress
+- [x] Activity
 - [ ] Project settings
+
+> Activity は Empty State を配置。詳細タイムラインは Activity データ連携後に拡張する。
+> Project settings（編集フォーム）は Archive メニューを先行実装。フル設定 UI は後続で拡張する。
 
 ---
 

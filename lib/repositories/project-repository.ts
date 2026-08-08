@@ -1,4 +1,14 @@
-import { and, asc, count, desc, eq, inArray, like, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNull,
+  like,
+  sql,
+} from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import { createId, nowUnix } from "@/lib/db/id";
 import { projectMembers, projects, tasks, users } from "@/lib/db/schema";
@@ -21,8 +31,14 @@ export async function listProjectsForUser(
   const offset = (query.page - 1) * query.limit;
   const conditions = [eq(projectMembers.userId, userId)];
 
-  if (query.status) {
+  if (query.status === "archived") {
+    conditions.push(eq(projects.status, "archived"));
+  } else if (query.status) {
     conditions.push(eq(projects.status, query.status));
+    conditions.push(isNull(projects.archivedAt));
+  } else {
+    // Default list hides soft-archived projects.
+    conditions.push(isNull(projects.archivedAt));
   }
   if (query.priority) {
     conditions.push(eq(projects.priority, query.priority));
@@ -157,6 +173,28 @@ export async function listProjectMembers(db: AppDatabase, projectId: string) {
     .from(projectMembers)
     .innerJoin(users, eq(users.id, projectMembers.userId))
     .where(eq(projectMembers.projectId, projectId))
+    .all();
+}
+
+export async function listMembersForProjects(
+  db: AppDatabase,
+  projectIds: string[],
+) {
+  if (projectIds.length === 0) {
+    return [];
+  }
+
+  return db
+    .select({
+      projectId: projectMembers.projectId,
+      id: users.id,
+      name: users.name,
+      image: users.image,
+      role: projectMembers.role,
+    })
+    .from(projectMembers)
+    .innerJoin(users, eq(users.id, projectMembers.userId))
+    .where(inArray(projectMembers.projectId, projectIds))
     .all();
 }
 
