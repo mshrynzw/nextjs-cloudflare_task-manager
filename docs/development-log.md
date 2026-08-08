@@ -920,6 +920,38 @@ Repository / Service / Auth 実装を同じ Schema 上で進められる。
 
 ### Change
 
+Phase 3（Authentication / Authorization）を完了した。
+
+### Reason
+
+保護ルートと Workspace / Project 認可の土台を、API・画面実装前に固定するため。
+
+### Decision
+
+- Auth.js v5 (`next-auth` beta) + `@auth/drizzle-adapter`
+- Session strategy: JWT（Credentials 互換）
+- Provider 実装順: GitHub → Google → Email（環境変数で個別有効化）
+- Auth tables: `accounts` / `sessions` / `verification_tokens` + `users.password_hash`
+- Middleware は Edge 安全な `auth.config.ts` を使用
+- ローカル Next.js は SQLite（`.data/local.sqlite`）、D1 は migration 済み
+- Forgot Password は未実装（後続）
+
+### Impact
+
+`/login` / `/dashboard` / logout / membership helpers が利用可能。
+
+### Follow-up
+
+- Phase 4: Backend / API
+- OAuth Client ID を `.env.local` に設定して GitHub / Google を有効化
+- Forgot Password フロー
+
+---
+
+## 2026-08-08
+
+### Change
+
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
 ### Reason
@@ -1316,12 +1348,12 @@ Component Design   ✓
 Development Log    ✓
 Phase 1 Env        ✓
 Phase 2 Database   ✓
+Phase 3 Auth       ✓
 ```
 
 ## Planned
 
 ```text
-Authentication (GitHub → Google → Email)
 API Implementation
 Frontend Implementation
 Testing (feature-level)

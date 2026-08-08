@@ -231,31 +231,27 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 
 ## Status
 
-`PLANNED`
-
-## Priority
-
-`P0`
+`DONE`
 
 ## Authentication
 
 実装順: GitHub → Google → Email
 
-- [ ] Auth.js setup
-- [ ] Session management
-- [ ] GitHub authentication
-- [ ] Google authentication
-- [ ] Email authentication
-- [ ] Logout
-- [ ] Session expiration
+- [x] Auth.js setup
+- [x] Session management
+- [x] GitHub authentication
+- [x] Google authentication
+- [x] Email authentication
+- [x] Logout
+- [x] Session expiration
 
 ## Authorization
 
-- [ ] Workspace membership
-- [ ] Project membership
-- [ ] Role management
-- [ ] Permission checks
-- [ ] Protected routes
+- [x] Workspace membership
+- [x] Project membership
+- [x] Role management
+- [x] Permission checks
+- [x] Protected routes
 
 ## Roles
 

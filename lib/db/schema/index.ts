@@ -1,4 +1,5 @@
 export { users } from "./users";
+export { accounts, sessions, verificationTokens } from "./auth";
 export { workspaces, workspaceMembers } from "./workspaces";
 export { projects, projectMembers, projectTags } from "./projects";
 export { tags } from "./tags";

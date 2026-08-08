@@ -107,4 +107,16 @@ Phase 3 での実装順:
 
 ## Current Status
 
-Phase 2（Database Foundation）完了。次は Phase 3（Authentication）。
+Phase 3（Authentication）完了。次は Phase 4（Backend / API）。
+
+### Local Auth Setup
+
+```bash
+cp .env.example .env.local
+# set AUTH_SECRET (openssl rand -base64 32)
+# optionally set GitHub / Google OAuth credentials
+pnpm db:seed:local
+pnpm dev
+```
+
+Demo email user (after seed): `demo@example.com` / `DemoPass123!`

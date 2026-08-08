@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("home page smoke", () => {
-  test("renders the default Next.js starter content", async ({ page }) => {
-    await page.goto("/");
+test.describe("login page smoke", () => {
+  test("renders the sign in screen", async ({ page }) => {
+    await page.goto("/login");
 
     await expect(
       page.getByRole("heading", {
-        name: /to get started, edit the page\.tsx file/i,
+        name: /sign in/i,
       }),
     ).toBeVisible();
   });

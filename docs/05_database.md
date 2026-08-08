@@ -1606,7 +1606,9 @@ Database integration tests
 ```
 
 Auth.js 用テーブル（`accounts` / `sessions` / `verification_tokens`）と
-Attachments / Time Entries は未実装（それぞれ Phase 3 / 将来拡張）。
+`users.password_hash` は Phase 3 で追加済み。
+
+Attachments / Time Entries は未実装（将来拡張）。
 
 本番用 D1（`task-manager-prod`）は Deployment 時に作成する。
 

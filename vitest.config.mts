@@ -9,6 +9,10 @@ export default defineConfig({
     environment: "node",
     include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
     exclude: ["tests/e2e/**", "node_modules/**", ".next/**"],
+    env: {
+      AUTH_SECRET: "test-secret-at-least-32-characters-long!!",
+      AUTH_EMAIL_ENABLED: "true",
+    },
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],

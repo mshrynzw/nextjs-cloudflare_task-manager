@@ -7,13 +7,15 @@ import * as schema from "./schema";
 
 export type AppSchema = typeof schema;
 
-export type AppDatabase =
-  DrizzleD1Database<AppSchema> | BetterSQLite3Database<AppSchema>;
+/** Local / test database used by Next.js during Phase 3. */
+export type AppDatabase = BetterSQLite3Database<AppSchema>;
+
+export type D1AppDatabase = DrizzleD1Database<AppSchema>;
 
 /**
  * Create a Drizzle client for Cloudflare D1 (Workers / OpenNext runtime).
  */
-export function createD1Database(d1: D1Database): DrizzleD1Database<AppSchema> {
+export function createD1Database(d1: D1Database): D1AppDatabase {
   return drizzleD1(d1, { schema });
 }
 
@@ -23,7 +25,7 @@ export function createD1Database(d1: D1Database): DrizzleD1Database<AppSchema> {
  */
 export function createSqliteDatabase(
   filename: string | ":memory:" = ":memory:",
-): BetterSQLite3Database<AppSchema> {
+): AppDatabase {
   const sqlite = new Database(filename);
   sqlite.pragma("foreign_keys = ON");
   return drizzleSqlite(sqlite, { schema });

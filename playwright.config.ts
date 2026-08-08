@@ -25,5 +25,12 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    env: {
+      ...process.env,
+      AUTH_SECRET:
+        process.env.AUTH_SECRET ??
+        "playwright-dev-secret-at-least-32-chars!!",
+      AUTH_EMAIL_ENABLED: process.env.AUTH_EMAIL_ENABLED ?? "true",
+    },
   },
 });

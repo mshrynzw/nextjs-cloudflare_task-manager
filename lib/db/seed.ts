@@ -1,3 +1,4 @@
+import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import type { AppDatabase } from "./client";
 import { createId, nowUnix } from "./id";
@@ -21,6 +22,9 @@ export interface SeedResult {
   taskId: string;
 }
 
+export const DEMO_USER_EMAIL = "demo@example.com";
+export const DEMO_USER_PASSWORD = "DemoPass123!";
+
 /**
  * Insert a minimal demo dataset for local development and tests.
  * Do not run against production.
@@ -36,12 +40,14 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
   const commentId = createId("comment");
   const activityId = createId("activity");
   const notificationId = createId("notification");
+  const passwordHash = await hash(DEMO_USER_PASSWORD, 12);
 
   await db.insert(users).values({
     id: userId,
     name: "Demo User",
     username: "demo",
-    email: "demo@example.com",
+    email: DEMO_USER_EMAIL,
+    passwordHash,
     role: "user",
     timezone: "UTC",
     language: "en",

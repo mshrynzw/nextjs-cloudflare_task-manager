@@ -62,8 +62,8 @@ Task Manager
 
 | ID      | Screen         | Route                         | Auth | Priority | Status  |
 | ------- | -------------- | ----------------------------- | ---- | -------- | ------- |
-| SCR-001 | Login          | `/login`                      | No   | P0       | Planned |
-| SCR-002 | Dashboard      | `/dashboard`                  | Yes  | P0       | Planned |
+| SCR-001 | Login          | `/login`                      | No   | P0       | Done    |
+| SCR-002 | Dashboard      | `/dashboard`                  | Yes  | P0       | In Progress |
 | SCR-003 | Project List   | `/projects`                   | Yes  | P0       | Planned |
 | SCR-004 | Project Detail | `/projects/[projectId]`       | Yes  | P0       | Planned |
 | SCR-005 | Task Board     | `/projects/[projectId]/board` | Yes  | P0       | Planned |
