@@ -1,0 +1,1413 @@
+---
+description: Performance rules for the Task Manager project. Apply when creating or modifying pages, data fetching, Server Components, Client Components, database queries, API routes, caching, animations, bundles, loading states, or infrastructure.
+alwaysApply: true
+---
+
+# Performance Rules
+
+Performance is a first-class requirement of this project.
+
+The application is designed as a portfolio project and must provide a fast, reliable first impression.
+
+The user should not experience an unnecessarily slow initial page load, blank screen, or prolonged loading state.
+
+Follow the project-wide rules defined in:
+
+`AGENTS.md`
+
+The architectural performance strategy is defined in:
+
+`docs/04_architecture.md`
+
+The UI performance rules are defined in:
+
+`docs/08_ui-guideline.md`
+
+---
+
+# 1. Core Performance Principles
+
+Always prioritize:
+
+- Fast initial rendering
+- Minimal client-side JavaScript
+- Efficient server-side data fetching
+- Efficient database queries
+- Appropriate caching
+- Small component boundaries
+- Minimal network requests
+- Stable layouts
+- Responsive interactions
+
+Do not optimize blindly.
+
+Prefer measurable improvements over assumptions.
+
+---
+
+# 2. Performance Priority
+
+When making performance decisions, prioritize:
+
+```text
+User-visible performance
+        ↓
+Initial page rendering
+        ↓
+Network requests
+        ↓
+Database queries
+        ↓
+Client JavaScript
+        ↓
+Rendering performance
+        ↓
+Animation performance
+```
+
+Do not optimize a low-impact micro-operation while a larger bottleneck remains unresolved.
+
+---
+
+# 3. Initial Load Is Critical
+
+The first page load is especially important.
+
+The application should provide useful UI as quickly as possible.
+
+Avoid unnecessary work during initial rendering.
+
+Do not:
+
+- Fetch unnecessary data
+- Load unnecessary Client Components
+- Load large JavaScript libraries
+- Execute expensive calculations
+- Query unrelated database tables
+- Wait for non-critical data before rendering the page
+
+---
+
+# 4. Login Page Performance
+
+The public Login page should remain lightweight.
+
+The Login page must not access the application database merely to render the login UI.
+
+Avoid:
+
+```text
+Browser
+ ↓
+Login Page
+ ↓
+Database
+ ↓
+Render Login
+```
+
+when database access is not required.
+
+Prefer:
+
+```text
+Browser
+ ↓
+Edge / CDN
+ ↓
+Login UI
+```
+
+Authentication-related operations should occur only when required.
+
+---
+
+# 5. Public Pages
+
+Public pages should minimize dependencies and server-side work.
+
+Do not load:
+
+- Dashboard data
+- Project data
+- Task data
+- Analytics data
+- User-specific resources
+
+until authentication and application access actually require them.
+
+---
+
+# 6. Server Components by Default
+
+Use Server Components by default.
+
+Server Components reduce the amount of JavaScript that must be sent to the browser.
+
+Prefer Server Components for:
+
+- Initial page rendering
+- Static UI
+- Server-side data fetching
+- Database-backed content
+- SEO-related content
+
+---
+
+# 7. Client Components
+
+Use Client Components only when client-side behavior is required.
+
+Typical reasons include:
+
+- User interaction
+- Local state
+- Drag and Drop
+- Dialog
+- Dropdown
+- Command Palette
+- Calendar interaction
+- Charts
+- Browser APIs
+- GSAP
+- Real-time interaction
+
+Do not convert an entire page to a Client Component because one small section requires interactivity.
+
+Prefer:
+
+```text
+Server Component
+ ├── Static Content
+ ├── Server Data
+ └── Small Client Component
+```
+
+over:
+
+```text
+Entire Page
+ ↓
+Client Component
+```
+
+---
+
+# 8. Client Boundary Size
+
+Keep `"use client"` boundaries as small as practical.
+
+Bad:
+
+```text
+Dashboard
+ ↓
+"use client"
+ ↓
+Everything becomes client-side
+```
+
+Prefer:
+
+```text
+Dashboard Server Component
+ ├── Server-rendered statistics
+ ├── Server-rendered project list
+ └── Interactive Chart Client Component
+```
+
+---
+
+# 9. JavaScript Budget
+
+Do not add client-side JavaScript without a reason.
+
+Before adding a dependency, ask:
+
+```text
+Does this require browser-side execution?
+Can this be implemented with CSS?
+Can this remain a Server Component?
+Is the dependency worth its bundle cost?
+```
+
+Prefer native browser APIs and CSS when they are sufficient.
+
+---
+
+# 10. Dependencies
+
+Do not install large libraries for trivial functionality.
+
+Before adding a dependency:
+
+1. Check whether the project already contains the required functionality.
+2. Check whether the browser provides the functionality.
+3. Check whether CSS can solve the problem.
+4. Evaluate bundle size.
+5. Evaluate whether the dependency is required on the client.
+6. Evaluate whether the dependency is compatible with Cloudflare.
+
+Do not introduce a dependency solely for convenience.
+
+---
+
+# 11. GSAP
+
+GSAP may be used for high-quality animations.
+
+However, GSAP should not be loaded unnecessarily on every page.
+
+Prefer CSS transitions for simple effects such as:
+
+- Opacity
+- Transform
+- Color
+- Border
+- Shadow
+
+Use GSAP for interactions that genuinely benefit from:
+
+- Timelines
+- Staggered animation
+- Scroll-driven animation
+- Complex sequences
+- Coordinated transitions
+
+---
+
+# 12. Animation Performance
+
+Animations must remain smooth.
+
+Prefer animating:
+
+```text
+transform
+opacity
+```
+
+when possible.
+
+Avoid expensive layout-triggering properties during animation.
+
+Avoid unnecessary animation of:
+
+```text
+width
+height
+top
+left
+margin
+padding
+```
+
+when transform-based animation can achieve the same effect.
+
+---
+
+# 13. Reduced Motion
+
+Respect:
+
+```css
+prefers-reduced-motion
+```
+
+Users who request reduced motion should receive reduced or disabled non-essential animation.
+
+Do not make functionality depend on animation.
+
+---
+
+# 14. Page Transitions
+
+Page transitions must never make the application feel slower.
+
+Avoid:
+
+```text
+Click
+ ↓
+Long animation
+ ↓
+Navigation
+```
+
+Prefer:
+
+```text
+Click
+ ↓
+Navigation
+ ↓
+Subtle transition
+```
+
+Animations must not unnecessarily delay interaction.
+
+---
+
+# 15. Data Fetching
+
+Fetch only the data required by the current screen.
+
+Do not retrieve large datasets when only a small subset is required.
+
+Prefer:
+
+```text
+Required Data
+ ↓
+Server
+ ↓
+UI
+```
+
+over:
+
+```text
+All Data
+ ↓
+Server
+ ↓
+Client filters everything
+```
+
+---
+
+# 16. Avoid Waterfalls
+
+Avoid unnecessary sequential data fetching.
+
+Bad:
+
+```text
+Get User
+ ↓
+Get Workspace
+ ↓
+Get Project
+ ↓
+Get Tasks
+ ↓
+Get Analytics
+```
+
+when some operations can safely execute in parallel.
+
+Prefer:
+
+```ts
+const [projects, notifications] = await Promise.all([
+  getProjects(),
+  getNotifications(),
+]);
+```
+
+when the operations are independent.
+
+Do not parallelize operations that have dependencies.
+
+---
+
+# 17. Server Data Fetching
+
+Prefer server-side data fetching for initial page data when appropriate.
+
+Avoid unnecessary client-side fetching immediately after page load.
+
+Bad:
+
+```text
+Server renders empty page
+ ↓
+Browser loads JavaScript
+ ↓
+Client requests data
+ ↓
+Data appears
+```
+
+when the data could safely be fetched during server rendering.
+
+---
+
+# 18. Client-Side Data Fetching
+
+Use TanStack Query when client-side server state management provides meaningful benefits.
+
+Appropriate use cases include:
+
+- Background refetching
+- Mutations
+- Optimistic updates
+- Client-side cache
+- Polling
+- Interactive server state
+
+Do not introduce TanStack Query solely because data exists.
+
+---
+
+# 19. Duplicate Requests
+
+Avoid fetching the same data repeatedly.
+
+Before adding a new request:
+
+1. Check whether the data already exists in the current server render.
+2. Check whether TanStack Query already has the data.
+3. Check whether a parent component already retrieves it.
+4. Check whether the API call can be shared.
+
+Do not create duplicate network requests without a reason.
+
+---
+
+# 20. Database Performance
+
+Database queries are a critical performance boundary.
+
+Use:
+
+```text
+Application
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Drizzle
+ ↓
+D1
+```
+
+Do not execute database queries directly from UI components.
+
+---
+
+# 21. Select Only Required Columns
+
+Do not retrieve entire database records when only a few fields are required.
+
+Prefer selecting the required columns.
+
+Avoid unnecessary retrieval of:
+
+- Large text fields
+- Internal metadata
+- Sensitive fields
+- Unused relationships
+
+This reduces database work and response size.
+
+---
+
+# 22. N+1 Queries
+
+Avoid N+1 query patterns.
+
+Bad:
+
+```text
+Get 100 Projects
+ ↓
+Query members for Project 1
+Query members for Project 2
+Query members for Project 3
+...
+```
+
+Prefer appropriate joins, batching, aggregation, or carefully designed queries.
+
+Do not blindly optimize queries without understanding the data requirements.
+
+---
+
+# 23. Pagination
+
+Use pagination for potentially large datasets.
+
+Potential candidates:
+
+- Projects
+- Tasks
+- Activities
+- Notifications
+- Comments
+- Search results
+
+Do not load thousands of records into the browser simply because the database can return them.
+
+---
+
+# 24. Pagination Limits
+
+Never allow unbounded client-controlled page sizes.
+
+Example:
+
+```text
+?pageSize=999999999
+```
+
+must not result in an enormous database query.
+
+Use a reasonable server-defined maximum.
+
+---
+
+# 25. Search
+
+Search queries must be bounded.
+
+Limit:
+
+- Search string length
+- Result count
+- Query complexity
+
+Do not perform expensive unbounded searches for every keystroke.
+
+Use appropriate debouncing or deferred interaction where necessary.
+
+---
+
+# 26. Search Debouncing
+
+Interactive search should not issue a network request for every individual keystroke unless there is a specific reason.
+
+Prefer debouncing for server-backed search.
+
+Example:
+
+```text
+User types
+ ↓
+Short delay
+ ↓
+Search request
+```
+
+Do not introduce unnecessary delays for local filtering.
+
+---
+
+# 27. Database Indexes
+
+Frequently queried fields should be evaluated for indexing.
+
+Potential candidates include:
+
+```text
+userId
+workspaceId
+projectId
+status
+createdAt
+updatedAt
+dueDate
+```
+
+Do not add indexes indiscriminately.
+
+Before adding an index:
+
+1. Identify the query that needs it.
+2. Confirm the query pattern.
+3. Consider write overhead.
+4. Update `docs/05_database.md`.
+
+---
+
+# 28. Analytics Queries
+
+Analytics can be expensive.
+
+Do not execute expensive analytics queries unnecessarily on every render.
+
+Consider:
+
+- Aggregation
+- Caching
+- Precomputed values
+- Time-range limits
+- Pagination
+- Background processing
+
+Use the simplest approach that satisfies the requirements.
+
+---
+
+# 29. Dashboard Performance
+
+The Dashboard is a high-visibility screen.
+
+Avoid blocking the entire Dashboard on secondary data.
+
+Prefer independent sections when appropriate:
+
+```text
+Dashboard
+ ├── Summary
+ ├── Project Progress
+ ├── Recent Tasks
+ ├── Activity
+ └── Analytics
+```
+
+If a secondary section is slow, it should not necessarily prevent the primary UI from appearing.
+
+---
+
+# 30. Streaming
+
+Use Next.js streaming or Suspense boundaries when they provide meaningful UX benefits.
+
+Potential structure:
+
+```text
+Dashboard
+ ├── Immediate Summary
+ ├── Suspense
+ │    └── Analytics
+ └── Suspense
+      └── Recent Activity
+```
+
+Do not introduce Suspense boundaries solely for architectural complexity.
+
+---
+
+# 31. Loading UI
+
+Loading states should preserve layout.
+
+Use:
+
+- Skeleton
+- Placeholder
+- Spinner
+- Progress indicator
+
+according to the UI guideline.
+
+Avoid blank screens.
+
+---
+
+# 32. Skeleton Performance
+
+Skeletons should be lightweight.
+
+Do not implement complex JavaScript-driven skeleton animations.
+
+Prefer CSS-based animation when possible.
+
+Respect reduced motion.
+
+---
+
+# 33. Layout Stability
+
+Avoid unnecessary Cumulative Layout Shift.
+
+Reserve appropriate space for:
+
+- Images
+- Charts
+- Cards
+- Navigation
+- Async content
+
+Do not allow content to jump dramatically when data loads.
+
+---
+
+# 34. Images
+
+Use optimized images.
+
+Avoid loading unnecessarily large images.
+
+Prefer appropriate dimensions and modern formats when supported.
+
+Do not load images that are not visible or required.
+
+For user avatars, use appropriately sized images rather than full-resolution originals.
+
+---
+
+# 35. Icons
+
+Prefer the project's existing icon system.
+
+Do not introduce large icon libraries unnecessarily.
+
+Import icons in a way that allows unused icons to be excluded from the client bundle when supported.
+
+---
+
+# 36. Fonts
+
+Avoid loading unnecessary font families and weights.
+
+Use the project's configured typography.
+
+Do not add multiple external font requests without a clear design requirement.
+
+---
+
+# 37. Code Splitting
+
+Use code splitting for genuinely large or rarely used client-side features.
+
+Potential candidates:
+
+- Analytics charts
+- Rich editors
+- Advanced calendar interactions
+- Large command interfaces
+
+Do not dynamically import tiny components merely to create more complexity.
+
+---
+
+# 38. Lazy Loading
+
+Lazy-load non-critical functionality when appropriate.
+
+Examples:
+
+```text
+Analytics
+Advanced Charts
+Large Dialog Content
+Rarely Used Tools
+```
+
+Do not lazy-load content required for the initial user experience.
+
+---
+
+# 39. Bundle Size
+
+Keep client bundles small.
+
+When adding a dependency, consider:
+
+```text
+Package Size
+Client Usage
+Tree Shaking
+Transitive Dependencies
+```
+
+Do not ship server-only dependencies to the browser.
+
+---
+
+# 40. Server-Only Code
+
+Server-only modules must remain server-side.
+
+Do not import server-only code into Client Components.
+
+Examples:
+
+```text
+Database Client
+D1 Access
+Authentication Secrets
+Private API Clients
+Server Environment Variables
+```
+
+must never enter the client bundle.
+
+---
+
+# 41. Environment Variables
+
+Never expose server-only environment variables to the client.
+
+Do not use:
+
+```text
+NEXT_PUBLIC_*
+```
+
+for secrets.
+
+Only expose values that are intentionally public.
+
+---
+
+# 42. Caching
+
+Caching should be intentional.
+
+Potential cache candidates include:
+
+- Public content
+- Stable configuration
+- Non-sensitive aggregate data
+- Expensive read operations
+
+Before caching, consider:
+
+```text
+Freshness
+Authorization
+User identity
+Workspace
+Project
+Invalidation
+```
+
+---
+
+# 43. User-Specific Cache Safety
+
+Never allow user-specific data to leak through shared caches.
+
+Bad:
+
+```text
+Cache Key:
+dashboard
+```
+
+when the response differs between users.
+
+The cache strategy must respect the appropriate security boundary.
+
+When uncertain, prefer no shared cache for sensitive data.
+
+---
+
+# 44. Cache Invalidation
+
+When adding caching, define how data becomes stale.
+
+Examples:
+
+```text
+Project Updated
+ ↓
+Invalidate Project Cache
+
+Task Updated
+ ↓
+Invalidate Task / Project Progress Cache
+```
+
+Do not introduce caching without considering invalidation.
+
+---
+
+# 45. Cloudflare Edge
+
+The application is designed to benefit from Cloudflare's edge infrastructure.
+
+Prefer architecture that allows static and cacheable content to be served efficiently.
+
+Do not introduce unnecessary origin requests.
+
+Do not assume that every request should reach the database.
+
+---
+
+# 46. Cloudflare D1
+
+D1 access should be minimized.
+
+Do not use D1 for data that can be rendered statically or cached safely.
+
+Avoid unnecessary repeated queries.
+
+Use appropriate indexes and query constraints.
+
+---
+
+# 47. Cold Start / Availability Considerations
+
+The application should avoid creating a user experience that depends on a slow first database interaction.
+
+Do not make the public UI depend on unnecessary database access.
+
+When authentication or database access is required:
+
+- Keep queries small.
+- Avoid unnecessary sequential requests.
+- Avoid loading unrelated data.
+- Provide useful loading UI.
+- Fail gracefully.
+
+Do not hide slow operations behind an indefinite loading screen.
+
+---
+
+# 48. Initial Page vs Authenticated Application
+
+Treat these as different performance contexts.
+
+## Initial / Public
+
+Prioritize:
+
+```text
+Fast HTML
+Minimal JavaScript
+Minimal dependencies
+No unnecessary database access
+```
+
+## Authenticated
+
+Prioritize:
+
+```text
+Efficient data fetching
+Parallel requests
+Caching
+Progressive loading
+Small client boundaries
+```
+
+Do not apply the same data-fetching strategy blindly to both contexts.
+
+---
+
+# 49. Navigation Performance
+
+Navigation should feel immediate.
+
+Avoid performing expensive unrelated operations before route navigation.
+
+Use appropriate Next.js navigation features.
+
+Do not block navigation with unnecessary client-side work.
+
+---
+
+# 50. Prefetching
+
+Use route or data prefetching when it provides a measurable UX benefit.
+
+Do not prefetch large amounts of data for every possible route.
+
+Potential candidates:
+
+- Frequently visited pages
+- Next likely navigation
+- Project detail after hovering a project link
+
+Avoid aggressive prefetching on mobile or constrained networks when unnecessary.
+
+---
+
+# 51. Forms
+
+Forms should remain responsive while submitting.
+
+Use appropriate pending states.
+
+Do not block the entire page for a small form submission.
+
+Prefer local pending UI:
+
+```text
+Submit Button
+ ↓
+Saving...
+```
+
+instead of:
+
+```text
+Entire Application
+ ↓
+Loading...
+```
+
+unless the operation genuinely affects the whole page.
+
+---
+
+# 52. Optimistic UI
+
+Optimistic updates may be used for interactions where the expected result is highly reliable.
+
+Good candidates:
+
+- Task status changes
+- Task ordering
+- Simple toggles
+- Read/unread state
+
+Do not use optimistic updates when rollback behavior is complex or failure is likely.
+
+Always handle failure and rollback correctly.
+
+---
+
+# 53. Drag and Drop
+
+The Kanban Board must remain responsive during drag and drop.
+
+Avoid:
+
+- Heavy database requests on every pointer movement
+- Re-rendering the entire board unnecessarily
+- Expensive calculations during drag events
+
+Prefer:
+
+```text
+Drag
+ ↓
+Local UI Update
+ ↓
+Drop
+ ↓
+Persist Change
+```
+
+when the product requirements allow it.
+
+---
+
+# 54. React Rendering
+
+Avoid unnecessary re-renders.
+
+Consider:
+
+- Component boundaries
+- Derived state
+- Stable props
+- Appropriate memoization
+
+Do not add `useMemo` or `useCallback` everywhere.
+
+Optimize only when there is a meaningful rendering problem.
+
+---
+
+# 55. Memoization
+
+Do not use memoization automatically.
+
+Before adding:
+
+```text
+useMemo
+useCallback
+memo
+```
+
+determine whether there is an actual performance problem.
+
+Prefer simpler code unless memoization provides measurable or clearly justified value.
+
+---
+
+# 56. Large Lists
+
+Large lists should not render thousands of DOM nodes unnecessarily.
+
+Potential solutions include:
+
+- Pagination
+- Virtualization
+- Incremental loading
+
+Use virtualization only when the dataset and interaction pattern justify it.
+
+Do not add virtualization to small lists.
+
+---
+
+# 57. Calendar Performance
+
+Calendar screens can contain many events.
+
+Avoid rendering unnecessarily large datasets.
+
+Consider:
+
+- Date range
+- Visible events
+- Pagination
+- Lazy loading
+- Memoized event rendering
+
+Do not load years of calendar events into the browser unless explicitly required.
+
+---
+
+# 58. Analytics Performance
+
+Analytics should avoid expensive recalculation on every render.
+
+Prefer:
+
+```text
+Server aggregation
+ ↓
+Small response
+ ↓
+Client visualization
+```
+
+over:
+
+```text
+Large raw dataset
+ ↓
+Browser downloads everything
+ ↓
+Browser performs all aggregation
+```
+
+when server-side aggregation is appropriate.
+
+---
+
+# 59. Error Handling and Performance
+
+Errors should fail quickly and clearly.
+
+Do not retry indefinitely.
+
+Use reasonable retry strategies for transient failures.
+
+Do not create retry loops that can multiply database or API traffic.
+
+---
+
+# 60. Network Requests
+
+Minimize unnecessary network requests.
+
+Before adding a request, ask:
+
+```text
+Is this data already available?
+Can this request be combined?
+Can this be server-rendered?
+Can this be cached?
+Can this request happen in parallel?
+Is the request actually necessary?
+```
+
+---
+
+# 61. Monitoring and Measurement
+
+Do not rely only on subjective impressions.
+
+When performance becomes a concern, investigate:
+
+- Browser Performance
+- Network waterfall
+- Server timing
+- Database query timing
+- Bundle size
+- Rendering behavior
+- Web Vitals
+
+Measure before performing large optimizations when practical.
+
+---
+
+# 62. Performance Regression
+
+When fixing a significant performance problem:
+
+1. Identify the bottleneck.
+2. Measure the current behavior when possible.
+3. Implement the fix.
+4. Measure again.
+5. Add a regression test or performance guard when practical.
+6. Document significant performance improvements.
+
+Do not claim performance improvements without evidence when measurement is available.
+
+---
+
+# 63. Performance Documentation
+
+If a performance decision changes the architecture, update:
+
+```text
+docs/04_architecture.md
+```
+
+If it changes database behavior, update:
+
+```text
+docs/05_database.md
+```
+
+If it changes API behavior, update:
+
+```text
+docs/06_api.md
+```
+
+If it changes UI behavior, update:
+
+```text
+docs/08_ui-guideline.md
+```
+
+Record significant performance decisions in:
+
+```text
+docs/development-log.md
+```
+
+---
+
+# 64. Performance Testing
+
+Performance-sensitive features should be tested appropriately.
+
+Consider:
+
+- Database query behavior
+- API response size
+- Rendering behavior
+- Large dataset behavior
+- Mobile behavior
+- Slow network behavior
+
+Do not create expensive performance tests for every small feature.
+
+---
+
+# 65. Performance Checklist
+
+Before completing a performance-sensitive feature:
+
+- [ ] Initial rendering does not perform unnecessary work.
+- [ ] Server Components are used where appropriate.
+- [ ] Client Components are kept small.
+- [ ] No unnecessary `"use client"` was introduced.
+- [ ] Client JavaScript is minimized.
+- [ ] Database queries retrieve only required data.
+- [ ] N+1 queries are avoided.
+- [ ] Large datasets are paginated or otherwise bounded.
+- [ ] Search is appropriately bounded.
+- [ ] Independent requests are parallelized where appropriate.
+- [ ] Duplicate requests are avoided.
+- [ ] Caching is intentional.
+- [ ] User-specific data cannot leak through caches.
+- [ ] Loading states are provided.
+- [ ] Layout shifts are minimized.
+- [ ] Animations remain performant.
+- [ ] Reduced motion is respected.
+- [ ] Large dependencies were avoided where possible.
+- [ ] Server-only code remains server-side.
+- [ ] Mobile performance was considered.
+- [ ] Performance-sensitive behavior was measured when practical.
+
+---
+
+# 66. Forbidden Performance Practices
+
+Never:
+
+- Fetch all database records when only a subset is required.
+- Perform database queries directly from Client Components.
+- Make the entire application a Client Component unnecessarily.
+- Add `"use client"` without a reason.
+- Load large libraries for trivial functionality.
+- Perform N+1 database queries.
+- Allow unlimited pagination.
+- Send unnecessarily large API responses.
+- Perform expensive calculations on every render without reason.
+- Add `useMemo` or `useCallback` indiscriminately.
+- Add GSAP when CSS is sufficient.
+- Block navigation with unnecessary animation.
+- Use shared caching for private data without proper isolation.
+- Expose server-only code to the browser.
+- Retry failed requests indefinitely.
+- Hide slow operations behind indefinite loading states.
+- Optimize without understanding the bottleneck.
+
+---
+
+# 67. Performance Priority for This Project
+
+The following priorities are especially important for this Task Manager:
+
+```text
+1. Fast initial page rendering
+2. Fast public Login page
+3. Minimal unnecessary database access
+4. Efficient Cloudflare D1 queries
+5. Small Client Component boundaries
+6. Minimal client-side JavaScript
+7. Efficient Dashboard loading
+8. Responsive Kanban interaction
+9. Efficient Calendar rendering
+10. Efficient Analytics queries
+```
+
+The application should feel fast before it feels feature-rich.
+
+---
+
+# 68. Final Performance Principles
+
+Always prefer:
+
+```text
+Fast initial render
+    over
+Unnecessary data fetching
+
+Server rendering
+    over
+Unnecessary client rendering
+
+Small client boundaries
+    over
+Entire-page Client Components
+
+Required data
+    over
+All available data
+
+Parallel requests
+    over
+Unnecessary waterfalls
+
+Measured optimization
+    over
+Guesswork
+
+Simple solution
+    over
+Premature optimization
+
+Responsive UI
+    over
+Heavy animation
+
+Efficient queries
+    over
+Large data transfers
+
+Progressive loading
+    over
+Blocking the entire page
+```
+
+The goal is to make the application feel fast, reliable, and responsive while preserving maintainability and architectural simplicity.
+
+Performance is part of the product experience, not a final optimization step.

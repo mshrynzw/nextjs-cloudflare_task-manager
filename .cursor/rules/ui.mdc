@@ -1,17 +1,1265 @@
-Always use
+---
+description: UI and UX rules for the Task Manager project. Apply when creating or modifying pages, components, layouts, styles, animations, responsive behavior, accessibility, loading states, and user interactions.
+alwaysApply: true
+---
 
-shadcn/ui
+# UI / UX Rules
 
-Tailwind
+The Task Manager is a portfolio-quality SaaS application.
+
+The UI must feel like a polished modern SaaS product rather than a generic administration dashboard.
+
+Prioritize:
+
+- Visual quality
+- Usability
+- Consistency
+- Accessibility
+- Responsiveness
+- Performance
+- Maintainability
+
+Follow the project-wide rules defined in:
+
+`AGENTS.md`
+
+The canonical UI design system is defined in:
+
+`docs/08_ui-guideline.md`
+
+---
+
+# 1. Design Direction
+
+The visual direction should be inspired by products such as:
+
+- Linear
+- Vercel
+- Notion
+- Raycast
+- Stripe
+- GitHub Projects
+
+Do not copy these products directly.
+
+Use them as references for:
+
+- Information hierarchy
+- Spacing
+- Typography
+- Interaction design
+- Navigation
+- Motion
+- Visual polish
+
+The application should feel:
+
+- Modern
+- Premium
+- Minimal
+- Professional
+- Calm
+- Fast
+- Precise
+
+Avoid generic dashboard aesthetics.
+
+---
+
+# 2. Design Reference
+
+Visual references created during the design phase are stored under:
+
+```text
+docs/ui-reference/
+```
+
+These references may contain:
+
+```text
+index.html
+style.css
+script.js
+```
+
+Use the appropriate reference as the visual source of truth when implementing a screen.
+
+For example:
+
+```text
+docs/ui-reference/
+└── project-list/
+    ├── index.html
+    ├── style.css
+    └── script.js
+```
+
+When implementing Project List:
+
+1. Read the relevant screen design.
+2. Read the corresponding UI reference.
+3. Read `docs/08_ui-guideline.md`.
+4. Read `docs/07_component_design.md`.
+5. Implement the design using the project's production components.
+
+Do not blindly copy prototype code into the production application.
+
+The prototype is a visual reference, not the production architecture.
+
+---
+
+# 3. Design System
+
+Use the design tokens defined in:
+
+```text
+docs/08_ui-guideline.md
+```
+
+Do not create arbitrary colors, spacing values, radii, shadows, or typography values when an existing design token should be used.
+
+Prefer centralized design tokens.
+
+Examples:
+
+```css
+--bg-base
+--bg-surface
+--bg-elevated
+--text-primary
+--text-secondary
+--border-subtle
+--accent-1
+```
+
+Do not introduce screen-specific versions of global design tokens without a clear reason.
+
+---
+
+# 4. shadcn/ui
+
+Use shadcn/ui for common UI primitives where appropriate.
+
+Examples:
+
+- Button
+- Dialog
+- Dropdown Menu
+- Select
+- Popover
+- Tooltip
+- Tabs
+- Input
+- Checkbox
+- Switch
+- Command
+- Toast
+- Sheet
+
+Prefer existing shadcn/ui components before creating equivalent components.
+
+Do not recreate an existing primitive unnecessarily.
+
+Customize shadcn/ui components to match the project's design system when necessary.
+
+Do not allow the default shadcn/ui appearance to determine the entire visual identity of the application.
+
+---
+
+# 5. Tailwind CSS
+
+Use Tailwind CSS according to the project's established configuration.
+
+Prefer existing design tokens and utility classes.
+
+Avoid excessive inline arbitrary values such as:
+
+```tsx
+className = "mt-[17px] text-[#8B5CF6]";
+```
+
+when an existing design token or utility is appropriate.
+
+Do not create large amounts of duplicated utility classes.
+
+When a style pattern is reused frequently, consider an appropriate reusable component or design token.
+
+---
+
+# 6. Responsive Design
+
+Every screen must support:
+
+- Desktop
+- Tablet
+- Mobile
+
+Do not simply shrink the desktop layout.
+
+Responsive layouts must be intentionally designed.
+
+Consider:
+
+- Navigation
+- Sidebar
+- Tables
+- Kanban boards
+- Cards
+- Forms
+- Dialogs
+- Charts
+- Calendar
+- Filters
+- Command menus
+
+---
+
+# 7. Mobile First Consideration
+
+When implementing responsive behavior, consider mobile constraints from the beginning.
+
+Do not wait until the end of implementation to add responsive CSS.
+
+Important mobile considerations include:
+
+- Touch targets
+- Navigation access
+- Horizontal scrolling
+- Content density
+- Dialog size
+- Button placement
+- Form usability
+- Keyboard behavior
+
+---
+
+# 8. Touch Targets
+
+Interactive elements must be large enough to use comfortably on touch devices.
+
+Avoid tiny clickable icons.
+
+When an icon-only control is necessary:
+
+- Provide an accessible name.
+- Provide a tooltip on desktop when appropriate.
+- Provide sufficient touch area on mobile.
+
+---
+
+# 9. Dark Theme
+
+The primary design is a dark theme.
+
+Use the color tokens defined in:
+
+```text
+docs/08_ui-guideline.md
+```
+
+Do not use pure black everywhere.
+
+Prefer layered surfaces and subtle contrast.
+
+Example conceptual hierarchy:
+
+```text
+Background
+ ↓
+Surface
+ ↓
+Elevated Surface
+ ↓
+Interactive Surface
+```
+
+Use borders, shadows, and contrast carefully.
+
+---
+
+# 10. Typography
+
+Typography must establish a clear visual hierarchy.
+
+Use the project's configured font system.
+
+Prioritize:
+
+- Readability
+- Consistent hierarchy
+- Appropriate line height
+- Appropriate letter spacing
+- Clear heading/body distinction
+
+Do not use excessive font sizes merely to make a screen look impressive.
+
+---
+
+# 11. Spacing
+
+Use the spacing system defined by the design guidelines.
+
+Prefer consistent spacing scales.
+
+Avoid arbitrary spacing values.
+
+Spacing should communicate hierarchy.
+
+For example:
+
+```text
+Page
+ ├── Section
+ │    ├── Heading
+ │    └── Content
+ │
+ └── Section
+```
+
+should have visually meaningful spacing between levels.
+
+---
+
+# 12. Cards
+
+Cards should be used intentionally.
+
+Avoid wrapping every piece of information inside a card.
+
+Use cards when they improve:
+
+- Grouping
+- Hierarchy
+- Scanning
+- Interaction
+
+Cards should have consistent:
+
+- Radius
+- Padding
+- Border
+- Shadow
+- Hover behavior
+
+according to `docs/08_ui-guideline.md`.
+
+---
+
+# 13. Borders and Shadows
+
+Use subtle borders and shadows.
+
+Avoid excessive visual noise.
+
+Do not use strong shadows everywhere.
+
+Prefer:
+
+```text
+Subtle border
++
+Layered surface
++
+Small elevation
+```
+
+over heavy drop shadows.
+
+---
+
+# 14. Glassmorphism
+
+Glassmorphism may be used sparingly.
+
+Do not make the entire application glassmorphic.
+
+Use it only when it improves visual hierarchy or depth.
+
+Avoid:
+
+- Excessive blur
+- Low-contrast text
+- Transparent surfaces everywhere
+- Performance-heavy effects
+
+---
+
+# 15. Icons
+
+Use Lucide icons or the project's established icon system.
+
+Do not use arbitrary Unicode characters as UI icons.
+
+Avoid mixing multiple icon libraries without a clear reason.
+
+Icons must communicate meaning clearly.
+
+Icon-only controls must have accessible names.
+
+---
+
+# 16. Buttons
+
+Buttons must clearly communicate their hierarchy.
+
+Use appropriate visual levels:
+
+```text
+Primary
+Secondary
+Tertiary
+Destructive
+Ghost
+Icon
+```
+
+Do not make every button visually prominent.
+
+Primary actions should stand out.
+
+Destructive actions should be visually distinguishable.
+
+---
+
+# 17. Forms
+
+Forms must provide:
+
+- Clear labels
+- Validation feedback
+- Error messages
+- Loading state
+- Success feedback where appropriate
+- Disabled state
+- Keyboard accessibility
+
+Do not rely only on placeholder text as a label.
+
+Use accessible form controls.
+
+---
+
+# 18. Loading States
+
+Major asynchronous UI must provide an appropriate loading state.
+
+Use:
+
+- Skeleton
+- Spinner
+- Progress indicator
+- Button loading state
+
+depending on the context.
+
+Prefer Skeleton for page-level content loading when the final layout is predictable.
+
+Avoid blocking the entire screen unnecessarily.
+
+---
+
+# 19. Skeleton
+
+Skeleton UI should resemble the final content layout.
+
+Do not create generic skeleton blocks that cause major layout shifts.
+
+Example:
+
+```text
+Project Card
+├── Title Skeleton
+├── Description Skeleton
+├── Progress Skeleton
+└── Member Skeleton
+```
+
+Skeleton animation should be subtle.
+
+Respect reduced-motion preferences.
+
+---
+
+# 20. Empty States
+
+Every major data-driven screen must have an intentional Empty State.
+
+Examples:
+
+```text
+No projects yet.
+No tasks yet.
+No notifications.
+No search results.
+```
+
+An Empty State should explain:
+
+1. What is empty.
+2. Why it may be empty.
+3. What the user can do next.
+
+When appropriate, provide a primary action.
+
+---
+
+# 21. Error States
+
+Errors must be visible and understandable.
+
+Do not leave blank screens when data fails to load.
+
+Provide:
+
+- Clear explanation
+- Appropriate recovery action
+- Retry when possible
+- User-friendly language
+
+Do not expose stack traces or internal errors to users.
+
+---
+
+# 22. Toast Notifications
+
+Use Toast notifications for short-lived feedback.
+
+Good examples:
+
+```text
+Project created
+Task updated
+Changes saved
+Project deleted
+```
+
+Do not use Toasts for important information that must remain visible.
+
+Do not show excessive Toast notifications.
+
+---
+
+# 23. Dialogs
+
+Use dialogs for focused tasks that require temporary attention.
+
+Examples:
+
+- Create Project
+- Edit Project
+- Delete confirmation
+- Create Task
+- Command Palette
+
+Dialogs must:
+
+- Trap focus appropriately
+- Support Escape
+- Have accessible labels
+- Restore focus appropriately
+- Work on mobile
+
+---
+
+# 24. Dropdowns and Popovers
+
+Dropdowns and Popovers should be used for contextual actions and compact controls.
+
+Examples:
+
+```text
+Sort
+Filter
+More Actions
+User Menu
+Project Actions
+```
+
+Do not hide important navigation or critical information inside ambiguous menus.
+
+---
+
+# 25. Command Palette
+
+The application may provide a Command Palette for power users.
+
+It should support actions such as:
+
+```text
+Create Project
+Create Task
+Search Projects
+Search Tasks
+Open Dashboard
+Open Calendar
+Open Settings
+```
+
+Keyboard navigation must work.
+
+A common shortcut such as:
+
+```text
+⌘ K
+```
+
+or:
+
+```text
+Ctrl K
+```
+
+may be used depending on platform.
+
+---
+
+# 26. Tooltips
+
+Use Tooltips for icon-only controls or unfamiliar controls.
+
+Do not use Tooltips for information that must always be visible.
+
+Do not make critical actions inaccessible without a mouse.
+
+Tooltips must not replace accessible names.
+
+---
+
+# 27. Context Menus
+
+Context menus may be used for advanced interactions.
+
+Examples:
+
+```text
+Task
+ └── Right Click
+      ├── Edit
+      ├── Duplicate
+      ├── Move
+      └── Delete
+```
+
+Important actions should remain discoverable through normal UI controls.
+
+Do not make essential functionality available only through context menus.
+
+---
+
+# 28. Animation
+
+Animations should feel polished and restrained.
+
+Use animation to communicate:
+
+- State changes
+- Hierarchy
+- Feedback
+- Navigation
+- Appearance
+- Disappearance
+
+Do not animate everything.
+
+Avoid animation that delays usability.
+
+---
+
+# 29. GSAP
+
+GSAP may be used for sophisticated animations.
+
+Appropriate use cases include:
+
+- Page entrance
+- Card stagger
+- Sidebar transitions
+- Modal transitions
+- Scroll-based effects
+- Micro-interactions
+
+Use GSAP only when it provides meaningful visual value.
+
+Do not use GSAP for animations that CSS can handle more simply.
+
+---
+
+# 30. Animation Timing
+
+Animations should be short and natural.
+
+Prefer subtle transitions.
+
+Avoid:
+
+- Long entrance animations
+- Excessive bouncing
+- Large-scale movement
+- Continuous decorative animation
+
+The UI should feel fast even when animated.
+
+---
+
+# 31. Reduced Motion
+
+Respect:
+
+```css
+prefers-reduced-motion
+```
+
+Users who request reduced motion should receive a significantly reduced animation experience.
+
+Do not make essential functionality dependent on animation.
+
+---
+
+# 32. Page Transitions
+
+Page transitions may use subtle fade or movement.
+
+Transitions must not block navigation.
+
+Avoid long transitions that make the application feel slow.
+
+---
+
+# 33. Hover States
+
+Interactive elements should provide clear hover feedback on devices that support hover.
+
+Examples:
+
+- Background change
+- Border change
+- Elevation
+- Icon movement
+- Subtle color transition
+
+Do not rely on hover as the only indication of an action.
+
+---
+
+# 34. Focus States
+
+Keyboard focus must always remain visible.
+
+Do not remove focus outlines without providing an equivalent accessible focus indicator.
+
+Focus styles must be visually consistent with the design system.
+
+---
+
+# 35. Accessibility
+
+Accessibility is mandatory.
+
+Use semantic HTML.
+
+Prefer:
+
+```html
+<button></button>
+```
+
+over:
+
+```html
+<div></div>
+```
+
+for actions.
+
+Prefer:
+
+```html
+<nav>
+  <main>
+    <header>
+      <section>
+        <article>
+          <footer></footer>
+        </article>
+      </section>
+    </header>
+  </main>
+</nav>
+```
+
+where appropriate.
+
+---
+
+# 36. Accessible Names
+
+Interactive elements must have accessible names.
+
+Icon-only buttons must use appropriate accessible labels.
+
+Example:
+
+```tsx
+<Button aria-label="Delete project">
+  <Trash2 />
+</Button>
+```
+
+Do not rely on visual icons alone.
+
+---
+
+# 37. Keyboard Navigation
+
+Interactive components must be keyboard accessible.
+
+Users should be able to navigate:
+
+- Buttons
+- Links
+- Forms
+- Dialogs
+- Dropdowns
+- Command Palette
+- Tabs
+- Menus
+
+Do not create custom interactions that work only with mouse events.
+
+---
+
+# 38. Color Contrast
+
+Do not use color as the only way to communicate information.
+
+For example:
+
+```text
+Red = Error
+Green = Success
+```
+
+should be accompanied by:
+
+- Text
+- Icon
+- Accessible status
+
+Ensure sufficient contrast between:
+
+- Text and background
+- Interactive elements
+- Borders and surfaces
+- Disabled states
+
+---
+
+# 39. Responsive Navigation
+
+Desktop navigation and mobile navigation may use different interaction patterns.
+
+Example:
+
+```text
+Desktop
+Sidebar
+
+Mobile
+Sheet / Drawer
+```
+
+Do not force a desktop sidebar onto a narrow mobile viewport.
+
+---
+
+# 40. Tables
+
+Tables must remain usable on small screens.
+
+Possible approaches:
+
+- Horizontal scrolling
+- Responsive columns
+- Card transformation
+- Priority-based column hiding
+
+Do not allow tables to silently overflow the entire page.
+
+---
+
+# 41. Kanban Board
+
+The Task Board must support desktop and mobile intentionally.
+
+Desktop may use:
+
+```text
+Horizontal columns
+```
+
+Mobile may use:
+
+```text
+Scrollable columns
+```
+
+or:
+
+```text
+Alternative compact interaction
+```
+
+depending on the screen design.
+
+Drag and Drop must not be the only way to change task status.
+
+Provide an accessible alternative when practical.
+
+---
+
+# 42. Calendar
+
+Calendar interactions must remain usable on mobile.
+
+Do not simply shrink a desktop monthly calendar.
+
+Consider:
+
+- Agenda view
+- Day view
+- Horizontal scrolling
+- Compact event display
+- Touch interaction
+
+Follow the screen design and UI guideline.
+
+---
+
+# 43. Charts and Analytics
+
+Charts must be:
+
+- Readable
+- Responsive
+- Accessible where practical
+- Visually consistent
+
+Do not use excessive colors.
+
+Use the project's semantic color tokens.
+
+Provide textual context for important information when practical.
+
+---
+
+# 44. Responsive Breakpoints
+
+Use the project's established Tailwind breakpoints.
+
+Do not create arbitrary breakpoints for individual components unless necessary.
+
+If a new breakpoint is genuinely required:
+
+1. Explain why.
+2. Check whether the existing breakpoints can solve the problem.
+3. Update the UI guideline if the breakpoint becomes part of the design system.
+
+---
+
+# 45. Mobile Layout
+
+Mobile is a first-class experience.
+
+The mobile layout should not be treated as an afterthought.
+
+The project has a dedicated mobile design reference:
+
+```text
+docs/ui-reference/mobile/
+```
+
+Use it when implementing responsive behavior.
+
+---
+
+# 46. Visual Consistency
+
+All screens should feel like the same product.
+
+Maintain consistency across:
+
+- Buttons
+- Inputs
+- Cards
+- Dialogs
+- Navigation
+- Tables
+- Tags
+- Badges
+- Icons
+- Empty states
+- Loading states
+- Error states
+
+Do not create screen-specific visual styles without a clear reason.
+
+---
+
+# 47. Component Reuse
+
+Before creating a new UI component:
+
+1. Check `components/ui/`.
+2. Check existing shared components.
+3. Check `docs/07_component_design.md`.
+4. Check the UI reference.
+5. Reuse an existing component if appropriate.
+
+Do not duplicate Button, Dialog, Card, Input, Badge, Tooltip, or similar primitives.
+
+---
+
+# 48. shadcn/ui Customization
+
+Use shadcn/ui as a foundation, not as a restriction.
+
+It is acceptable to customize:
+
+- Radius
+- Colors
+- Typography
+- Shadows
+- States
+- Spacing
+- Animation
+
+to match the project's design system.
+
+Do not allow default component styling to make the application look like an unmodified component-library demo.
+
+---
+
+# 49. Responsive Testing
+
+When implementing a screen, consider at least:
+
+```text
+Mobile
+Tablet
+Desktop
+Large Desktop
+```
+
+Check:
+
+- Overflow
+- Navigation
+- Dialogs
+- Cards
+- Tables
+- Forms
+- Buttons
+- Typography
+- Touch targets
+
+---
+
+# 50. Performance
+
+UI quality must not come at the expense of performance.
+
+Avoid:
+
+- Excessive JavaScript
+- Unnecessary Client Components
+- Excessive animation
+- Large animation libraries when CSS is sufficient
+- Expensive rendering loops
+- Unnecessary re-renders
+
+Prefer CSS transitions for simple animations.
+
+Use GSAP when its capabilities provide meaningful value.
+
+---
+
+# 51. Images and Visual Assets
+
+Do not introduce unnecessary external images into application UI.
+
+When visual assets are required:
+
+- Use optimized assets.
+- Provide appropriate dimensions.
+- Avoid unnecessary large files.
+- Provide accessible alternative text where appropriate.
+
+For the current design references, SVG and CSS-based visuals are preferred when practical.
+
+---
+
+# 52. Prototype vs Production
+
+The files under:
+
+```text
+docs/ui-reference/
+```
+
+are design prototypes.
+
+They are not production code.
+
+Do not directly copy:
+
+```text
+index.html
+style.css
+script.js
+```
+
+into the Next.js application.
+
+Instead:
+
+```text
+UI Reference
+     ↓
+Understand Design
+     ↓
+Map to Existing Components
+     ↓
+Apply Design Tokens
+     ↓
+Implement in Next.js
+     ↓
+Test Responsive / Accessible Behavior
+```
+
+---
+
+# 53. UI Implementation Workflow
+
+Before implementing a screen:
+
+```text
+1. Read requirements
+        ↓
+2. Read screen detail design
+        ↓
+3. Read component design
+        ↓
+4. Read UI guideline
+        ↓
+5. Read corresponding UI reference
+        ↓
+6. Inspect existing components
+        ↓
+7. Implement
+        ↓
+8. Add responsive behavior
+        ↓
+9. Add accessibility
+        ↓
+10. Add loading / empty / error states
+        ↓
+11. Add appropriate animation
+        ↓
+12. Test
+```
+
+---
+
+# 54. UI Checklist
+
+Before completing a screen:
+
+- [ ] Design reference was reviewed.
+- [ ] `docs/08_ui-guideline.md` was followed.
+- [ ] Existing components were reused where appropriate.
+- [ ] shadcn/ui was used for appropriate primitives.
+- [ ] Tailwind CSS conventions were followed.
+- [ ] Design tokens were reused.
+- [ ] Desktop layout works.
+- [ ] Tablet layout works.
+- [ ] Mobile layout works.
+- [ ] Loading state exists where required.
+- [ ] Skeleton exists where appropriate.
+- [ ] Empty State exists where required.
+- [ ] Error State exists where required.
+- [ ] Interactive states exist.
+- [ ] Keyboard navigation works.
+- [ ] Focus states are visible.
+- [ ] Accessible names exist.
+- [ ] Color is not the only communication method.
+- [ ] Reduced motion is respected.
+- [ ] Animations do not block usability.
+- [ ] No unnecessary Client Component was introduced.
+- [ ] No unnecessary dependency was added.
+
+---
+
+# 55. Final UI Principles
+
+Always prefer:
+
+```text
+Polished
+    over
+Decorative
+
+Consistent
+    over
+Unique on every screen
+
+Accessible
+    over
+Visually clever
+
+Fast
+    over
+Animation-heavy
+
+Simple
+    over
+Over-designed
+
+Intentional
+    over
+Generic
 
 Responsive
+    over
+Desktop-only
 
-Dark mode
+Reusable
+    over
+Duplicated
+```
 
-Accessibility
+The goal is to create a UI that looks impressive within the first few seconds while remaining practical, accessible, responsive, and maintainable.
 
-Loading Skeleton
+The application should feel like a real premium SaaS product, not a portfolio mockup.
 
-Empty State
+````
 
-Error State
+## 今回は特に `ui-reference` との連携が重要です
+
+あなたのプロジェクトでは、Claudeに作ってもらったデザインを、
+
+```text
+docs/
+└── ui-reference/
+    ├── login/
+    ├── dashboard/
+    ├── project-list/
+    ├── project-detail/
+    ├── task-board/
+    ├── task-detail/
+    ├── calendar/
+    ├── analytics/
+    ├── settings/
+    ├── profile/
+    └── mobile/
+
+````

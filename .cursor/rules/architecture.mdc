@@ -1,13 +1,1246 @@
-You are a senior software engineer.
+---
+description: Architecture rules for the Task Manager project. Apply when creating or modifying application architecture, routes, features, components, services, repositories, data access, state management, authentication, or infrastructure.
+alwaysApply: true
+---
 
-Always follow Feature First Architecture.
+# Architecture Rules
 
-Never place business logic inside page.tsx.
+You are working on a production-oriented Task Manager application.
 
-Separate UI, hooks, services and repositories.
+The canonical architecture is defined in:
 
-Always use TypeScript strict mode.
+`docs/04_architecture.md`
 
-Always use App Router.
+Always read and follow that document when making architectural decisions.
 
-Always use Server Components unless Client Components are required.
+---
+
+# 1. Core Architecture Principles
+
+- Follow Feature First Architecture.
+- Prefer simple and maintainable architecture.
+- Separate UI, business logic, data access, and infrastructure concerns.
+- Keep business logic out of UI components.
+- Keep database access out of UI components.
+- Do not introduce unnecessary abstractions.
+- Do not introduce unnecessary dependencies.
+- Do not change the established architecture without a clear reason.
+- Do not silently introduce a different architectural pattern.
+
+The implementation must remain consistent with `docs/04_architecture.md`.
+
+---
+
+# 2. Feature First Architecture
+
+Organize application code by feature rather than by page.
+
+Preferred structure:
+
+```text
+features/
+├── auth/
+├── dashboard/
+├── project/
+├── task/
+├── calendar/
+├── analytics/
+├── notification/
+├── settings/
+└── profile/
+```
+
+A feature may contain only the directories it actually needs.
+
+Do not create empty directories solely to match the example structure.
+
+---
+
+# 3. Feature Structure
+
+A feature may use:
+
+```text
+features/<feature>/
+├── components/
+├── hooks/
+├── schemas/
+├── types/
+├── services/
+└── utils/
+```
+
+Use only the directories required by the feature.
+
+Do not create unnecessary layers.
+
+---
+
+# 4. Layered Architecture
+
+The preferred application flow is:
+
+```text
+UI
+ ↓
+Hook / Server Component
+ ↓
+API / Server Action
+ ↓
+Validation
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Drizzle ORM
+ ↓
+Cloudflare D1
+```
+
+Each layer must have a clear responsibility.
+
+---
+
+# 5. UI Layer
+
+UI components are responsible for:
+
+- Rendering UI
+- User interaction
+- Presenting state
+- Calling appropriate hooks or server-side operations
+
+UI components must NOT contain substantial business logic.
+
+Do not put:
+
+- Complex business rules
+- Database queries
+- Authorization logic
+- Large data transformations
+
+directly inside UI components.
+
+---
+
+# 6. Page Components
+
+`page.tsx` should primarily compose the page.
+
+Do not place large business logic inside:
+
+```text
+page.tsx
+```
+
+If logic becomes complex, move it to the appropriate:
+
+- Feature component
+- Hook
+- Service
+- Utility
+- Repository
+
+A page should generally answer:
+
+> "Which UI should be rendered for this route?"
+
+not:
+
+> "How does the entire business process work?"
+
+---
+
+# 7. Next.js App Router
+
+Use Next.js App Router.
+
+Preferred structure:
+
+```text
+app/
+├── (auth)/
+│   └── login/
+│
+├── dashboard/
+├── projects/
+│   ├── page.tsx
+│   └── [projectId]/
+│
+├── calendar/
+├── analytics/
+├── settings/
+├── profile/
+└── api/
+    └── v1/
+```
+
+Do not introduce the Pages Router.
+
+Do not create duplicate routing systems.
+
+---
+
+# 8. Server Components
+
+Server Components are the default.
+
+Prefer Server Components for:
+
+- Initial data fetching
+- Server-side rendering
+- Database-backed data retrieval
+- SEO-related content
+- Server-only operations
+
+Do not add:
+
+```tsx
+"use client";
+```
+
+unless client-side behavior actually requires it.
+
+---
+
+# 9. Client Components
+
+Use Client Components only when necessary.
+
+Typical use cases:
+
+- Drag and Drop
+- Dialog
+- Dropdown
+- Command Palette
+- Interactive Forms
+- Calendar interaction
+- Charts
+- GSAP animations
+- Browser APIs
+- Local interactive state
+- Real-time UI
+
+Do not make an entire page a Client Component just because one child component needs client-side behavior.
+
+Prefer the smallest possible Client Component boundary.
+
+---
+
+# 10. Database Access
+
+UI components must never access the database directly.
+
+Forbidden:
+
+```text
+Client Component
+ ↓
+Database
+```
+
+Also avoid:
+
+```text
+UI Component
+ ↓
+Drizzle
+```
+
+Database access must be isolated behind the server-side data access architecture.
+
+Preferred:
+
+```text
+Server Component / Route Handler / Server Action
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Drizzle
+ ↓
+D1
+```
+
+---
+
+# 11. Repository Layer
+
+Repositories are responsible for database access.
+
+Example:
+
+```text
+lib/repositories/
+├── project-repository.ts
+├── task-repository.ts
+├── user-repository.ts
+├── comment-repository.ts
+└── activity-repository.ts
+```
+
+Repository responsibilities:
+
+- Execute database queries
+- Insert data
+- Update data
+- Delete data
+- Retrieve data
+- Handle database-specific concerns
+
+Repositories must not contain UI logic.
+
+Repositories should not contain presentation concerns.
+
+---
+
+# 12. Service Layer
+
+Services are responsible for business logic.
+
+Example:
+
+```text
+lib/services/
+├── project-service.ts
+├── task-service.ts
+├── user-service.ts
+├── calendar-service.ts
+└── analytics-service.ts
+```
+
+Services may handle:
+
+- Business rules
+- Permission checks
+- Validation coordination
+- Transactions
+- Multiple repository operations
+- Business-level data transformations
+
+Do not move database-specific query logic into Services when it belongs in a Repository.
+
+---
+
+# 13. Route Handlers
+
+Route Handlers are responsible for HTTP/API concerns.
+
+They should handle:
+
+- HTTP method
+- Request parsing
+- Authentication
+- Input validation
+- Calling services
+- HTTP response
+- Error mapping
+
+Do not put large business logic inside Route Handlers.
+
+Preferred:
+
+```text
+Route Handler
+ ↓
+Validate
+ ↓
+Authenticate / Authorize
+ ↓
+Service
+ ↓
+Repository
+```
+
+---
+
+# 14. Server Actions
+
+Server Actions may be used for appropriate server-side mutations.
+
+They must follow the same architectural principles as API endpoints.
+
+Do not bypass:
+
+```text
+Validation
+Authorization
+Business Logic
+Data Access
+```
+
+A Server Action must not directly contain a large amount of business logic.
+
+---
+
+# 15. Authentication
+
+Authentication is handled by Auth.js.
+
+Authentication answers:
+
+```text
+Who is the user?
+```
+
+Do not implement custom authentication logic when the established authentication architecture already provides the required behavior.
+
+Do not store sensitive authentication information in Client Components.
+
+---
+
+# 16. Authorization
+
+Authentication and Authorization are separate concerns.
+
+Authorization answers:
+
+```text
+What is this user allowed to access?
+```
+
+Always perform authorization checks on the server.
+
+Never rely only on:
+
+- Hidden buttons
+- Disabled UI
+- Client-side checks
+- Route visibility
+
+to enforce permissions.
+
+A user must not be able to access another user's:
+
+- Workspace
+- Project
+- Task
+- Comments
+- Activities
+- Private data
+
+through a manipulated request.
+
+---
+
+# 17. Workspace and Project Boundaries
+
+Treat Workspace and Project membership as security boundaries.
+
+Preferred conceptual flow:
+
+```text
+User
+ ↓
+Workspace Membership
+ ↓
+Project Membership
+ ↓
+Resource
+```
+
+Do not trust a client-provided:
+
+```text
+userId
+workspaceId
+projectId
+```
+
+without verifying authorization on the server.
+
+---
+
+# 18. State Management
+
+Classify state before choosing a state management solution.
+
+## Server State
+
+Use TanStack Query where client-side server-state management is required.
+
+Examples:
+
+```text
+Projects
+Tasks
+Notifications
+Analytics
+```
+
+Do not duplicate server state unnecessarily in local React state.
+
+---
+
+## Local UI State
+
+Use:
+
+```text
+useState
+useReducer
+```
+
+for local UI state.
+
+Examples:
+
+```text
+Modal Open
+Sidebar Open
+Dropdown Open
+Selected Tab
+```
+
+Do not introduce global state for simple local UI state.
+
+---
+
+## Form State
+
+Use React Hook Form for complex forms.
+
+Use Zod for validation.
+
+---
+
+## URL State
+
+Use URL Search Parameters for state that should be:
+
+- Shareable
+- Bookmarkable
+- Navigable
+- Filterable
+
+Examples:
+
+```text
+/projects?status=active&sort=updatedAt
+```
+
+Do not store URL-worthy filter state only in React state.
+
+---
+
+# 19. API Architecture
+
+API endpoints are implemented using Next.js Route Handlers.
+
+Preferred location:
+
+```text
+app/api/v1/
+```
+
+API contracts are defined in:
+
+```text
+docs/06_api.md
+```
+
+Do not create undocumented API endpoints.
+
+Before modifying an API:
+
+1. Read `docs/06_api.md`.
+2. Update the API documentation if the contract changes.
+3. Implement the change.
+4. Add or update tests.
+
+---
+
+# 20. Validation Boundary
+
+External input is untrusted.
+
+Validate:
+
+- Request bodies
+- URL parameters
+- Search parameters
+- Form input
+- Query parameters
+
+Use Zod.
+
+Preferred flow:
+
+```text
+External Input
+ ↓
+Zod Validation
+ ↓
+Service
+ ↓
+Repository
+```
+
+Do not rely solely on client-side validation.
+
+---
+
+# 21. Shared Components
+
+Shared components belong in:
+
+```text
+components/
+```
+
+Examples:
+
+```text
+components/
+├── ui/
+├── layout/
+├── navigation/
+└── feedback/
+```
+
+Use shared components when they are genuinely shared across multiple features.
+
+Examples:
+
+```text
+Button
+Dialog
+Card
+Input
+Badge
+Toast
+Tooltip
+```
+
+---
+
+# 22. Feature Components
+
+Feature-specific components belong inside their feature.
+
+Examples:
+
+```text
+TaskCard
+ProjectCard
+CalendarEvent
+```
+
+Prefer:
+
+```text
+features/task/components/task-card.tsx
+```
+
+over putting Task-specific UI into a global shared directory.
+
+Do not promote a feature component to shared code prematurely.
+
+---
+
+# 23. Component Boundaries
+
+Use the following rules.
+
+## Shared Component
+
+Use when:
+
+- Multiple features use it.
+- It has no feature-specific business logic.
+- Its API can remain generic.
+
+## Feature Component
+
+Use when:
+
+- It is strongly tied to one feature.
+- It contains feature-specific UI behavior.
+- It should not be reused elsewhere.
+
+## Page Component
+
+Use when:
+
+- It composes a route-specific page.
+- It coordinates page layout.
+- It does not contain large business logic.
+
+---
+
+# 24. Cross-Feature Dependencies
+
+Avoid unnecessary dependencies between features.
+
+Bad:
+
+```text
+features/task/
+ ↓
+features/project/
+ ↓
+features/calendar/
+ ↓
+features/analytics/
+```
+
+when the dependency is not architecturally necessary.
+
+Prefer shared domain logic or services where appropriate.
+
+Do not create circular dependencies.
+
+---
+
+# 25. Database Technology
+
+The target database architecture is:
+
+```text
+Application
+ ↓
+Drizzle ORM
+ ↓
+Cloudflare D1
+ ↓
+SQLite
+```
+
+Do not introduce another database technology without updating:
+
+```text
+docs/04_architecture.md
+docs/05_database.md
+```
+
+and recording the architectural decision.
+
+---
+
+# 26. Database Abstraction
+
+Do not couple UI code to Drizzle or D1.
+
+The following is forbidden:
+
+```tsx
+// UI
+const tasks = await db.select(...);
+```
+
+Database-specific implementation must remain in the data-access layer.
+
+---
+
+# 27. Performance Architecture
+
+Performance is a first-class architectural requirement.
+
+Priorities:
+
+1. Fast initial load
+2. Server Components
+3. Static rendering where possible
+4. Edge caching where appropriate
+5. Minimal Client JavaScript
+6. Lazy loading
+7. Efficient database queries
+
+Do not move server-side work to the client without a clear reason.
+
+---
+
+# 28. Initial Load
+
+The Login page must not access the database merely to render the login UI.
+
+Preferred:
+
+```text
+Browser
+ ↓
+Edge / CDN
+ ↓
+Login Page
+```
+
+After authentication:
+
+```text
+Login
+ ↓
+Session
+ ↓
+Dashboard
+ ↓
+Required Data
+```
+
+Do not load unnecessary application data during the initial Dashboard request.
+
+---
+
+# 29. Database Connection Strategy
+
+Database access must occur only when required.
+
+Allowed server-side locations include:
+
+```text
+Server Component
+Route Handler
+Server Action
+Service
+Repository
+```
+
+Client Components must never connect directly to D1.
+
+---
+
+# 30. Caching
+
+Use caching where appropriate.
+
+Potential candidates:
+
+```text
+Project List
+Analytics
+Public Profile
+```
+
+Never accidentally share user-specific or permission-sensitive data through a public/shared cache.
+
+When introducing caching, explicitly consider:
+
+- User identity
+- Workspace
+- Project
+- Authorization
+- Cache invalidation
+- Data freshness
+
+---
+
+# 31. Error Architecture
+
+Errors should be handled according to layer responsibility.
+
+```text
+UI
+ ↓
+API
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Database
+```
+
+Do not expose internal implementation details to users.
+
+Do not silently swallow errors.
+
+Do not use generic error handling that hides the actual failure during development.
+
+---
+
+# 32. Error Boundaries
+
+Use Next.js Error Boundaries where appropriate.
+
+Prefer isolating errors to the smallest reasonable feature or route segment.
+
+Do not allow an isolated feature failure to unnecessarily crash the entire application.
+
+---
+
+# 33. Loading Architecture
+
+Use Next.js loading UI where appropriate:
+
+```text
+loading.tsx
+```
+
+For client-side asynchronous UI, use Skeleton components where appropriate.
+
+Loading UI should preserve the expected page structure and avoid unnecessary layout shifts.
+
+---
+
+# 34. Empty States
+
+Every major data-driven screen must define an appropriate Empty State.
+
+Examples:
+
+```text
+No projects yet.
+No tasks yet.
+No notifications.
+No search results.
+```
+
+An Empty State should tell the user what happened and, when appropriate, what to do next.
+
+---
+
+# 35. Responsive Architecture
+
+All application screens must support:
+
+```text
+Desktop
+Tablet
+Mobile
+```
+
+Do not simply scale down desktop UI.
+
+Mobile layouts should be intentionally designed for:
+
+- Touch interaction
+- Small screens
+- Reduced information density
+- Navigation constraints
+
+Follow:
+
+```text
+docs/08_ui-guideline.md
+```
+
+for breakpoint definitions.
+
+---
+
+# 36. Animation Architecture
+
+GSAP may be used for appropriate UI animation.
+
+Animation must:
+
+- Support usability
+- Provide feedback
+- Clarify transitions
+- Remain performant
+- Respect `prefers-reduced-motion`
+
+Forbidden:
+
+- Excessive animation
+- Long blocking animations
+- Animation that delays page usability
+- Decorative animation with no UX purpose
+
+---
+
+# 37. Testing Architecture
+
+Tests are part of the architecture.
+
+Tests belong in:
+
+```text
+tests/
+├── unit/
+├── integration/
+└── e2e/
+```
+
+Use:
+
+## Unit Tests
+
+For:
+
+- Utilities
+- Validation
+- Services
+- Repositories
+- Business logic
+
+## Integration Tests
+
+For:
+
+- APIs
+- Database
+- Authentication
+- Authorization
+- Feature workflows
+
+## E2E Tests
+
+For important user journeys.
+
+At minimum:
+
+```text
+Login
+ ↓
+Dashboard
+ ↓
+Create Project
+ ↓
+Create Task
+ ↓
+Move Task
+ ↓
+Task Detail
+ ↓
+Logout
+```
+
+---
+
+# 38. Architecture and Testing
+
+Architectural layers must remain testable.
+
+Prefer dependency boundaries that allow:
+
+- Service testing
+- Repository testing
+- API testing
+- Component testing
+
+Do not tightly couple business logic to React components.
+
+---
+
+# 39. Dependency Policy
+
+Before adding a dependency:
+
+1. Check whether the project already provides the required functionality.
+2. Check whether an existing dependency can solve the problem.
+3. Evaluate bundle size.
+4. Evaluate maintenance status.
+5. Evaluate security.
+6. Evaluate license.
+7. Evaluate Next.js compatibility.
+8. Evaluate Cloudflare compatibility.
+
+Do not add a dependency for a trivial utility that can be implemented safely without it.
+
+---
+
+# 40. Architecture Changes
+
+Do not silently change:
+
+- Framework
+- Database
+- ORM
+- Authentication
+- Hosting
+- API architecture
+- Folder structure
+- State management
+- Testing strategy
+- Deployment strategy
+
+If such a change is required:
+
+1. Explain the reason.
+2. Identify affected areas.
+3. Update the relevant documentation.
+4. Update `docs/04_architecture.md`.
+5. Update `docs/development-log.md`.
+
+---
+
+# 41. Forbidden Architecture
+
+The following are prohibited:
+
+- Direct database access from Client Components
+- Business logic embedded heavily in UI components
+- Large business logic inside `page.tsx`
+- Large business logic inside Route Handlers
+- Feature-specific logic inside generic shared components
+- Circular feature dependencies
+- Undocumented API endpoints
+- Bypassing validation
+- Bypassing authorization
+- Unnecessary global state
+- Unnecessary Client Components
+- Unnecessary dependencies
+- Duplicate implementations of existing architecture
+- Silent architectural changes
+
+---
+
+# 42. Documentation Synchronization
+
+When architecture changes, update:
+
+```text
+docs/04_architecture.md
+```
+
+Also update other affected documents.
+
+Potentially affected documents include:
+
+```text
+docs/01_requirements.md
+docs/02_basic-design.md
+docs/03_detail-design/
+docs/05_database.md
+docs/06_api.md
+docs/07_component_design.md
+docs/08_ui-guideline.md
+docs/roadmap.md
+docs/development-log.md
+```
+
+Documentation and implementation must remain consistent.
+
+---
+
+# 43. Implementation Workflow
+
+Before implementing a major feature:
+
+```text
+1. Read requirements
+        ↓
+2. Read relevant detail design
+        ↓
+3. Read architecture
+        ↓
+4. Read database / API / component documentation
+        ↓
+5. Check existing implementation
+        ↓
+6. Reuse existing architecture where possible
+        ↓
+7. Implement
+        ↓
+8. Add tests
+        ↓
+9. Run type check
+        ↓
+10. Run lint
+        ↓
+11. Run tests
+        ↓
+12. Update documentation if necessary
+```
+
+Do not skip directly from a feature request to implementation without checking the existing architecture.
+
+---
+
+# 44. Architecture Decision Priority
+
+When multiple technically valid solutions exist, prioritize:
+
+```text
+1. Security
+2. Correctness
+3. Performance
+4. Maintainability
+5. Simplicity
+6. Developer Experience
+7. Visual Quality
+8. Implementation Speed
+```
+
+Do not choose a technically inferior architecture merely because it is faster to implement.
+
+---
+
+# 45. Current Target Architecture
+
+The target architecture is:
+
+```text
+                         ┌───────────────┐
+                         │    Browser    │
+                         └───────┬───────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────┐
+                    │ Cloudflare Edge/CDN  │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │      Next.js         │
+                    │                      │
+                    │ App Router           │
+                    │ Server Components    │
+                    │ Client Components    │
+                    │ Route Handlers       │
+                    └──────────┬───────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+           Auth.js       Service Layer    TanStack Query
+                               │
+                               ▼
+                        Repository Layer
+                               │
+                               ▼
+                          Drizzle ORM
+                               │
+                               ▼
+                         Cloudflare D1
+                               │
+                               ▼
+                            SQLite
+```
+
+This architecture is the target design, not a statement that every component has already been implemented.
+
+Do not assume planned technologies are already installed or configured.
+
+---
+
+# 46. Important Distinction: Planned vs Implemented
+
+The architecture document may define technologies that are planned but not yet implemented.
+
+Before using a planned technology:
+
+1. Check `package.json`.
+2. Check the actual source tree.
+3. Check the current implementation.
+4. Confirm the technology has been configured.
+
+Do not claim that a planned technology is already implemented.
+
+---
+
+# 47. Final Architecture Principles
+
+Always keep the following principles in mind:
+
+> Keep the UI lightweight.
+
+> Keep business logic out of the UI.
+
+> Keep database access isolated.
+
+> Keep features independent.
+
+> Keep Server Components as the default.
+
+> Keep Client Components as small as possible.
+
+> Keep the architecture simple.
+
+> Keep the system testable.
+
+> Keep security boundaries on the server.
+
+> Keep documentation synchronized with implementation.

@@ -1,17 +1,892 @@
-Always
+---
+description: Coding standards for the Task Manager project. Apply when creating, modifying, refactoring, or reviewing TypeScript, React, Next.js, and related application code.
+alwaysApply: true
+---
 
-ESLint
+# Coding Rules
 
-Prettier
+All code must follow the project's requirements, architecture, and documentation.
 
-TypeScript
+Before implementing code, read the relevant documentation and existing implementation.
 
-Never use any.
+---
 
-Prefer interface.
+# 1. Core Principles
 
-Prefer async/await.
+- Write production-ready code.
+- Prioritize readability and maintainability.
+- Prefer simple solutions over unnecessary abstractions.
+- Follow existing project conventions.
+- Reuse existing utilities and components where appropriate.
+- Avoid duplicated logic.
+- Keep responsibilities clear.
+- Keep functions focused.
+- Do not introduce unnecessary dependencies.
+- Do not overengineer.
 
-Write reusable code.
+---
 
-No duplicated code.
+# 2. TypeScript
+
+Use TypeScript for application code.
+
+TypeScript strictness must be preserved.
+
+Never use:
+
+```ts
+any;
+```
+
+Do not use `any` to suppress type errors.
+
+Do not weaken compiler settings to make code compile.
+
+Prefer explicit types when they improve readability.
+
+Prefer type inference when the type is obvious.
+
+---
+
+# 3. Interface vs Type
+
+Use `interface` for object-shaped contracts that may benefit from extension or declaration merging.
+
+Example:
+
+```ts
+interface User {
+  id: string;
+  name: string;
+}
+```
+
+Use `type` for:
+
+- Union types
+- Intersection types
+- Tuple types
+- Function types
+- Mapped types
+- Conditional types
+- Other type-level compositions
+
+Example:
+
+```ts
+type TaskStatus = "backlog" | "todo" | "in_progress" | "review" | "done";
+```
+
+Do not blindly use `interface` for every type.
+
+Choose the construct that best expresses the intended type.
+
+---
+
+# 4. Type Safety
+
+Prefer type-safe implementations.
+
+Avoid unsafe type assertions:
+
+```ts
+value as SomeType;
+```
+
+unless the assertion is justified and there is no safer alternative.
+
+Do not use:
+
+```ts
+as any
+```
+
+Do not use:
+
+```ts
+// @ts-ignore
+```
+
+unless there is an exceptional, documented reason.
+
+Prefer:
+
+- Type guards
+- Zod validation
+- Generics
+- Discriminated unions
+- Properly typed function parameters
+- Properly typed return values
+
+---
+
+# 5. Null and Undefined
+
+Handle nullable values explicitly.
+
+Do not assume that optional data exists.
+
+Avoid unsafe code such as:
+
+```ts
+user!.name;
+```
+
+unless the invariant is guaranteed and clearly established.
+
+Prefer explicit handling:
+
+```ts
+if (!user) {
+  return;
+}
+```
+
+or appropriate fallback behavior.
+
+---
+
+# 6. Async / Await
+
+Prefer `async/await` for asynchronous code.
+
+Example:
+
+```ts
+const project = await getProject(projectId);
+```
+
+Avoid unnecessary Promise chains:
+
+```ts
+getProject(projectId)
+  .then(...)
+  .catch(...)
+```
+
+Use `Promise.all()` when independent asynchronous operations can safely execute in parallel.
+
+Example:
+
+```ts
+const [projects, notifications] = await Promise.all([
+  getProjects(),
+  getNotifications(),
+]);
+```
+
+Do not use parallel execution when operations depend on each other.
+
+---
+
+# 7. Error Handling
+
+Do not silently ignore errors.
+
+Avoid:
+
+```ts
+try {
+  await doSomething();
+} catch {}
+```
+
+Handle errors intentionally.
+
+Use appropriate error boundaries between:
+
+- UI
+- API
+- Service
+- Repository
+
+Do not expose internal implementation details to users.
+
+---
+
+# 8. Functions
+
+Keep functions small and focused.
+
+A function should generally have one clear responsibility.
+
+Avoid functions that:
+
+- Fetch data
+- Validate data
+- Transform data
+- Update the database
+- Format UI output
+
+all at once.
+
+Split responsibilities when a function becomes difficult to understand or test.
+
+---
+
+# 9. File Size
+
+Prefer keeping files under approximately 300 lines.
+
+The 300-line guideline is not absolute.
+
+Do not split a file into many meaningless files just to satisfy the line count.
+
+Split files when separation improves:
+
+- Readability
+- Testability
+- Reusability
+- Responsibility boundaries
+
+---
+
+# 10. Naming
+
+Use descriptive names.
+
+Prefer:
+
+```ts
+getProjectById();
+createProject();
+updateTaskStatus();
+calculateProjectProgress();
+```
+
+over:
+
+```ts
+getData();
+create();
+update();
+calc();
+```
+
+Avoid unnecessary abbreviations.
+
+---
+
+# 11. Variables
+
+Use `const` by default.
+
+Use `let` only when reassignment is required.
+
+Avoid `var`.
+
+Prefer immutable data where practical.
+
+---
+
+# 12. Boolean Naming
+
+Boolean variables should clearly communicate their meaning.
+
+Prefer:
+
+```ts
+isLoading;
+isAuthenticated;
+isArchived;
+hasPermission;
+canEdit;
+```
+
+Avoid:
+
+```ts
+loading;
+auth;
+archive;
+permission;
+```
+
+when the boolean meaning is unclear.
+
+---
+
+# 13. Constants
+
+Use constants for values that have semantic meaning or are reused.
+
+Example:
+
+```ts
+const MAX_PROJECTS_PER_PAGE = 50;
+```
+
+Avoid unexplained magic numbers.
+
+Bad:
+
+```ts
+if (projects.length > 50) {
+```
+
+Better:
+
+```ts
+if (projects.length > MAX_PROJECTS_PER_PAGE) {
+```
+
+---
+
+# 14. Comments
+
+Prefer self-explanatory code.
+
+Do not write comments that merely describe obvious code.
+
+Avoid:
+
+```ts
+// Get project
+const project = await getProject(id);
+```
+
+Write comments when they explain:
+
+- Why something is necessary
+- Why an unusual implementation was chosen
+- Important constraints
+- Non-obvious business rules
+- Workarounds
+
+Example:
+
+```ts
+// Keep the initial login request database-free so the public login page
+// remains fast even when the application database has not been accessed recently.
+```
+
+---
+
+# 15. React
+
+Follow React best practices.
+
+Prefer functional components.
+
+Do not use class components unless explicitly required.
+
+Keep components focused.
+
+Avoid excessively large components.
+
+If a component becomes difficult to understand, split it by responsibility.
+
+---
+
+# 16. React Props
+
+Define explicit props.
+
+Example:
+
+```ts
+interface TaskCardProps {
+  task: Task;
+  onOpen: (taskId: string) => void;
+}
+```
+
+Avoid overly generic props such as:
+
+```ts
+data: any;
+```
+
+Never use `any`.
+
+---
+
+# 17. React State
+
+Do not create state when derived values can be calculated.
+
+Avoid:
+
+```ts
+const [completedCount, setCompletedCount] = useState(0);
+```
+
+when it can safely be derived from existing data.
+
+Prefer:
+
+```ts
+const completedCount = tasks.filter((task) => task.status === "done").length;
+```
+
+Avoid unnecessary global state.
+
+Keep local state local whenever possible.
+
+---
+
+# 18. useEffect
+
+Do not use `useEffect` as a default mechanism for application logic.
+
+Before using `useEffect`, determine whether the logic can be handled by:
+
+- Server Components
+- Event handlers
+- Derived state
+- Server-side data fetching
+- TanStack Query
+
+Use `useEffect` when synchronization with an external system or browser API actually requires it.
+
+---
+
+# 19. Server / Client Boundary
+
+Follow `docs/04_architecture.md`.
+
+Server Components are the default.
+
+Do not add:
+
+```tsx
+"use client";
+```
+
+unless the component requires client-side behavior.
+
+Keep Client Components as small as practical.
+
+Do not make an entire page a Client Component because one child component requires interactivity.
+
+---
+
+# 20. Data Fetching
+
+Do not fetch data unnecessarily.
+
+Prefer server-side data fetching for initial page data when appropriate.
+
+Use TanStack Query for client-side server state when its features are actually needed.
+
+Avoid duplicate requests.
+
+Avoid fetching the same data independently in multiple components when it can be shared appropriately.
+
+---
+
+# 21. API Calls
+
+Do not put API request logic directly into many unrelated components.
+
+Centralize repeated API communication when appropriate.
+
+Validate API responses when required by the architecture.
+
+Handle:
+
+- Loading
+- Success
+- Empty
+- Error
+
+states explicitly.
+
+---
+
+# 22. Validation
+
+All external input must be validated.
+
+Use Zod for:
+
+- Forms
+- API requests
+- Query parameters
+- URL parameters
+- User-provided data
+
+Client-side validation does not replace server-side validation.
+
+---
+
+# 23. Business Logic
+
+Do not put business logic inside UI components.
+
+Business logic belongs in the appropriate service or domain layer.
+
+Bad:
+
+```tsx
+const progress = (completedTasks.length / tasks.length) * 100;
+```
+
+when the calculation is a shared business rule used across multiple parts of the application.
+
+Prefer a reusable domain/service function:
+
+```ts
+calculateProjectProgress(tasks);
+```
+
+Do not create a service for trivial presentation logic.
+
+Use judgment.
+
+---
+
+# 24. Database Access
+
+Do not access the database directly from UI components.
+
+Do not import Drizzle or database clients into Client Components.
+
+Database access belongs to the repository/data-access layer.
+
+Follow:
+
+```text
+UI
+ ↓
+API / Server Action
+ ↓
+Validation
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Drizzle
+ ↓
+D1
+```
+
+---
+
+# 25. Security
+
+Treat all external input as untrusted.
+
+Never trust:
+
+- Client-provided user IDs
+- Workspace IDs
+- Project IDs
+- Permission flags
+- Role information
+
+Authorization must be verified on the server.
+
+Never expose secrets in client-side code.
+
+Never commit secrets.
+
+---
+
+# 26. Reusability
+
+Write reusable code when reuse provides real value.
+
+Do not abstract code prematurely.
+
+Avoid creating a generic utility solely because two pieces of code look similar.
+
+Extract shared logic when:
+
+- It is used by multiple features.
+- The behavior has a clear common meaning.
+- The abstraction improves maintainability.
+
+---
+
+# 27. Duplication
+
+Avoid duplicated business logic.
+
+Before creating new functionality:
+
+1. Search the repository.
+2. Check existing utilities.
+3. Check existing services.
+4. Check existing hooks.
+5. Check existing components.
+
+Reuse existing functionality when appropriate.
+
+Do not duplicate functionality simply because it is faster.
+
+---
+
+# 28. Imports
+
+Keep imports clean.
+
+Prefer project aliases where configured.
+
+Example:
+
+```ts
+import { Button } from "@/components/ui/button";
+```
+
+Avoid unnecessary relative paths across distant directories.
+
+Remove unused imports.
+
+Do not leave commented-out imports.
+
+---
+
+# 29. Dependency Management
+
+Do not install a dependency without a clear reason.
+
+Before installing a package:
+
+1. Check whether the functionality already exists.
+2. Check existing project dependencies.
+3. Consider bundle size.
+4. Consider maintenance.
+5. Consider security.
+6. Consider Cloudflare compatibility.
+
+Do not add a dependency for a trivial piece of functionality.
+
+---
+
+# 30. ESLint
+
+Code must pass ESLint.
+
+Before completing a task:
+
+```bash
+pnpm lint
+```
+
+must pass.
+
+Do not disable ESLint rules merely to make code pass.
+
+If an ESLint rule must be disabled, the reason must be clear and localized.
+
+Avoid broad ESLint disable comments.
+
+---
+
+# 31. Prettier
+
+Follow the project's Prettier configuration.
+
+Do not manually introduce formatting styles that conflict with Prettier.
+
+Do not disable formatting rules unnecessarily.
+
+Format changed files before completing the task.
+
+---
+
+# 32. Type Checking
+
+Before completing a task, run the project's TypeScript type check.
+
+Example:
+
+```bash
+pnpm typecheck
+```
+
+If the project uses a different command, follow `package.json`.
+
+Do not ignore TypeScript errors.
+
+Do not use `any` to resolve them.
+
+---
+
+# 33. Testing
+
+New functionality must include appropriate tests.
+
+Tests belong under:
+
+```text
+tests/
+├── unit/
+├── integration/
+└── e2e/
+```
+
+Use:
+
+- Unit tests for isolated logic.
+- Integration tests for interactions between systems.
+- E2E tests for important user journeys.
+
+Do not write tests that merely reproduce implementation details.
+
+Test behavior.
+
+---
+
+# 34. Testability
+
+Write code that can be tested independently.
+
+Prefer:
+
+```text
+Pure Function
+ ↓
+Unit Test
+```
+
+and:
+
+```text
+Service
+ ↓
+Repository
+ ↓
+Integration Test
+```
+
+Avoid tightly coupling business logic to React components.
+
+---
+
+# 35. Git
+
+Do not modify unrelated files.
+
+Keep changes focused.
+
+Do not generate temporary files.
+
+Do not commit:
+
+```text
+.env
+.env.local
+secrets
+credentials
+build artifacts
+```
+
+Follow `.gitignore`.
+
+---
+
+# 36. Refactoring
+
+Do not perform large unrelated refactors while implementing a feature.
+
+If refactoring is necessary:
+
+1. Explain why.
+2. Keep the refactor focused.
+3. Preserve existing behavior.
+4. Run relevant tests.
+
+Do not rewrite working code merely because another style is preferred.
+
+---
+
+# 37. Existing Code
+
+Before creating new code, inspect the existing implementation.
+
+Do not assume that a feature or utility does not already exist.
+
+Prefer extending existing code over creating competing implementations.
+
+Respect established conventions unless there is a clear reason to change them.
+
+---
+
+# 38. Documentation
+
+When code changes the documented behavior, update the relevant documentation.
+
+Relevant documents include:
+
+```text
+docs/01_requirements.md
+docs/02_basic-design.md
+docs/03_detail-design/
+docs/04_architecture.md
+docs/05_database.md
+docs/06_api.md
+docs/07_component_design.md
+docs/08_ui-guideline.md
+docs/product.md
+docs/roadmap.md
+docs/screen-list.md
+docs/development-log.md
+```
+
+Do not leave documentation inconsistent with implementation.
+
+---
+
+# 39. Implementation Checklist
+
+Before completing implementation, verify:
+
+- [ ] TypeScript passes
+- [ ] ESLint passes
+- [ ] Prettier passes
+- [ ] No `any`
+- [ ] No unnecessary type assertions
+- [ ] No unnecessary dependencies
+- [ ] No duplicated business logic
+- [ ] Existing components/utilities were checked
+- [ ] Server / Client boundary is appropriate
+- [ ] Validation is implemented
+- [ ] Authorization is implemented where required
+- [ ] Tests are added or updated
+- [ ] Loading state is handled
+- [ ] Empty state is handled
+- [ ] Error state is handled
+- [ ] Documentation is updated if necessary
+
+---
+
+# 40. Final Coding Principles
+
+Always prefer:
+
+```text
+Readable
+        over
+Clever
+
+Simple
+        over
+Over-engineered
+
+Type-safe
+        over
+Convenient
+
+Reusable
+        over
+Duplicated
+
+Tested
+        over
+Assumed
+
+Explicit
+        over
+Implicit
+
+Maintainable
+        over
+Short
+```
+
+The goal is not to produce the smallest amount of code.
+
+The goal is to produce code that another engineer can understand, test, modify, and safely maintain.

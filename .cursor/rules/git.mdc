@@ -1,13 +1,691 @@
-Generate commit messages.
+---
+description: Git and commit rules for the Task Manager project. Apply when creating commits, preparing changes for commit, reviewing staged changes, or generating commit messages.
+alwaysApply: true
+---
 
-Use Conventional Commits.
+# Git Rules
 
+Git history should remain clean, understandable, and useful for future development.
+
+Follow the project-wide rules defined in `AGENTS.md`.
+
+---
+
+# 1. Core Principles
+
+- Keep commits focused and logically cohesive.
+- Do not mix unrelated changes in a single commit.
+- Use Conventional Commits.
+- Write commit messages that clearly describe the purpose of the change.
+- Do not commit unfinished work unless explicitly requested.
+- Do not commit secrets or sensitive information.
+- Do not rewrite shared Git history unless explicitly requested.
+- Do not force push unless explicitly requested.
+- Do not modify unrelated files simply to make a commit cleaner.
+
+---
+
+# 2. Conventional Commits
+
+Use the following commit types:
+
+```text
 feat:
-
 fix:
-
 refactor:
-
 test:
-
 docs:
+style:
+perf:
+build:
+ci:
+chore:
+```
+
+Prefer the most specific type.
+
+Examples:
+
+```text
+feat: add project creation
+fix: handle unauthorized project access
+refactor: extract task service
+test: add task repository tests
+docs: update database design
+style: adjust project card spacing
+perf: optimize dashboard queries
+build: update project dependencies
+ci: add test workflow
+chore: update development tooling
+```
+
+---
+
+# 3. Commit Message Format
+
+Use:
+
+```text
+<type>: <short description>
+```
+
+Example:
+
+```text
+feat: add project list page
+```
+
+Keep the subject concise.
+
+Prefer imperative, action-oriented descriptions.
+
+Good:
+
+```text
+feat: add project creation form
+fix: prevent unauthorized task access
+refactor: extract project repository
+```
+
+Avoid:
+
+```text
+feat: added project creation form
+fix: some bug
+update: changes
+work: task manager
+```
+
+Do not use vague messages.
+
+---
+
+# 4. Scope
+
+A commit should represent one logical change.
+
+Good:
+
+```text
+feat: add project repository
+```
+
+followed by:
+
+```text
+test: add project repository tests
+```
+
+if they are intentionally separated.
+
+Also acceptable when the changes form one cohesive implementation:
+
+```text
+feat: add project repository and tests
+```
+
+Avoid combining unrelated changes:
+
+```text
+feat: add project page, fix login, update calendar, change colors
+```
+
+---
+
+# 5. Commit Size
+
+Prefer small, reviewable commits.
+
+A commit should ideally be understandable without inspecting many unrelated changes.
+
+Do not split commits artificially when the changes must work together.
+
+The goal is:
+
+```text
+Small
++
+Cohesive
++
+Working
+=
+Good Commit
+```
+
+---
+
+# 6. Before Committing
+
+Before creating a commit:
+
+1. Review changed files.
+2. Check the diff.
+3. Remove accidental changes.
+4. Check for secrets.
+5. Run relevant tests.
+6. Run type checking when applicable.
+7. Run lint when applicable.
+8. Verify documentation is synchronized.
+9. Confirm the commit contains only the intended changes.
+
+Recommended commands:
+
+```bash
+git status
+git diff
+```
+
+Then run the project's validation commands defined in `package.json`.
+
+---
+
+# 7. Never Commit Secrets
+
+Never commit:
+
+```text
+.env
+.env.local
+.env.production
+.env.*.local
+```
+
+or:
+
+```text
+API keys
+Access tokens
+Passwords
+Private keys
+Service credentials
+Database credentials
+Authentication secrets
+```
+
+If a secret is accidentally staged, remove it before committing.
+
+Do not assume `.gitignore` alone is sufficient.
+
+---
+
+# 8. Environment Files
+
+Environment configuration should use example files when appropriate.
+
+For example:
+
+```text
+.env.example
+```
+
+may contain:
+
+```text
+DATABASE_URL=
+AUTH_SECRET=
+```
+
+but must never contain real credentials.
+
+Never commit actual secret values.
+
+---
+
+# 9. Generated Files
+
+Do not commit unnecessary generated files.
+
+Do not commit:
+
+```text
+node_modules/
+.next/
+dist/
+build/
+coverage/
+temporary files
+debug output
+```
+
+unless the project explicitly requires them.
+
+Follow `.gitignore`.
+
+---
+
+# 10. Documentation Changes
+
+When implementation changes documented behavior, include the appropriate documentation update.
+
+Examples:
+
+```text
+feat: add project filtering
+docs: update project list design
+```
+
+If documentation is part of the same feature implementation, it may be included in the feature commit.
+
+Do not leave documentation intentionally outdated.
+
+---
+
+# 11. Database Changes
+
+Database schema changes should include the appropriate migration and documentation.
+
+Example:
+
+```text
+feat: add task priority
+```
+
+may include:
+
+```text
+database migration
+database schema update
+application code
+tests
+```
+
+when they form one cohesive feature.
+
+Update:
+
+```text
+docs/05_database.md
+```
+
+when the database design changes.
+
+---
+
+# 12. API Changes
+
+API contract changes must be reflected in:
+
+```text
+docs/06_api.md
+```
+
+A commit involving an API change should include appropriate tests.
+
+Example:
+
+```text
+feat: add project creation endpoint
+```
+
+---
+
+# 13. Architecture Changes
+
+Architecture changes require additional care.
+
+If a change affects:
+
+- Framework
+- Database
+- ORM
+- Authentication
+- Authorization
+- API architecture
+- State management
+- Folder structure
+- Infrastructure
+- Deployment
+
+do not commit the change without updating the relevant documentation.
+
+At minimum, review:
+
+```text
+docs/04_architecture.md
+docs/development-log.md
+```
+
+---
+
+# 14. UI Changes
+
+For UI changes, check:
+
+```text
+docs/07_component_design.md
+docs/08_ui-guideline.md
+```
+
+and the relevant screen design:
+
+```text
+docs/03_detail-design/
+```
+
+Do not introduce arbitrary design values when existing design tokens or components should be used.
+
+---
+
+# 15. Tests
+
+New functionality should include appropriate tests before committing.
+
+Tests belong under:
+
+```text
+tests/
+├── unit/
+├── integration/
+└── e2e/
+```
+
+Do not commit code with intentionally failing tests unless explicitly requested.
+
+Do not modify tests solely to make them pass without investigating the underlying problem.
+
+---
+
+# 16. Staging
+
+Do not blindly stage every file.
+
+Avoid:
+
+```bash
+git add .
+```
+
+when unrelated changes may exist.
+
+Review the working tree first:
+
+```bash
+git status
+```
+
+Then stage only the intended files when appropriate.
+
+Before committing:
+
+```bash
+git diff --staged
+```
+
+must contain only the intended changes.
+
+---
+
+# 17. Existing User Changes
+
+Never overwrite or discard user changes without explicit permission.
+
+If unrelated local changes already exist:
+
+- Leave them untouched.
+- Do not reset them.
+- Do not checkout them away.
+- Do not include them in the commit unless requested.
+
+If the user's changes conflict with the requested task, explain the conflict.
+
+---
+
+# 18. Branches
+
+Use feature-oriented branches when working with multiple changes.
+
+Examples:
+
+```text
+feature/project-list
+feature/task-board
+feature/authentication
+fix/task-status
+refactor/project-service
+```
+
+Avoid vague branch names such as:
+
+```text
+test
+work
+update
+new
+tmp
+```
+
+---
+
+# 19. Pull Requests
+
+When creating a Pull Request, include:
+
+- Summary
+- Main changes
+- Tests performed
+- Documentation changes
+- Known limitations
+- Breaking changes, if any
+
+Keep Pull Requests focused.
+
+Do not combine unrelated features into one Pull Request.
+
+---
+
+# 20. Breaking Changes
+
+Clearly identify breaking changes.
+
+Examples:
+
+```text
+BREAKING CHANGE: change project API response format
+```
+
+or use an appropriate Conventional Commit scope when the project adopts scoped commits.
+
+Do not hide breaking changes inside generic commits.
+
+---
+
+# 21. Rewriting History
+
+Do not use destructive Git commands without explicit permission.
+
+Avoid:
+
+```bash
+git reset --hard
+git clean -fd
+git push --force
+git push --force-with-lease
+```
+
+unless explicitly requested and the consequences are understood.
+
+Never discard user work to solve a Git problem.
+
+---
+
+# 22. Merge and Rebase
+
+Prefer the repository's established workflow.
+
+Do not automatically rebase or merge branches unless requested.
+
+When resolving conflicts:
+
+1. Understand both changes.
+2. Preserve intended behavior.
+3. Run tests.
+4. Review the resulting diff.
+
+Never resolve conflicts by blindly choosing one side.
+
+---
+
+# 23. Commit History
+
+Commit history should communicate development intent.
+
+A reviewer should be able to understand:
+
+```text
+What changed?
+Why did it change?
+Which feature or problem does it belong to?
+```
+
+from the commit history.
+
+Avoid meaningless commits such as:
+
+```text
+update
+fix
+changes
+work
+test
+aaa
+final
+final2
+```
+
+---
+
+# 24. Automated Commit Generation
+
+When asked to generate a commit message:
+
+1. Inspect the actual diff.
+2. Identify the primary purpose of the changes.
+3. Choose the appropriate Conventional Commit type.
+4. Generate a concise message.
+5. Do not claim changes that are not present.
+
+Never generate a commit message based only on the user's description when the actual diff is available.
+
+---
+
+# 25. Commit Message Examples
+
+## Feature
+
+```text
+feat: add project list
+```
+
+## Bug Fix
+
+```text
+fix: prevent duplicate task creation
+```
+
+## Refactoring
+
+```text
+refactor: extract task validation
+```
+
+## Tests
+
+```text
+test: add project service tests
+```
+
+## Documentation
+
+```text
+docs: update task board design
+```
+
+## Performance
+
+```text
+perf: reduce dashboard database queries
+```
+
+## Styling
+
+```text
+style: refine task card spacing
+```
+
+## Build
+
+```text
+build: update Next.js dependencies
+```
+
+## CI
+
+```text
+ci: add automated test workflow
+```
+
+## Maintenance
+
+```text
+chore: update development tooling
+```
+
+---
+
+# 26. Commit Checklist
+
+Before committing:
+
+- [ ] The commit contains one logical change.
+- [ ] No unrelated files are included.
+- [ ] No secrets are included.
+- [ ] No generated artifacts are included.
+- [ ] Relevant tests pass.
+- [ ] Type checking passes when applicable.
+- [ ] Lint passes when applicable.
+- [ ] Documentation is synchronized.
+- [ ] The commit message follows Conventional Commits.
+- [ ] The commit message accurately describes the actual changes.
+- [ ] User changes were not overwritten or discarded.
+
+---
+
+# 27. Final Git Principles
+
+Always prefer:
+
+```text
+Focused commits
+        over
+Large mixed commits
+
+Clear history
+        over
+Meaningless history
+
+Reviewed diffs
+        over
+Blind staging
+
+Safe Git operations
+        over
+Destructive shortcuts
+
+Accurate messages
+        over
+Vague messages
+
+Working commits
+        over
+Broken commits
+```
+
+# 28. Commit Permission
+
+Do not create a Git commit unless the user explicitly asks you to commit.
+
+Do not push to a remote repository unless the user explicitly asks you to push.
+
+Do not force push.
+
+Generating a commit message and creating a commit are separate actions.

@@ -1,21 +1,1102 @@
-Every feature must have tests.
+---
+description: Testing rules for the Task Manager project. Apply when creating or modifying features, business logic, APIs, database access, React components, authentication, authorization, or user flows.
+alwaysApply: true
+---
 
-Create tests directory automatically.
+# Testing Rules
 
+Testing is a required part of development.
+
+The goal is not to maximize test count or coverage artificially.
+
+The goal is to verify important application behavior and prevent regressions.
+
+Follow the project-wide rules defined in:
+
+`AGENTS.md`
+
+---
+
+# 1. Core Principles
+
+- New functionality must have appropriate tests.
+- Bug fixes must include regression tests when practical.
+- Tests must verify behavior, not implementation details.
+- Prefer meaningful tests over large numbers of trivial tests.
+- Do not skip tests merely because implementation is inconvenient.
+- Do not delete existing tests without a clear reason.
+- Do not modify tests solely to make failing tests pass.
+- Investigate the cause of test failures.
+- Keep tests deterministic.
+- Keep tests isolated.
+- Avoid unnecessary external dependencies in tests.
+
+---
+
+# 2. Test Directory
+
+All project tests must be placed under the project root:
+
+```text
 tests/
+├── unit/
+├── integration/
+└── e2e/
+```
 
-    unit
+Do not create feature tests inside arbitrary source directories unless explicitly required by the testing framework.
 
-    integration
+The canonical test directory is:
 
-    e2e
+```text
+tests/
+```
 
-Generate
+---
 
+# 3. Automatically Create tests/
+
+If `tests/` does not exist and tests are required:
+
+Create:
+
+```text
+tests/
+```
+
+with the appropriate subdirectory:
+
+```text
+tests/unit/
+tests/integration/
+tests/e2e/
+```
+
+Do not create unnecessary empty test directories.
+
+For example, if only Unit Tests are currently required:
+
+```text
+tests/
+└── unit/
+```
+
+is sufficient.
+
+The complete structure may be created when the project reaches the stage where all test types are used.
+
+---
+
+# 4. Testing Tools
+
+Use the following tools according to test type.
+
+## Unit Tests
+
+Use:
+
+```text
 Vitest
+```
 
-Playwright
+for:
 
+- Utility functions
+- Validation
+- Business logic
+- Services
+- Repositories
+- Data transformation
+- Pure functions
+
+---
+
+## Component Tests
+
+Use:
+
+```text
+Vitest
 Testing Library
+```
 
-Never skip tests.
+for React component behavior when component-level testing provides meaningful value.
+
+Test:
+
+- User interaction
+- Rendered behavior
+- Accessible elements
+- State changes
+- User-visible output
+
+Do not test implementation details such as internal React state.
+
+---
+
+## Integration Tests
+
+Use:
+
+```text
+Vitest
+```
+
+for interactions between multiple application layers.
+
+Examples:
+
+```text
+API
+ ↓
+Service
+ ↓
+Repository
+```
+
+or:
+
+```text
+Service
+ ↓
+Database
+```
+
+Integration tests should verify that the layers work correctly together.
+
+---
+
+## E2E Tests
+
+Use:
+
+```text
+Playwright
+```
+
+for important user journeys.
+
+Examples:
+
+```text
+Login
+ ↓
+Dashboard
+ ↓
+Create Project
+ ↓
+Create Task
+ ↓
+Move Task
+ ↓
+Task Detail
+```
+
+Do not use E2E tests for every small function.
+
+---
+
+# 5. Test Type Selection
+
+Choose the smallest test level that provides sufficient confidence.
+
+Use:
+
+```text
+Unit
+```
+
+when behavior can be tested in isolation.
+
+Use:
+
+```text
+Integration
+```
+
+when multiple application layers must work together.
+
+Use:
+
+```text
+E2E
+```
+
+when verifying a critical user journey through the actual application.
+
+Prefer:
+
+```text
+Unit
+```
+
+over:
+
+```text
+Integration
+```
+
+when Unit testing is sufficient.
+
+Prefer:
+
+```text
+Integration
+```
+
+over:
+
+```text
+E2E
+```
+
+when E2E testing provides no additional meaningful confidence.
+
+---
+
+# 6. Test Pyramid
+
+Prefer the following balance:
+
+```text
+          E2E
+         /   \
+        /     \
+   Integration
+      /       \
+     /         \
+    Unit Tests
+```
+
+The majority of tests should be Unit Tests.
+
+Integration Tests should cover important boundaries.
+
+E2E Tests should cover critical user journeys.
+
+Do not build an application where every behavior is tested exclusively through E2E tests.
+
+---
+
+# 7. Unit Test Rules
+
+Unit tests should be:
+
+- Fast
+- Deterministic
+- Isolated
+- Easy to understand
+
+Example:
+
+```ts
+describe("calculateProjectProgress", () => {
+  it("calculates completion percentage", () => {
+    // ...
+  });
+});
+```
+
+Test important cases such as:
+
+- Normal input
+- Empty input
+- Boundary values
+- Invalid input
+- Error conditions
+
+---
+
+# 8. Business Logic Tests
+
+Business logic must be tested independently from UI whenever practical.
+
+For example:
+
+```text
+calculateProjectProgress()
+updateTaskStatus()
+canEditProject()
+validateTask()
+```
+
+should preferably be testable without rendering a React component.
+
+This keeps business logic:
+
+- Reusable
+- Deterministic
+- Easy to test
+
+---
+
+# 9. Service Tests
+
+Services should be tested for business behavior.
+
+Examples:
+
+```text
+createProject()
+updateProject()
+deleteProject()
+createTask()
+updateTaskStatus()
+assignTask()
+```
+
+Test:
+
+- Valid operations
+- Invalid operations
+- Permission failures
+- Not-found cases
+- Business rule violations
+- Important edge cases
+
+---
+
+# 10. Repository Tests
+
+Repository tests should verify database interaction where appropriate.
+
+Examples:
+
+```text
+getProjectById()
+createProject()
+updateProject()
+deleteProject()
+```
+
+Test:
+
+- Correct data retrieval
+- Correct insertion
+- Correct updates
+- Correct deletion
+- Not-found behavior
+- Important constraints
+
+Do not duplicate every repository test as an E2E test.
+
+---
+
+# 11. API Tests
+
+API endpoints must be tested when they contain meaningful application behavior.
+
+Test:
+
+```text
+Success
+Validation Error
+Authentication Error
+Authorization Error
+Not Found
+Conflict
+Server Error
+```
+
+Example:
+
+```text
+POST /api/v1/projects
+```
+
+should test at least:
+
+```text
+Valid Request
+Invalid Request
+Unauthenticated Request
+Unauthorized Request
+```
+
+when applicable.
+
+---
+
+# 12. Authentication Tests
+
+Authentication behavior must be tested.
+
+Important cases include:
+
+```text
+Unauthenticated user
+Authenticated user
+Invalid credentials
+Expired session
+Logout
+Protected route
+```
+
+Do not assume authentication works simply because the login form renders.
+
+---
+
+# 13. Authorization Tests
+
+Authorization is security-critical.
+
+Test that users cannot access resources they do not have permission to access.
+
+Examples:
+
+```text
+User A
+ ↓
+Project A
+```
+
+must not allow:
+
+```text
+User A
+ ↓
+Project B owned by User B
+```
+
+Test authorization at the server/API/service boundary.
+
+Do not rely only on UI tests.
+
+---
+
+# 14. Database Tests
+
+Database-related behavior must be tested appropriately.
+
+Test:
+
+- Constraints
+- Relationships
+- CRUD operations
+- Important queries
+- Not-found behavior
+- Authorization-related filtering
+
+Do not make tests depend on production data.
+
+Use an appropriate isolated test database or test environment.
+
+Never run destructive tests against production data.
+
+---
+
+# 15. React Component Tests
+
+Use Testing Library for user-facing behavior.
+
+Prefer:
+
+```ts
+screen.getByRole(...)
+```
+
+over implementation-specific selectors when practical.
+
+Prefer:
+
+```ts
+userEvent;
+```
+
+for simulating user interaction.
+
+Test:
+
+```text
+User sees
+User clicks
+User types
+User submits
+User receives feedback
+```
+
+Do not test:
+
+```text
+Internal state variable
+Internal implementation function
+Private component details
+```
+
+unless there is a compelling reason.
+
+---
+
+# 16. Accessibility Testing
+
+When testing UI components, prefer accessible queries.
+
+Good:
+
+```ts
+screen.getByRole("button", {
+  name: /create project/i,
+});
+```
+
+Avoid relying unnecessarily on:
+
+```text
+CSS classes
+DOM structure
+Internal component names
+```
+
+Tests should encourage accessible UI implementation.
+
+---
+
+# 17. E2E Test Rules
+
+Playwright E2E tests should focus on critical user journeys.
+
+Recommended E2E coverage:
+
+```text
+Login
+Project Creation
+Task Creation
+Task Status Change
+Task Board Interaction
+Task Detail
+Logout
+```
+
+Additional E2E tests may be added for important workflows.
+
+Do not create E2E tests for every button or small UI interaction.
+
+---
+
+# 18. Test Naming
+
+Test names should describe behavior.
+
+Good:
+
+```ts
+it("creates a project when valid data is submitted");
+```
+
+```ts
+it("rejects access when the user is not a project member");
+```
+
+```ts
+it("moves a task from todo to in progress");
+```
+
+Avoid:
+
+```ts
+it("works");
+```
+
+```ts
+it("test project");
+```
+
+```ts
+it("button test");
+```
+
+---
+
+# 19. Test Organization
+
+Keep tests organized by domain or feature.
+
+Preferred:
+
+```text
+tests/
+├── unit/
+│   ├── project/
+│   ├── task/
+│   ├── auth/
+│   └── analytics/
+│
+├── integration/
+│   ├── project/
+│   ├── task/
+│   ├── auth/
+│   └── analytics/
+│
+└── e2e/
+    ├── auth/
+    ├── project/
+    ├── task/
+    └── navigation/
+```
+
+Do not create excessively deep directory structures.
+
+---
+
+# 20. Naming Test Files
+
+Use descriptive test file names.
+
+Examples:
+
+```text
+project-service.test.ts
+task-service.test.ts
+project-repository.test.ts
+task-board.test.ts
+login.spec.ts
+project-creation.spec.ts
+```
+
+Use:
+
+```text
+.test.ts
+```
+
+for Vitest tests.
+
+Use:
+
+```text
+.spec.ts
+```
+
+for Playwright E2E tests when consistent with the project configuration.
+
+---
+
+# 21. Mocking
+
+Mock external dependencies only when appropriate.
+
+Good candidates:
+
+- External APIs
+- Email services
+- Time
+- Randomness
+- Third-party services
+
+Avoid mocking the entire application.
+
+Do not mock business logic that the test is supposed to verify.
+
+Prefer realistic integration tests when the actual dependency is safe and practical to use.
+
+---
+
+# 22. Database Mocking
+
+Do not blindly mock the database for every test.
+
+For repository/database behavior, prefer an isolated test database or appropriate database test environment when practical.
+
+Mock database access for Unit Tests when testing higher-level business logic in isolation.
+
+Example:
+
+```text
+Service Unit Test
+ ↓
+Mock Repository
+```
+
+versus:
+
+```text
+Repository Integration Test
+ ↓
+Test Database
+```
+
+Choose based on the purpose of the test.
+
+---
+
+# 23. Time and Date
+
+Tests involving dates must be deterministic.
+
+Do not depend on the real current time when the result should be predictable.
+
+Control time using the testing framework when appropriate.
+
+Test important boundaries such as:
+
+```text
+Today
+Tomorrow
+Past Due
+End of Month
+Timezone boundaries
+```
+
+---
+
+# 24. Async Tests
+
+Always properly await asynchronous operations.
+
+Good:
+
+```ts
+const project = await createProject();
+expect(project.name).toBe("Website");
+```
+
+Do not leave unresolved Promises in tests.
+
+Avoid arbitrary:
+
+```ts
+setTimeout(...)
+```
+
+to wait for asynchronous behavior.
+
+Prefer explicit synchronization.
+
+---
+
+# 25. Error Tests
+
+Test expected errors explicitly.
+
+Example:
+
+```ts
+await expect(createProject(invalidInput)).rejects.toThrow();
+```
+
+Do not simply catch an error and ignore it.
+
+---
+
+# 26. Loading / Empty / Error UI
+
+Major data-driven components should have tests for relevant states:
+
+```text
+Loading
+Loaded
+Empty
+Error
+```
+
+Example:
+
+```text
+Project List
+├── Loading
+├── Projects
+├── No Projects
+└── Error
+```
+
+Do not test every visual pixel.
+
+Test that the correct state and user-facing behavior are displayed.
+
+---
+
+# 27. Responsive Behavior
+
+Responsive behavior should be tested where it affects functionality.
+
+Examples:
+
+- Mobile navigation
+- Sidebar drawer
+- Mobile Kanban interaction
+- Responsive dialogs
+- Mobile-specific controls
+
+Do not create a separate E2E test for every CSS breakpoint.
+
+Visual regression testing may be introduced later if necessary.
+
+---
+
+# 28. Animation
+
+Do not make tests depend on animation timing.
+
+When testing components using GSAP or other animations:
+
+- Test the resulting user-visible state.
+- Avoid arbitrary animation delays.
+- Disable or mock animation when necessary.
+- Respect `prefers-reduced-motion`.
+
+Example:
+
+```text
+Click button
+ ↓
+Dialog becomes visible
+```
+
+is more important than:
+
+```text
+GSAP animation completed after 0.4 seconds
+```
+
+---
+
+# 29. Test Data
+
+Use predictable test data.
+
+Prefer test factories or fixtures when data is reused.
+
+Example:
+
+```text
+tests/
+└── fixtures/
+```
+
+Use fixtures only when they improve clarity.
+
+Do not create huge global fixtures that make tests difficult to understand.
+
+---
+
+# 30. Test Isolation
+
+Tests must not depend on execution order.
+
+Each test should establish the state it requires.
+
+Avoid:
+
+```text
+Test A creates data
+ ↓
+Test B assumes Test A ran
+```
+
+Prefer:
+
+```text
+Test B creates its own required data
+```
+
+Tests should be safe to run individually.
+
+---
+
+# 31. Flaky Tests
+
+Do not ignore flaky tests.
+
+If a test intermittently fails:
+
+1. Investigate the cause.
+2. Identify timing, state, environment, or network issues.
+3. Fix the underlying problem.
+4. Avoid simply adding arbitrary retries.
+
+Retries may be used only when appropriate and should not hide real defects.
+
+---
+
+# 32. Test Coverage
+
+Coverage is useful but is not the primary goal.
+
+Do not write meaningless tests solely to increase coverage.
+
+Prioritize coverage of:
+
+- Business rules
+- Security boundaries
+- Authentication
+- Authorization
+- Data mutations
+- Critical user journeys
+- Error handling
+- Important edge cases
+
+---
+
+# 33. Never Skip Tests Without Reason
+
+Do not use:
+
+```ts
+it.skip(...)
+```
+
+or:
+
+```ts
+describe.skip(...)
+```
+
+without a documented reason.
+
+Do not leave skipped tests in the codebase indefinitely.
+
+If a test must temporarily be skipped:
+
+- Document why.
+- Create a follow-up issue when appropriate.
+- Remove the skip as soon as possible.
+
+---
+
+# 34. Never Disable Test Failures
+
+Do not modify application code merely to satisfy an incorrect test.
+
+Do not modify a test merely because the implementation currently fails it.
+
+Determine whether:
+
+```text
+Implementation is wrong
+        or
+Test expectation is wrong
+```
+
+before changing either.
+
+---
+
+# 35. Test-First for Business Logic
+
+For complex business logic, prefer writing tests before or alongside implementation.
+
+Example:
+
+```text
+Requirement
+ ↓
+Test
+ ↓
+Implementation
+ ↓
+Refinement
+```
+
+This is especially useful for:
+
+- Permission rules
+- Task status transitions
+- Project progress calculations
+- Validation
+- Analytics calculations
+
+---
+
+# 36. Regression Tests
+
+Every meaningful bug fix should consider a regression test.
+
+Example:
+
+```text
+Bug:
+User could access another user's task.
+
+Fix:
+Add server-side authorization.
+
+Regression Test:
+Verify unauthorized user receives 403.
+```
+
+Do not rely only on manually verifying the fix.
+
+---
+
+# 37. Required Validation Before Completion
+
+Before considering a feature complete, run the appropriate checks.
+
+At minimum when applicable:
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+```
+
+For E2E-related changes:
+
+```bash
+pnpm test:e2e
+```
+
+Use the actual scripts defined in `package.json`.
+
+Do not invent commands if the project uses different script names.
+
+---
+
+# 38. Test Checklist
+
+Before completing a feature:
+
+- [ ] Appropriate Unit Tests exist.
+- [ ] Appropriate Integration Tests exist.
+- [ ] E2E Tests exist for critical user journeys.
+- [ ] Authentication is tested where relevant.
+- [ ] Authorization is tested where relevant.
+- [ ] Validation is tested.
+- [ ] Error handling is tested.
+- [ ] Important edge cases are tested.
+- [ ] Loading / Empty / Error states are tested where relevant.
+- [ ] Tests are deterministic.
+- [ ] Tests are isolated.
+- [ ] No unnecessary tests were added.
+- [ ] No tests were skipped without explanation.
+- [ ] Tests pass.
+
+---
+
+# 39. Final Testing Principles
+
+Always prefer:
+
+```text
+Behavior
+    over
+Implementation Details
+
+Meaningful Tests
+    over
+Test Quantity
+
+Unit Tests
+    over
+Unnecessary E2E Tests
+
+Integration Tests
+    for
+System Boundaries
+
+E2E Tests
+    for
+Critical User Journeys
+
+Deterministic Tests
+    over
+Flaky Tests
+
+Real Confidence
+    over
+Artificial Coverage
+```
+
+Testing exists to give the project confidence.
+
+Do not treat tests as an afterthought.

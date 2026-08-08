@@ -1,0 +1,1349 @@
+---
+description: Security rules for the Task Manager project. Apply when creating or modifying authentication, authorization, API endpoints, database access, user data, forms, validation, sessions, cookies, environment variables, or any code that handles untrusted input.
+alwaysApply: true
+---
+
+# Security Rules
+
+Security is a mandatory requirement of this project.
+
+The application handles authenticated users, workspaces, projects, tasks, and other potentially private data.
+
+Never sacrifice security for implementation speed or convenience.
+
+Follow the project-wide rules defined in:
+
+`AGENTS.md`
+
+The architectural security model is defined in:
+
+`docs/04_architecture.md`
+
+The database security model is defined in:
+
+`docs/05_database.md`
+
+The API security model is defined in:
+
+`docs/06_api.md`
+
+---
+
+# 1. Core Security Principles
+
+Always assume external input is untrusted.
+
+Never trust:
+
+- Client-side state
+- Client-provided user IDs
+- Client-provided workspace IDs
+- Client-provided project IDs
+- Client-provided role information
+- Client-provided permission flags
+- Hidden form fields
+- URL parameters
+- Query parameters
+- Request bodies
+- Cookies
+- Headers
+
+Validate and authorize data on the server.
+
+---
+
+# 2. Authentication vs Authorization
+
+Authentication answers:
+
+```text
+Who is the user?
+```
+
+Authorization answers:
+
+```text
+What is the user allowed to access?
+```
+
+Never treat authentication as authorization.
+
+A logged-in user must not automatically have access to every resource.
+
+---
+
+# 3. Authentication
+
+Use the project's established authentication architecture.
+
+Do not implement a parallel authentication system.
+
+Do not create custom password handling when the established authentication library already provides it.
+
+Do not store passwords in plain text.
+
+Do not store authentication secrets in source code.
+
+Do not expose authentication secrets to Client Components.
+
+---
+
+# 4. Session Security
+
+Session information must be handled securely.
+
+Never trust client-side session state for authorization.
+
+The server must determine the authenticated user from the trusted authentication/session mechanism.
+
+Do not authorize a request solely because:
+
+```text
+isLoggedIn === true
+```
+
+The server must identify the actual user.
+
+---
+
+# 5. Authorization
+
+Authorization must be enforced on the server.
+
+For protected resources, verify that the authenticated user has the required permission.
+
+Example:
+
+```text
+User
+ ↓
+Workspace Membership
+ ↓
+Project Membership
+ ↓
+Project
+ ↓
+Task
+```
+
+Do not assume that knowing a resource ID grants access to that resource.
+
+---
+
+# 6. Resource Ownership
+
+Never authorize access using only a resource ID.
+
+Bad:
+
+```ts
+const project = await getProjectById(projectId);
+```
+
+followed by returning the project without verifying access.
+
+Prefer:
+
+```text
+Authenticated User
+ ↓
+Verify Workspace / Project Membership
+ ↓
+Retrieve Authorized Resource
+```
+
+Authorization should be enforced as close to the server-side data access boundary as practical.
+
+---
+
+# 7. IDOR Prevention
+
+Prevent Insecure Direct Object Reference vulnerabilities.
+
+The following must never be sufficient by themselves to access private resources:
+
+```text
+/project/123
+/task/456
+/api/v1/projects/123
+/api/v1/tasks/456
+```
+
+Always verify that the current user has permission to access the referenced resource.
+
+Test unauthorized resource access explicitly.
+
+---
+
+# 8. User ID Handling
+
+Never trust a user ID provided by the client.
+
+Bad:
+
+```ts
+const userId = body.userId;
+```
+
+when the value is used to determine the current authenticated user.
+
+Prefer obtaining the authenticated user from the server-side session.
+
+Client-provided user IDs may be treated as data only when the operation explicitly allows acting on another user and proper authorization is performed.
+
+---
+
+# 9. Workspace Isolation
+
+Workspace boundaries are security boundaries.
+
+A user must not be able to access another workspace's:
+
+- Projects
+- Tasks
+- Members
+- Comments
+- Activities
+- Analytics
+- Settings
+- Private data
+
+Every workspace-scoped query must consider the authenticated user's workspace membership.
+
+---
+
+# 10. Project Isolation
+
+Project membership must be verified before accessing project-specific resources.
+
+A user who can access:
+
+```text
+Project A
+```
+
+must not automatically be able to access:
+
+```text
+Project B
+```
+
+unless they have the appropriate permission.
+
+---
+
+# 11. Task Authorization
+
+Tasks inherit authorization requirements from their project/workspace context.
+
+Before allowing operations such as:
+
+```text
+View
+Create
+Update
+Delete
+Assign
+Move
+Archive
+```
+
+verify that the current user is authorized to perform the operation.
+
+Do not rely only on the Task Board UI to prevent unauthorized operations.
+
+---
+
+# 12. Authorization on Mutations
+
+All mutations must perform authorization checks.
+
+Examples:
+
+```text
+Create Project
+Update Project
+Delete Project
+
+Create Task
+Update Task
+Delete Task
+Move Task
+Assign Task
+
+Add Member
+Remove Member
+Change Member Role
+```
+
+A hidden or disabled button is not an authorization mechanism.
+
+---
+
+# 13. Server-Side Authorization
+
+Authorization checks must occur on the server.
+
+Do not rely on:
+
+```tsx
+if (!canEdit) {
+  return null;
+}
+```
+
+in a Client Component as the security mechanism.
+
+Client-side checks may improve UX, but server-side authorization remains mandatory.
+
+---
+
+# 14. API Security
+
+All protected API endpoints must verify authentication and authorization.
+
+Preferred flow:
+
+```text
+Request
+ ↓
+Authentication
+ ↓
+Input Validation
+ ↓
+Authorization
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Response
+```
+
+Do not perform business operations before authorization is established.
+
+---
+
+# 15. API Input Validation
+
+Validate all external API input.
+
+Validate:
+
+- Request body
+- URL parameters
+- Query parameters
+- Search parameters
+- Form input
+
+Use the project's established Zod validation approach.
+
+Never assume that the client has already validated the data.
+
+---
+
+# 16. Validation Before Business Logic
+
+Preferred flow:
+
+```text
+Untrusted Input
+ ↓
+Zod Validation
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Business Logic
+```
+
+Do not pass unvalidated external input directly to:
+
+- Services
+- Repositories
+- Database queries
+- External APIs
+
+---
+
+# 17. Zod Validation
+
+Use Zod for externally supplied data.
+
+Example:
+
+```ts
+const schema = z.object({
+  title: z.string().min(1).max(200),
+});
+```
+
+Prefer schema-derived types where appropriate.
+
+Do not duplicate validation rules unnecessarily between multiple layers.
+
+Client-side validation may improve UX but does not replace server-side validation.
+
+---
+
+# 18. Database Security
+
+Database access must remain server-side.
+
+Never access the database directly from Client Components.
+
+Never expose the database connection to the browser.
+
+Never expose:
+
+```text
+D1 credentials
+Database connection details
+Database secrets
+Server-only environment variables
+```
+
+to the client.
+
+---
+
+# 19. Database Query Authorization
+
+Database queries must respect authorization boundaries.
+
+Do not retrieve private resources broadly and filter them only in the UI.
+
+Bad:
+
+```text
+Database
+ ↓
+All Projects
+ ↓
+Client filters projects for current user
+```
+
+Prefer:
+
+```text
+Authenticated User
+ ↓
+Authorized Query
+ ↓
+Only permitted Projects
+```
+
+Authorization-sensitive filtering should happen server-side.
+
+---
+
+# 20. SQL Injection
+
+Never construct SQL queries using raw string concatenation with untrusted input.
+
+Avoid:
+
+```ts
+`SELECT * FROM users WHERE name = '${name}'`;
+```
+
+Use Drizzle ORM's parameterized query mechanisms.
+
+Do not bypass the ORM with unsafe raw SQL.
+
+If raw SQL is genuinely required, use parameterized queries and document the reason.
+
+---
+
+# 21. Mass Assignment
+
+Do not blindly pass client-provided objects into database updates.
+
+Bad:
+
+```ts
+await updateUser(request.body);
+```
+
+when the request body may contain protected fields such as:
+
+```text
+role
+permissions
+userId
+workspaceId
+createdAt
+```
+
+Explicitly select fields that the user is allowed to modify.
+
+---
+
+# 22. Protected Fields
+
+Never allow ordinary users to modify security-sensitive fields unless explicitly authorized.
+
+Examples:
+
+```text
+userId
+role
+permissions
+workspaceId
+ownerId
+createdAt
+updatedAt
+```
+
+The server must determine protected values.
+
+---
+
+# 23. Role and Permission Security
+
+Never trust a role provided by the client.
+
+Bad:
+
+```ts
+const role = body.role;
+```
+
+when used for authorization.
+
+Roles must come from trusted server-side data.
+
+Examples:
+
+```text
+Owner
+Admin
+Member
+Viewer
+```
+
+must be determined by the server-side authorization model.
+
+---
+
+# 24. Privilege Escalation
+
+Prevent users from escalating their own privileges.
+
+A normal member must not be able to submit:
+
+```json
+{
+  "role": "owner"
+}
+```
+
+and become an owner.
+
+Permission-changing operations must require appropriate authorization.
+
+---
+
+# 25. Horizontal Privilege Escalation
+
+Prevent users from accessing another user's resources.
+
+Example:
+
+```text
+User A
+ ↓
+/projects/project-owned-by-user-B
+```
+
+must be rejected unless User A has explicit permission.
+
+---
+
+# 26. Vertical Privilege Escalation
+
+Prevent lower-privileged users from performing administrative operations.
+
+Example:
+
+```text
+Member
+ ↓
+Change workspace owner
+```
+
+must be rejected.
+
+Administrative operations must check the required role or permission.
+
+---
+
+# 27. Authentication Errors
+
+Do not reveal unnecessary information through authentication errors.
+
+Avoid responses that reveal whether a specific account exists when such information is not required.
+
+Do not expose:
+
+- Passwords
+- Authentication tokens
+- Session secrets
+- Internal authentication implementation details
+
+---
+
+# 28. Password Security
+
+If password-based authentication is used through the project's authentication provider:
+
+- Never log passwords.
+- Never store plaintext passwords.
+- Never return passwords through API responses.
+- Never expose passwords to Client Components.
+
+Do not implement custom password hashing unless explicitly required by the architecture.
+
+---
+
+# 29. Secrets
+
+Never commit secrets to Git.
+
+Never include real credentials in:
+
+```text
+.env.example
+README.md
+Documentation
+Test fixtures
+Source code
+Logs
+Commit messages
+```
+
+Use environment variables for secrets.
+
+---
+
+# 30. Environment Variables
+
+Separate public and server-only environment variables.
+
+Never expose server-only secrets through:
+
+```text
+NEXT_PUBLIC_*
+```
+
+or equivalent client-exposed configuration.
+
+Before using an environment variable in Client Components, verify that it is intentionally public.
+
+---
+
+# 31. `.env` Files
+
+Never commit:
+
+```text
+.env
+.env.local
+.env.production
+.env.development.local
+.env.test.local
+```
+
+when they contain secrets.
+
+Use:
+
+```text
+.env.example
+```
+
+for documentation of required variables.
+
+The example file must contain placeholders only.
+
+---
+
+# 32. Logging
+
+Never log sensitive information.
+
+Do not log:
+
+- Passwords
+- Access tokens
+- Session tokens
+- API keys
+- Secrets
+- Full authentication cookies
+- Sensitive personal information
+
+Logs should contain enough information to diagnose problems without exposing secrets.
+
+---
+
+# 33. Error Messages
+
+Do not expose internal implementation details to users.
+
+Avoid returning:
+
+```text
+SQL query
+Database credentials
+Stack trace
+Internal file path
+Environment variable
+Authentication internals
+```
+
+User-facing errors should be understandable.
+
+Developer logs may contain more diagnostic information, but must still avoid secrets.
+
+---
+
+# 34. XSS Prevention
+
+Treat user-generated content as untrusted.
+
+Avoid rendering arbitrary HTML from user input.
+
+Do not use:
+
+```tsx
+dangerouslySetInnerHTML;
+```
+
+unless absolutely necessary.
+
+If HTML rendering is required:
+
+1. Sanitize the content.
+2. Define an explicit allowlist.
+3. Test malicious input.
+4. Document why HTML rendering is required.
+
+---
+
+# 35. URL Security
+
+Treat URLs supplied by users as untrusted.
+
+Be careful with:
+
+- Redirect URLs
+- External links
+- Callback URLs
+- Image URLs
+- Embedded content
+
+Do not allow arbitrary user input to create open redirects.
+
+Validate redirect destinations against an appropriate allowlist when required.
+
+---
+
+# 36. Open Redirect Prevention
+
+Do not blindly redirect to a user-provided URL.
+
+Bad:
+
+```ts
+redirect(searchParams.get("redirect"));
+```
+
+Prefer validating the destination before redirecting.
+
+Internal application paths should be preferred for post-login redirects.
+
+---
+
+# 37. CSRF
+
+Protect state-changing operations against Cross-Site Request Forgery where applicable.
+
+Follow the security mechanisms provided by the authentication and framework architecture.
+
+Do not assume that a request is safe merely because it uses:
+
+```text
+POST
+PUT
+PATCH
+DELETE
+```
+
+---
+
+# 38. Cookies
+
+Authentication cookies should use secure attributes appropriate to the environment.
+
+Consider:
+
+```text
+HttpOnly
+Secure
+SameSite
+```
+
+Do not expose authentication cookies to JavaScript unless there is an explicit architectural requirement.
+
+---
+
+# 39. CORS
+
+Do not allow unrestricted CORS by default.
+
+Avoid:
+
+```text
+Access-Control-Allow-Origin: *
+```
+
+for authenticated APIs unless there is a specific, documented reason.
+
+Restrict origins where cross-origin access is required.
+
+---
+
+# 40. Security Headers
+
+Use appropriate security headers for the deployed application.
+
+Consider:
+
+```text
+Content-Security-Policy
+X-Content-Type-Options
+Referrer-Policy
+Permissions-Policy
+Strict-Transport-Security
+```
+
+Do not add headers blindly.
+
+Verify compatibility with the application's functionality.
+
+---
+
+# 41. Rate Limiting
+
+Consider rate limiting for operations that may be abused.
+
+Potential targets include:
+
+```text
+Login
+Password-related operations
+Authentication endpoints
+Search
+Expensive analytics queries
+Resource creation
+Invitation endpoints
+```
+
+Do not add rate limiting blindly to every request.
+
+Prioritize operations with meaningful abuse potential.
+
+---
+
+# 42. Denial of Service Considerations
+
+Avoid unbounded operations.
+
+Examples:
+
+```text
+Unlimited pagination
+Unlimited request body size
+Unbounded search
+Unbounded database queries
+Large file uploads
+Expensive analytics without limits
+```
+
+Use appropriate:
+
+- Pagination
+- Limits
+- Validation
+- Query constraints
+- Timeouts
+
+---
+
+# 43. Pagination Security
+
+Never allow arbitrary client input to create unbounded queries.
+
+Bad:
+
+```text
+?pageSize=999999999
+```
+
+Prefer a server-defined maximum.
+
+Example:
+
+```ts
+const MAX_PAGE_SIZE = 100;
+```
+
+Clamp or reject invalid values appropriately.
+
+---
+
+# 44. Search Security
+
+Search input must be validated.
+
+Prevent:
+
+- Unbounded queries
+- Excessively long search strings
+- Unsafe SQL construction
+- Expensive wildcard queries
+
+Use appropriate database query mechanisms.
+
+---
+
+# 45. File Uploads
+
+If file uploads are introduced:
+
+- Validate file type.
+- Validate file size.
+- Do not trust file extensions.
+- Do not trust client-provided MIME types.
+- Generate safe filenames.
+- Store files outside executable paths.
+- Consider malware scanning where appropriate.
+- Restrict access to private files.
+
+Do not implement file uploads without updating the relevant architecture and security documentation.
+
+---
+
+# 46. External Services
+
+Treat external services as untrusted boundaries.
+
+Validate:
+
+- Requests
+- Responses
+- Authentication
+- Timeouts
+- Errors
+
+Do not expose third-party API keys to the client.
+
+Use server-side integration for secret-bearing APIs.
+
+---
+
+# 47. Third-Party Dependencies
+
+Before adding a security-sensitive dependency:
+
+1. Verify its maintenance status.
+2. Check known vulnerabilities.
+3. Check compatibility with Next.js and Cloudflare.
+4. Check whether an existing dependency already provides the functionality.
+5. Keep the dependency version controlled.
+
+Do not add a package simply because it is popular.
+
+---
+
+# 48. Client-Side Security
+
+Never treat Client Components as a trusted environment.
+
+Anything in Client Components can be inspected or modified by the user.
+
+Never place security decisions exclusively in:
+
+```text
+React state
+localStorage
+sessionStorage
+hidden inputs
+disabled buttons
+UI conditions
+```
+
+Security decisions belong on the server.
+
+---
+
+# 49. Local Storage
+
+Do not store sensitive authentication information in:
+
+```text
+localStorage
+sessionStorage
+```
+
+unless explicitly required by the architecture and the security implications are understood.
+
+Avoid storing:
+
+- Access tokens
+- Refresh tokens
+- Passwords
+- Session secrets
+
+in browser storage.
+
+---
+
+# 50. Sensitive Data Minimization
+
+Do not retrieve or expose more data than necessary.
+
+API responses should contain only the fields required by the client.
+
+Avoid returning:
+
+```text
+passwordHash
+authenticationSecret
+private tokens
+internal credentials
+```
+
+or other server-only fields.
+
+---
+
+# 51. API Response Security
+
+Before returning database records:
+
+1. Determine which fields are safe for the client.
+2. Remove server-only fields.
+3. Verify authorization.
+4. Return the minimum required data.
+
+Do not blindly serialize database models.
+
+---
+
+# 52. Cache Security
+
+Caching must never leak user-specific data.
+
+Before caching a response, consider:
+
+```text
+User
+Workspace
+Project
+Role
+Permissions
+```
+
+Never put private user-specific data into a shared public cache without a secure cache key and invalidation strategy.
+
+When in doubt, do not cache sensitive data.
+
+---
+
+# 53. Authorization and Cache Keys
+
+If user-specific data is cached, the cache key must account for the appropriate security boundary.
+
+Bad:
+
+```text
+dashboard
+```
+
+when the response differs between users.
+
+Prefer an appropriately scoped key such as:
+
+```text
+dashboard:<userId>
+```
+
+or another secure strategy appropriate to the architecture.
+
+Do not expose authorization-sensitive cache keys to untrusted clients unnecessarily.
+
+---
+
+# 54. Timing and Enumeration
+
+Be aware of information leakage through:
+
+- Error messages
+- Response differences
+- Resource existence
+- Timing differences
+- Search results
+
+Do not expose unnecessary information about private resources.
+
+For sensitive operations, consider whether the response reveals whether an account or resource exists.
+
+---
+
+# 55. Security Testing
+
+Security-sensitive functionality must have tests.
+
+At minimum, test important authorization boundaries.
+
+Examples:
+
+```text
+Authenticated user can access own project.
+Unauthenticated user cannot access project.
+User cannot access another workspace.
+User cannot access another project's task.
+Member cannot perform owner-only action.
+Invalid input is rejected.
+Protected fields cannot be mass-assigned.
+```
+
+---
+
+# 56. Authentication Test Matrix
+
+For protected resources, consider:
+
+```text
+Unauthenticated
+    ↓
+403 / 401 as appropriate
+
+Authenticated + Authorized
+    ↓
+Success
+
+Authenticated + Unauthorized
+    ↓
+Forbidden
+
+Authenticated + Resource Not Found
+    ↓
+Appropriate response
+```
+
+Do not assume that testing only the happy path is sufficient.
+
+---
+
+# 57. Authorization Test Matrix
+
+For each protected mutation, consider:
+
+```text
+Owner
+Admin
+Member
+Viewer
+Unauthenticated
+Different Workspace User
+Different Project User
+```
+
+Only test roles that actually exist in the project's authorization model.
+
+Do not invent roles merely for testing.
+
+---
+
+# 58. Security Regression Tests
+
+When fixing a security vulnerability:
+
+1. Add a regression test.
+2. Fix the vulnerability.
+3. Verify the regression test fails before the fix when practical.
+4. Verify it passes after the fix.
+5. Review related authorization paths.
+
+Do not rely solely on manual testing.
+
+---
+
+# 59. Security Review for New Features
+
+Before completing a feature, ask:
+
+```text
+Who can access this?
+Who can modify this?
+Who can delete this?
+What happens if the user changes the ID?
+What happens if the user changes the role?
+What happens if the request is unauthenticated?
+What happens if the request is malformed?
+What happens if the user belongs to another workspace?
+What sensitive data is returned?
+What happens if the request is repeated?
+```
+
+If any answer is unclear, investigate before completing the feature.
+
+---
+
+# 60. Security Documentation
+
+If a security-sensitive behavior changes, update the relevant documentation.
+
+Potentially affected documents:
+
+```text
+docs/01_requirements.md
+docs/02_basic-design.md
+docs/03_detail-design/
+docs/04_architecture.md
+docs/05_database.md
+docs/06_api.md
+docs/development-log.md
+```
+
+Do not leave security behavior undocumented.
+
+---
+
+# 61. Security Checklist
+
+Before completing a security-sensitive feature:
+
+- [ ] Authentication is enforced where required.
+- [ ] Authorization is enforced on the server.
+- [ ] Workspace boundaries are respected.
+- [ ] Project boundaries are respected.
+- [ ] Resource IDs are not trusted by themselves.
+- [ ] External input is validated.
+- [ ] Zod validation is applied where appropriate.
+- [ ] Protected fields cannot be mass-assigned.
+- [ ] Database access remains server-side.
+- [ ] SQL injection is prevented.
+- [ ] Secrets are not exposed.
+- [ ] Secrets are not committed.
+- [ ] Sensitive data is not logged.
+- [ ] API responses contain only necessary data.
+- [ ] Client-side state is not treated as a security boundary.
+- [ ] Authentication and authorization tests exist.
+- [ ] Security regression tests exist for security fixes.
+- [ ] Caching does not leak private data.
+- [ ] Documentation is updated where necessary.
+
+---
+
+# 62. Forbidden Security Practices
+
+Never:
+
+- Trust client-provided user IDs for authentication.
+- Trust client-provided roles or permissions.
+- Rely on hidden UI elements for authorization.
+- Perform authorization only in Client Components.
+- Expose server secrets to the browser.
+- Store passwords in plaintext.
+- Store authentication secrets in source code.
+- Commit secrets.
+- Log passwords or tokens.
+- Construct SQL queries through unsafe string concatenation.
+- Blindly serialize database records into API responses.
+- Allow unrestricted resource access by ID.
+- Use `dangerouslySetInnerHTML` without sanitization.
+- Disable security checks for convenience.
+- Disable authentication or authorization in production code.
+- Bypass validation to simplify implementation.
+- Introduce a custom authentication system without explicit architectural approval.
+
+---
+
+# 63. Security and Development Convenience
+
+Development convenience must not weaken production security.
+
+Do not introduce shortcuts such as:
+
+```text
+"Skip authentication in development."
+"Allow every user to access every project."
+"Disable authorization temporarily."
+"Use a hard-coded secret."
+"Return the full database record."
+```
+
+If a development-only shortcut is genuinely necessary:
+
+1. Isolate it clearly.
+2. Make it impossible to activate accidentally in production.
+3. Document it.
+4. Remove it when no longer necessary.
+
+---
+
+# 64. Security Priority
+
+When security conflicts with convenience, prioritize:
+
+```text
+Security
+    >
+Correctness
+    >
+Privacy
+    >
+Maintainability
+    >
+Performance
+    >
+Developer Convenience
+```
+
+Do not accept a known security vulnerability merely because the implementation is easier.
+
+---
+
+# 65. Final Security Principles
+
+Always remember:
+
+```text
+Never trust the client.
+
+Authenticate on the server.
+
+Authorize on the server.
+
+Validate external input.
+
+Protect workspace boundaries.
+
+Protect project boundaries.
+
+Protect resource ownership.
+
+Keep secrets server-side.
+
+Return only necessary data.
+
+Test security boundaries.
+
+Document security-sensitive decisions.
+```
+
+Security is part of the feature, not an optional final step.
