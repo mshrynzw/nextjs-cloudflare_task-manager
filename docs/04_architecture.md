@@ -1031,7 +1031,15 @@ config: wrangler.jsonc → env.production
 ```
 
 ローカル検証では better-sqlite3（同一 Migration）も利用できる。
-`getDb()` は Cloudflare コンテキストがあれば D1、なければ SQLite にフォールバックする。
+`getDb()` / `getDbAsync()` は次の優先順位とする。
+
+```text
+1. SQLITE_DB_PATH が明示されている → その SQLite ファイル（E2E / 明示ローカル）
+2. Cloudflare コンテキストの D1 binding
+3. 既定のローカル SQLite（.data/local.sqlite）
+```
+
+`SQLITE_DB_PATH` 優先は、`initOpenNextCloudflareForDev` が空のローカル D1 を露出しても、seed 済み E2E DB を誤って上書き参照しないため。
 
 ## 43.5 Validation
 

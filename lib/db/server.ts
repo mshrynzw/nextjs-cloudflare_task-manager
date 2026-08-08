@@ -11,6 +11,15 @@ function isNodeRuntime(): boolean {
   return typeof process !== "undefined" && Boolean(process.versions?.node);
 }
 
+/**
+ * When SQLITE_DB_PATH is set (E2E / explicit local DB), never use D1.
+ * `initOpenNextCloudflareForDev` can expose an empty local D1 binding that
+ * would otherwise win over the seeded SQLite file.
+ */
+function shouldPreferSqliteFile(): boolean {
+  return Boolean(process.env.SQLITE_DB_PATH);
+}
+
 function createLocalSqlite(): AppDatabase {
   // Resolve relative to this module so Next's compiled output can load the sibling.
   const nodeRequire = createRequire(import.meta.url);
@@ -59,6 +68,10 @@ async function tryGetD1BindingAsync(): Promise<D1Database | undefined> {
  * OpenNext may not expose sync context.
  */
 export function getDb(): AppDatabase {
+  if (shouldPreferSqliteFile()) {
+    return getLocalSqlite();
+  }
+
   const d1 = tryGetD1BindingSync();
   if (d1) {
     return createD1Database(d1);
@@ -78,6 +91,10 @@ export function getDb(): AppDatabase {
  * that require `getCloudflareContext({ async: true })`.
  */
 export async function getDbAsync(): Promise<AppDatabase> {
+  if (shouldPreferSqliteFile()) {
+    return getLocalSqlite();
+  }
+
   const d1 = (await tryGetD1BindingAsync()) ?? tryGetD1BindingSync();
   if (d1) {
     return createD1Database(d1);
