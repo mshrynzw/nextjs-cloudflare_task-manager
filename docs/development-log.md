@@ -1849,3 +1849,20 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 - GitHub Environment `production` に `CLOUDFLARE_API_TOKEN` / `APP_URL` を設定して Actions デプロイを有効化
 - OpenNext が middleware-manifest を正式サポートしたら `NEXT_PRIVATE_MINIMAL_MODE` を外し middleware を再有効化
 - R2 incremental cache（任意）
+
+---
+
+# Phase 16 — Login redirect fix（Workers）
+
+## Date
+
+2026-08-08
+
+## Summary
+
+本番ログイン後に Server Action が「unexpected response」エラーになる問題を修正した。
+
+## Details
+
+- 原因: Auth.js `signIn` のデフォルト 302 が React Server Actions と不相容
+- 対応: `redirect: false` でサインイン後、Next.js `redirect("/dashboard")` を使用
