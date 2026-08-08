@@ -921,21 +921,62 @@ Production
 
 # 43. Environment Variables
 
-例
+環境変数の定義方針は以下とする。
+
+## 43.1 Source of Truth
+
+- ローカル開発: `.env.local`（Git管理対象外）
+- テンプレート: `.env.example`（プレースホルダのみをCommit）
+- Schema: `lib/env/schema.ts`（Zodによる検証）
+
+`.env.example` をコピーして `.env.local` を作成する。
+
+```bash
+cp .env.example .env.local
+```
+
+## 43.2 Variable Categories
 
 ```text
-DATABASE_URL
+NEXT_PUBLIC_*     Clientに公開してよい値のみ
+AUTH_*            Auth.js / OAuth / Session（Server only）
+Cloudflare / D1   Phase 2 以降で wrangler binding と合わせて定義
+```
 
-AUTH_SECRET
+秘密情報には `NEXT_PUBLIC_` プレフィックスを付けない。
 
-AUTH_URL
+## 43.3 Auth Provider Rollout
 
+Phase 3 の認証実装順は次とする。
+
+```text
+1. GitHub OAuth
+2. Google OAuth
+3. Email + Password
+```
+
+GitHubを最初に有効化し、Google / Emailは後続で追加する。
+
+必要な主な変数:
+
+```text
 NEXT_PUBLIC_APP_URL
+AUTH_SECRET
+AUTH_URL
+AUTH_GITHUB_ID
+AUTH_GITHUB_SECRET
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+AUTH_EMAIL_ENABLED
 ```
 
 実際の環境変数はプロジェクトのDeployment環境に合わせて定義する。
 
-秘密情報には `NEXT_PUBLIC_` プレフィックスを付けない。
+## 43.4 Validation
+
+外部入力と同様に、環境変数も Schema で検証する。
+
+Auth.js を有効化するタイミングで `parseAuthEnv()` を Server 側からのみ呼び出す。
 
 ---
 

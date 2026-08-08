@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+coverage
+pnpm-lock.yaml
+pnpm-workspace.yaml
+test-results
+playwright-report
+blob-report
+docs
+AGENTS.md
+CLAUDE.md
+*.min.js

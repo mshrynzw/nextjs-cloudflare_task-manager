@@ -102,7 +102,7 @@ Task Manager は、案件獲得用ポートフォリオとして制作するタ�
 
 | 機能           | 概要                       |
 | -------------- | -------------------------- |
-| ログイン       | メール・Google・GitHub認証 |
+| ログイン       | GitHub・Google・メール認証（実装順: GitHub → Google → Email） |
 | Dashboard      | 全体状況を表示             |
 | Project List   | プロジェクト一覧           |
 | Project Detail | プロジェクト詳細           |
@@ -138,9 +138,9 @@ Task Manager は、案件獲得用ポートフォリオとして制作するタ�
 
 ### 機能
 
-- メールログイン
-- Googleログイン
 - GitHubログイン
+- Googleログイン
+- メールログイン
 - Remember Me
 - パスワード入力
 - ローディング演出

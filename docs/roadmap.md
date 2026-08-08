@@ -134,7 +134,7 @@ Priorityは以下の3段階とする。
 
 ## Status
 
-`IN PROGRESS`
+`DONE`
 
 ## Tasks
 
@@ -152,19 +152,19 @@ Priorityは以下の3段階とする。
 
 ### Development Rules
 
-- [ ] AGENTS.md
-- [ ] Cursor Rules
-- [ ] VS Code settings
-- [ ] Test directory
-- [ ] Environment variable strategy
-- [ ] Git workflow
+- [x] AGENTS.md
+- [x] Cursor Rules
+- [x] VS Code settings
+- [x] Test directory
+- [x] Environment variable strategy
+- [x] Git workflow
 
 ### Testing
 
-- [ ] Test runner configuration
-- [ ] Unit test configuration
-- [ ] Integration test configuration
-- [ ] E2E test configuration
+- [x] Test runner configuration
+- [x] Unit test configuration
+- [x] Integration test configuration
+- [x] E2E test configuration
 
 ---
 
@@ -243,11 +243,13 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 
 ## Authentication
 
+実装順: GitHub → Google → Email
+
 - [ ] Auth.js setup
 - [ ] Session management
-- [ ] Email authentication
-- [ ] Google authentication
 - [ ] GitHub authentication
+- [ ] Google authentication
+- [ ] Email authentication
 - [ ] Logout
 - [ ] Session expiration
 

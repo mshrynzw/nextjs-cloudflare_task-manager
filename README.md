@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Manager
 
-## Getting Started
+Next.js + Cloudflare（D1）向けの Task Manager ポートフォリオプロジェクトです。
 
-First, run the development server:
+## Stack
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS / shadcn
+- Zod / React Hook Form / TanStack Query
+- Vitest / Playwright
+- Auth.js（予定） / Drizzle + Cloudflare D1（予定）
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm
+- Cloudflare account（Phase 2 以降で D1 を作成）
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env.local
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command                 | Purpose                   |
+| ----------------------- | ------------------------- |
+| `pnpm dev`              | Local development server  |
+| `pnpm lint`             | ESLint                    |
+| `pnpm typecheck`        | TypeScript check          |
+| `pnpm format`           | Prettier write            |
+| `pnpm format:check`     | Prettier check            |
+| `pnpm test`             | Vitest unit + integration |
+| `pnpm test:unit`        | Unit tests only           |
+| `pnpm test:integration` | Integration tests only    |
+| `pnpm test:e2e`         | Playwright E2E            |
+| `pnpm build`            | Production build          |
 
-## Learn More
+First E2E run may require:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm exec playwright install chromium
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Canonical docs live under `docs/`.
 
-## Deploy on Vercel
+- `docs/01_requirements.md`
+- `docs/04_architecture.md`
+- `docs/roadmap.md`
+- `docs/development-log.md`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Agent / coding rules:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `AGENTS.md`
+- `.cursor/rules/`
+
+## Git Workflow
+
+- Conventional Commits（`feat:`, `fix:`, `test:`, `docs:` など）
+- feature branch で作業し、小さく意味のある commit を積む
+- secrets / `.env.local` / build artifacts は commit しない
+- 詳細は `.cursor/rules/git.mdc`
+
+## Auth Roadmap
+
+Phase 3 での実装順:
+
+1. GitHub OAuth
+2. Google OAuth
+3. Email + Password
+
+## Current Status
+
+Phase 1（Development Environment）完了。次は Phase 2（Database Foundation）。
