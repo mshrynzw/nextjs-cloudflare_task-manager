@@ -7,15 +7,6 @@ import { createD1Database } from "./client";
 
 let cachedSqlite: AppDatabase | undefined;
 
-function tryGetD1Binding(): D1Database | undefined {
-  try {
-    const { env } = getCloudflareContext();
-    return (env as CloudflareEnv | undefined)?.DB;
-  } catch {
-    return undefined;
-  }
-}
-
 function isNodeRuntime(): boolean {
   return typeof process !== "undefined" && Boolean(process.versions?.node);
 }
@@ -35,14 +26,40 @@ function createLocalSqlite(): AppDatabase {
   return createSqliteDatabase(databasePath);
 }
 
+function getLocalSqlite(): AppDatabase {
+  if (cachedSqlite) {
+    return cachedSqlite;
+  }
+  cachedSqlite = createLocalSqlite();
+  return cachedSqlite;
+}
+
+function tryGetD1BindingSync(): D1Database | undefined {
+  try {
+    const { env } = getCloudflareContext();
+    return (env as CloudflareEnv | undefined)?.DB;
+  } catch {
+    return undefined;
+  }
+}
+
+async function tryGetD1BindingAsync(): Promise<D1Database | undefined> {
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    return (env as CloudflareEnv | undefined)?.DB;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
- * Server-side database client.
+ * Server-side database client (sync Cloudflare context).
  *
- * - Cloudflare Workers / OpenNext preview: D1 binding `DB`
- * - Local `next dev` / Vitest / scripts: SQLite file (better-sqlite3)
+ * Prefer `getDbAsync()` inside Auth.js Route Handlers / Workers paths where
+ * OpenNext may not expose sync context.
  */
 export function getDb(): AppDatabase {
-  const d1 = tryGetD1Binding();
+  const d1 = tryGetD1BindingSync();
   if (d1) {
     return createD1Database(d1);
   }
@@ -53,12 +70,26 @@ export function getDb(): AppDatabase {
     );
   }
 
-  if (cachedSqlite) {
-    return cachedSqlite;
+  return getLocalSqlite();
+}
+
+/**
+ * Async DB client — use for Auth.js callbacks and other Workers request paths
+ * that require `getCloudflareContext({ async: true })`.
+ */
+export async function getDbAsync(): Promise<AppDatabase> {
+  const d1 = (await tryGetD1BindingAsync()) ?? tryGetD1BindingSync();
+  if (d1) {
+    return createD1Database(d1);
   }
 
-  cachedSqlite = createLocalSqlite();
-  return cachedSqlite;
+  if (!isNodeRuntime()) {
+    throw new Error(
+      "D1 binding `DB` is unavailable in the Workers runtime. Check wrangler.jsonc.",
+    );
+  }
+
+  return getLocalSqlite();
 }
 
 /** Test-only helper to reset the cached connection. */

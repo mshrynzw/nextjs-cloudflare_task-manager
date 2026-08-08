@@ -3,6 +3,7 @@ export type ApiErrorCode =
   | "FORBIDDEN"
   | "NOT_FOUND"
   | "VALIDATION_ERROR"
+  | "RATE_LIMITED"
   | "CONFLICT"
   | "INTERNAL_ERROR";
 
@@ -35,6 +36,14 @@ export function validationError(
   details?: Array<{ field: string; message: string }>,
 ): ApiError {
   return new ApiError("VALIDATION_ERROR", message, 422, details);
+}
+
+export function tooManyRequests(message: string): ApiError {
+  return new ApiError("RATE_LIMITED", message, 429);
+}
+
+export function conflict(message = "Conflict."): ApiError {
+  return new ApiError("CONFLICT", message, 409);
 }
 
 export function internalError(

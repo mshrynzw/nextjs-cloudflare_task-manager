@@ -154,6 +154,39 @@ Auth.jsが提供する認証エンドポイントについては、Auth.jsの仕
 
 未認証の場合は `401 Unauthorized` を返す。
 
+## POST /api/v1/auth/register
+
+Email + Password で新規ユーザーを作成する（セッションは発行しない）。
+
+クライアントは成功後に `next-auth/react` の `signIn("credentials")` でログインする。
+
+### Request
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+### Response `201`
+
+```json
+{
+  "data": {
+    "email": "user@example.com"
+  }
+}
+```
+
+### Errors
+
+| Status | 条件 |
+| ------ | ---- |
+| 422 | 入力不正 / Email 認証無効 |
+| 409 | 登録できないメール（既存の可能性） |
+| 429 | レート制限 |
+
 ---
 
 # 7. Users API

@@ -1865,9 +1865,12 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 ## Details
 
 - 症状: Sign In 後に「Something went wrong / An unexpected response was received from the server」。Cookie は付与され、リロードすると Dashboard に入れる
-- 原因: Auth.js の Server Action 内 `signIn` / リダイレクトが、OpenNext on Workers 上で Server Action レスポンスと不相容
+- 原因:
+  - `/login` への Server Action が、既存セッション時の `redirect("/dashboard")` と衝突して 302 になる
+  - Auth.js credentials callback で sync `getCloudflareContext` だと D1 を取れず `Configuration` になる場合がある
 - 対応:
-  - `features/auth/components/login-form.tsx`: `next-auth/react` の `signIn` + `window.location.assign("/dashboard")`
-  - `features/auth/actions.ts`: `prepareCredentialsSignIn` / `registerWithCredentials` のみ（検証・rate limit・ユーザー作成）
-  - リダイレクト先定数は `features/auth/constants.ts`（`"use server"` ファイルから非 async 定数を export しない）
-- `docs/04_architecture.md` §15.1 に Workers 向けログインフローを追記
+  - ログインは Server Action なし。`next-auth/react` `signIn` + `window.location.assign("/dashboard")` のみ
+  - 登録は `POST /api/v1/auth/register`（JSON）
+  - Auth.js を async config + `getDbAsync()`（`getCloudflareContext({ async: true })`）に変更
+  - ログイン rate limit は Credentials `authorize` 内で実施
+- `docs/04_architecture.md` §15.1 / `docs/06_api.md` を更新

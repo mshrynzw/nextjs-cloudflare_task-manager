@@ -34,6 +34,12 @@ const CODE_MAP: Record<ApiErrorCode, UserFacingError> = {
     description: "Please check your input and try again.",
     code: "VALIDATION_ERROR",
   },
+  RATE_LIMITED: {
+    variant: "generic",
+    title: "Too many attempts",
+    description: "Please wait a moment and try again.",
+    code: "RATE_LIMITED",
+  },
   CONFLICT: {
     variant: "generic",
     title: "Conflict",

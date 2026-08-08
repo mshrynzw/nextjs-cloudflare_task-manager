@@ -3,10 +3,6 @@
 import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import {
-  prepareCredentialsSignIn,
-  registerWithCredentials,
-} from "@/features/auth/actions";
 import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
 
 const inputClassName =
@@ -16,6 +12,12 @@ interface LoginFormProps {
   emailEnabled: boolean;
   githubEnabled: boolean;
   googleEnabled: boolean;
+}
+
+interface ApiErrorBody {
+  error?: {
+    message?: string;
+  };
 }
 
 async function completeCredentialsSignIn(
@@ -32,8 +34,35 @@ async function completeCredentialsSignIn(
     return "Invalid email or password.";
   }
 
+  // Full navigation so the App Router picks up the new session cookie.
   window.location.assign(POST_AUTH_REDIRECT);
   return undefined;
+}
+
+async function registerAccount(
+  email: string,
+  password: string,
+): Promise<string | undefined> {
+  const response = await fetch("/api/v1/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (response.ok) {
+    return undefined;
+  }
+
+  let message = "Unable to create an account.";
+  try {
+    const body = (await response.json()) as ApiErrorBody;
+    if (body.error?.message) {
+      message = body.error.message;
+    }
+  } catch {
+    // keep default message
+  }
+  return message;
 }
 
 export function LoginForm({
@@ -55,19 +84,13 @@ export function LoginForm({
     setSignInPending(true);
 
     const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
     const password = String(formData.get("password") ?? "");
 
     try {
-      const prepared = await prepareCredentialsSignIn(formData);
-      if (prepared.status === "error" || !prepared.email) {
-        setSignInError(prepared.message ?? "Unable to sign in.");
-        return;
-      }
-
-      const errorMessage = await completeCredentialsSignIn(
-        prepared.email,
-        password,
-      );
+      const errorMessage = await completeCredentialsSignIn(email, password);
       if (errorMessage) {
         setSignInError(errorMessage);
       }
@@ -84,19 +107,19 @@ export function LoginForm({
     setRegisterPending(true);
 
     const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
     const password = String(formData.get("password") ?? "");
 
     try {
-      const registered = await registerWithCredentials(formData);
-      if (registered.status === "error" || !registered.email) {
-        setRegisterError(registered.message ?? "Unable to create an account.");
+      const registerMessage = await registerAccount(email, password);
+      if (registerMessage) {
+        setRegisterError(registerMessage);
         return;
       }
 
-      const errorMessage = await completeCredentialsSignIn(
-        registered.email,
-        password,
-      );
+      const errorMessage = await completeCredentialsSignIn(email, password);
       if (errorMessage) {
         setRegisterError(
           "Account created, but sign-in failed. Try signing in.",

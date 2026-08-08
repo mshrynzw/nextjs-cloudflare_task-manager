@@ -430,16 +430,16 @@ User
 
 ## 15.1 Login / Sign-in flow（Cloudflare Workers）
 
-Credentials / OAuth の `signIn` はクライアントの `next-auth/react` 経由で行う。
+Credentials / OAuth の `signIn` はクライアントの `next-auth/react` 経由のみで行う。
 
-Server Action 内の Auth.js `signIn` や `redirect()` は、OpenNext on Workers 上で Server Action レスポンスを壊し、ログイン UI に「unexpected response」を出すため使わない。
+ログイン経路では Server Action を使わない。`/login` ページの Server Action は、既存セッション時の `redirect("/dashboard")` と組み合わさると 302 になり、クライアントが例外扱いするため。
 
 ```text
 Login Form (Client)
    │
-   ├─ Server Action: 入力検証 / rate limit / ユーザー作成
+   ├─ (任意) POST /api/v1/auth/register … ユーザー作成のみ
    │
-   └─ next-auth/react signIn → /api/auth/*
+   └─ next-auth/react signIn → /api/auth/callback/*
          │
          ▼
       Session cookie
@@ -447,6 +447,8 @@ Login Form (Client)
          ▼
       window.location → /dashboard
 ```
+
+Auth.js は OpenNext 上で `getCloudflareContext({ async: true })` 経由の D1（`getDbAsync`）を使う。
 
 認可は引き続き Server Component / Route Handler 上の `auth()` で行う。
 
