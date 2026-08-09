@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Vantage — Task Manager",
   description: "Modern project and task management",
+  // Icons are provided via App Router file conventions:
+  // app/favicon.ico, app/icon.png, app/apple-icon.png
+  manifest: "/site.webmanifest",
+  themeColor: "#08090d",
 };
 
 export default function RootLayout({
