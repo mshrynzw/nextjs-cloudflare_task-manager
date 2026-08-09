@@ -27,7 +27,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply task-manager-dev --remote",
     "db:migrate:prod": "wrangler d1 migrations apply task-manager-prod --remote --env production",
     "db:seed:local": "tsx scripts/seed-local.ts",
-    "db:seed:e2e": "tsx scripts/seed-e2e.ts"
+    "db:seed:e2e": "tsx scripts/seed-e2e.ts",
+    "db:seed:prod": "tsx scripts/seed-prod.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

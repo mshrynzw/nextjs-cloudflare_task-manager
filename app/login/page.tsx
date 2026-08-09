@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import { authConfig } from "@/auth.config";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { isEmailAuthEnabled } from "@/lib/auth/flags";
+import {
+  DEMO_USER_EMAIL,
+  DEMO_USER_PASSWORD,
+} from "@/lib/db/demo-credentials";
 
 /**
  * Edge-compatible session reader — no Drizzle adapter / SQLite open.
@@ -44,6 +48,12 @@ export default async function LoginPage() {
           githubEnabled={githubEnabled}
           googleEnabled={googleEnabled}
         />
+        <p className="mt-6 text-center text-xs text-zinc-500">
+          Demo:{" "}
+          <span className="font-mono text-zinc-400">{DEMO_USER_EMAIL}</span>
+          {" / "}
+          <span className="font-mono text-zinc-400">{DEMO_USER_PASSWORD}</span>
+        </p>
       </section>
     </main>
   );

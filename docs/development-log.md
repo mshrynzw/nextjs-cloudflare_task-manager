@@ -1876,3 +1876,25 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 - `docs/04_architecture.md` §15.1 / `docs/06_api.md` を更新
 - 追記: E2E で `getDbAsync` が空 D1 を優先し `no such table: users` になる問題を、`SQLITE_DB_PATH` 明示時は SQLite 優先にすることで修正
 - 追記: ログアウトを `next-auth/react` `signOut` に変更（Server Action では session cookie が残る）
+
+---
+
+# Phase 17 — Demo / Portfolio Preparation
+
+## Date
+
+2026-08-09
+
+## Summary
+
+Live Demo 向けのリッチなデモデータ、README、デモログイン案内を整備した。
+
+## Details
+
+- `lib/db/seed-portfolio.ts`: Projects 10 / Tasks 75+ / Members 7 / Comments・Activities を seed（idempotent, slug `portfolio-demo`）
+- E2E 用 `seedDemoData` は維持
+- `pnpm db:seed:local` / `pnpm db:seed:prod`（`CONFIRM_PROD_SEED=yes`）
+- README 刷新（Live Demo URL・Demo login・Docs）
+- Login 画面にデモ credential hint
+- ルート `/` は従来どおり login / dashboard redirect（ランディングは作らない）
+- 本番 seed は `getPlatformProxy` remote がハングするため、D1 HTTP API クライアント（`scripts/http-d1.ts`）を採用。`CONFIRM_PROD_SEED=yes pnpm db:seed:prod` で投入済み（Projects 10 / Tasks 75 / Comments 106 / Activities 190）

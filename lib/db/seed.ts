@@ -1,6 +1,7 @@
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import type { AppDatabase } from "./client";
+import { DEMO_USER_EMAIL, DEMO_USER_PASSWORD } from "./demo-credentials";
 import { createId, nowUnix } from "./id";
 import {
   activities,
@@ -22,8 +23,7 @@ export interface SeedResult {
   taskId: string;
 }
 
-export const DEMO_USER_EMAIL = "demo@example.com";
-export const DEMO_USER_PASSWORD = "DemoPass123!";
+export { DEMO_USER_EMAIL, DEMO_USER_PASSWORD };
 
 /**
  * Insert a minimal demo dataset for local development and tests.

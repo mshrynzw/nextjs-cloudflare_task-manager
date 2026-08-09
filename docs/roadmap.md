@@ -1127,7 +1127,7 @@ Production Databaseへ開発用Seed Dataを投入しない。
 
 ## Status
 
-`PLANNED`
+`DONE`
 
 ## Priority
 
@@ -1158,6 +1158,12 @@ Activities
 100+
 ```
 
+### Implementation
+
+- [x] `seedPortfolioData`（`lib/db/seed-portfolio.ts`）— リッチ・idempotent（slug `portfolio-demo`）
+- [x] E2E 用 `seedDemoData` は維持
+- [x] `pnpm db:seed:local` / `pnpm db:seed:prod`（`CONFIRM_PROD_SEED=yes`）
+
 ---
 
 # 25.2 Demo Account
@@ -1173,6 +1179,11 @@ Demo Projects
     ↓
 Demo Tasks
 ```
+
+### Implementation
+
+- [x] `demo@example.com` / `DemoPass123!`
+- [x] Login 画面 + README に案内
 
 ---
 
@@ -1192,6 +1203,10 @@ GitHub
 Technical Documentation
 ```
 
+### Implementation
+
+- [x] README に Live Demo / Demo login / Docs リンク（ルート `/` は login redirect のまま）
+
 ---
 
 # 26. README Preparation
@@ -1200,7 +1215,7 @@ READMEには以下を記載する。
 
 - Product Overview
 - Features
-- Screenshots
+- Screenshots（任意・Live Demo への誘導で代替可）
 - Tech Stack
 - Architecture
 - Database
@@ -1209,6 +1224,10 @@ READMEには以下を記載する。
 - Performance
 - Design Decisions
 - Live Demo
+
+### Implementation
+
+- [x] README 刷新（Live Demo / Demo login / Docs / セットアップ）
 
 ---
 
@@ -1232,7 +1251,11 @@ docs/
 └── screen-list.md
 ```
 
-すべてのドキュメントと実装内容が一致していることを確認する。
+明らかな古さのみ修正（全面監査はスコープ外）。
+
+### Implementation
+
+- [x] roadmap / development-log / database（seed 戦略）を同期
 
 ---
 
@@ -1242,7 +1265,7 @@ Production公開前に以下を確認する。
 
 ## Functional
 
-- [ ] Login
+- [ ] Login（ユーザー確認）
 - [ ] Dashboard
 - [ ] Project
 - [ ] Task
@@ -1269,12 +1292,13 @@ Production公開前に以下を確認する。
 
 ## Engineering
 
-- [ ] Type Check
-- [ ] ESLint
-- [ ] Unit Test
-- [ ] Integration Test
-- [ ] E2E Test
+- [x] Type Check
+- [x] ESLint
+- [x] Unit Test
+- [ ] Integration Test（該当時）
+- [ ] E2E（seed 分離確認・任意）
 - [ ] Build
+- [ ] Lighthouse（ユーザー確認）
 
 ---
 
@@ -1583,8 +1607,7 @@ Roadmap
 ## In Progress
 
 ```text
-Development Environment
-██████████░░░░░░░░░░ 50%
+（なし — Phase 17 DONE。Formal QA / Lighthouse はユーザー確認）
 ```
 
 ---
@@ -1592,17 +1615,8 @@ Development Environment
 ## Planned
 
 ```text
-Database Implementation
-Authentication
-API Implementation
-Core Features
-UI Implementation
-Testing
-Security
-Performance
-CI/CD
-Deployment
-Portfolio Release
+Phase 18+（roadmap 後半）
+Custom domain（任意）
 ```
 
 ---

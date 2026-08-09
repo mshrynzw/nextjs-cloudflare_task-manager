@@ -4,6 +4,10 @@ import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
+import {
+  DEMO_USER_EMAIL,
+  DEMO_USER_PASSWORD,
+} from "@/lib/db/demo-credentials";
 
 const inputClassName =
   "h-10 rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 text-sm text-zinc-50 outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500/40";
@@ -185,6 +189,17 @@ export function LoginForm({
               {signInPending ? "Please wait…" : "Sign In"}
             </Button>
           </form>
+
+          <p className="rounded-lg border border-zinc-800/80 bg-zinc-950/30 px-3 py-2 text-xs leading-relaxed text-zinc-500">
+            Demo:{" "}
+            <span className="select-all font-mono text-zinc-400">
+              {DEMO_USER_EMAIL}
+            </span>
+            {" / "}
+            <span className="select-all font-mono text-zinc-400">
+              {DEMO_USER_PASSWORD}
+            </span>
+          </p>
 
           <details className="rounded-lg border border-zinc-800 bg-zinc-950/40 p-3">
             <summary className="cursor-pointer text-sm text-zinc-400">

@@ -1219,6 +1219,19 @@ drizzle/
 
 開発環境ではSeed Dataを利用できるようにする。
 
+## Strategies
+
+| Script | Module | Purpose |
+| ------ | ------ | ------- |
+| `pnpm db:seed:e2e` | `seedDemoData` | 最小フィクスチャ（Playwright） |
+| `pnpm db:seed:local` | `seedPortfolioData` | リッチなローカル / デモデータ |
+| `pnpm db:seed:prod` | `seedPortfolioData` | Live Demo 用本番 D1（`CONFIRM_PROD_SEED=yes` 必須） |
+
+ポートフォリオ seed は workspace slug `portfolio-demo` を idempotent に置換する。
+デモアカウントは `demo@example.com` / `DemoPass123!`（`lib/db/demo-credentials.ts`）。
+
+本番へ空の開発用最小 seed を流し込まない。Live Demo 用は明示的なポートフォリオ seed のみ。
+
 Seedには以下を含める。
 
 - Demo User
@@ -1246,7 +1259,8 @@ Comments: 30〜50
 Activities: 100+
 ```
 
-ただし、本番環境へ開発用Demo Dataを投入しない。
+ただし、本番環境へ開発用の最小 / 空に近い seed を投入しない。
+Live Demo 向けは `seedPortfolioData` のみ、`CONFIRM_PROD_SEED=yes` 付きで明示的に投入する。
 
 ---
 
@@ -1601,7 +1615,7 @@ wrangler.jsonc (binding: DB)
 Drizzle ORM
 lib/db/schema/
 drizzle/migrations/
-Seed (lib/db/seed.ts / pnpm db:seed:local)
+Seed (lib/db/seed.ts / seed-portfolio.ts / pnpm db:seed:local|e2e|prod)
 Database integration tests
 ```
 
@@ -1610,7 +1624,8 @@ Auth.js 用テーブル（`accounts` / `sessions` / `verification_tokens`）と
 
 Attachments / Time Entries は未実装（将来拡張）。
 
-本番用 D1（`task-manager-prod`）は Deployment 時に作成する。
+本番用 D1（`task-manager-prod`）は Deployment 済み。Live Demo 用ポートフォリオ seed は
+`CONFIRM_PROD_SEED=yes pnpm db:seed:prod` で投入する。
 
 ---
 
