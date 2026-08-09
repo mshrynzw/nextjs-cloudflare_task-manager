@@ -58,13 +58,13 @@ Workers 上のログイン / ログアウトは `next-auth/react` 経由（Serve
 
 ## Database
 
-| Item        | Value              |
-| ----------- | ------------------ |
-| Dev D1      | `task-manager-dev` |
-| Prod D1     | `task-manager-prod` |
-| Binding     | `DB`               |
-| Schema      | `lib/db/schema/`   |
-| Migrations  | `drizzle/migrations/` |
+| Item       | Value                 |
+| ---------- | --------------------- |
+| Dev D1     | `task-manager-dev`    |
+| Prod D1    | `task-manager-prod`   |
+| Binding    | `DB`                  |
+| Schema     | `lib/db/schema/`      |
+| Migrations | `drizzle/migrations/` |
 
 Seed 戦略:
 
@@ -88,19 +88,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Scripts
 
-| Command                 | Purpose                          |
-| ----------------------- | -------------------------------- |
-| `pnpm dev`              | Local development                |
-| `pnpm lint`             | ESLint                           |
-| `pnpm typecheck`        | TypeScript                       |
-| `pnpm test`             | Vitest unit + integration        |
-| `pnpm test:e2e`         | Playwright E2E                   |
-| `pnpm db:migrate:local` | Apply migrations to local D1     |
-| `pnpm db:migrate:prod`  | Apply migrations to prod D1      |
-| `pnpm db:seed:local`    | Portfolio seed (SQLite)          |
-| `pnpm db:seed:e2e`      | Minimal E2E seed                 |
-| `pnpm db:seed:prod`     | Portfolio seed (prod D1, gated)  |
-| `pnpm deploy`           | OpenNext build + Workers deploy  |
+| Command                 | Purpose                         |
+| ----------------------- | ------------------------------- |
+| `pnpm dev`              | Local development               |
+| `pnpm lint`             | ESLint                          |
+| `pnpm typecheck`        | TypeScript                      |
+| `pnpm test`             | Vitest unit + integration       |
+| `pnpm test:e2e`         | Playwright E2E                  |
+| `pnpm db:migrate:local` | Apply migrations to local D1    |
+| `pnpm db:migrate:prod`  | Apply migrations to prod D1     |
+| `pnpm db:seed:local`    | Portfolio seed (SQLite)         |
+| `pnpm db:seed:e2e`      | Minimal E2E seed                |
+| `pnpm db:seed:prod`     | Portfolio seed (prod D1, gated) |
+| `pnpm deploy`           | OpenNext build + Workers deploy |
 
 ## Testing
 

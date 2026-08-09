@@ -1898,3 +1898,4 @@ Live Demo 向けのリッチなデモデータ、README、デモログイン案�
 - Login 画面にデモ credential hint
 - ルート `/` は従来どおり login / dashboard redirect（ランディングは作らない）
 - 本番 seed は `getPlatformProxy` remote がハングするため、D1 HTTP API クライアント（`scripts/http-d1.ts`）を採用。`CONFIRM_PROD_SEED=yes pnpm db:seed:prod` で投入済み（Projects 10 / Tasks 75 / Comments 106 / Activities 190）
+- 追記: Live Demo 手動 Formal QA 完了（Functional / Visual / Auth 境界）。README スクリーンショット追加済み。Lighthouse は未計測のまま任意

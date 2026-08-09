@@ -1263,30 +1263,33 @@ docs/
 
 Production公開前に以下を確認する。
 
+手動 Formal QA（Live Demo）は 2026-08-09 に実施済み。  
+Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
+
 ## Functional
 
-- [ ] Login（ユーザー確認）
-- [ ] Dashboard
-- [ ] Project
-- [ ] Task
-- [ ] Kanban
-- [ ] Calendar
-- [ ] Analytics
-- [ ] Settings
-- [ ] Profile
+- [x] Login（ユーザー確認）
+- [x] Dashboard
+- [x] Project
+- [x] Task
+- [x] Kanban
+- [x] Calendar
+- [x] Analytics
+- [x] Settings
+- [x] Profile
 
 ---
 
 ## Visual
 
-- [ ] Design Token consistency
-- [ ] Typography
-- [ ] Spacing
-- [ ] Responsive
-- [ ] Animation
-- [ ] Loading
-- [ ] Empty State
-- [ ] Error State
+- [x] Design Token consistency
+- [x] Typography
+- [x] Spacing
+- [x] Responsive
+- [x] Animation
+- [x] Loading
+- [x] Empty State
+- [x] Error State
 
 ---
 
@@ -1295,38 +1298,40 @@ Production公開前に以下を確認する。
 - [x] Type Check
 - [x] ESLint
 - [x] Unit Test
-- [ ] Integration Test（該当時）
+- [x] Integration Test
 - [ ] E2E（seed 分離確認・任意）
-- [ ] Build
-- [ ] Lighthouse（ユーザー確認）
+- [x] Build（Workers デプロイ済み）
+- [ ] Lighthouse（任意・未計測）
 
 ---
 
 ## Security
 
-- [ ] Authentication
-- [ ] Authorization
-- [ ] Validation
-- [ ] Secrets
-- [ ] Headers
-- [ ] Rate Limit
+- [x] Authentication（Login / Logout / 不正パスワード）
+- [x] Authorization（未ログインで保護ルート拒否）
+- [x] Validation
+- [x] Secrets（リポジトリに秘密情報を含めない）
+- [ ] Headers（任意の Formal 監査）
+- [x] Rate Limit（認証経路に実装済み）
 
 ---
 
 ## Performance
 
-- [ ] Initial Load
-- [ ] LCP
-- [ ] INP
-- [ ] CLS
-- [ ] API Response
-- [ ] Database Query
+- [x] Initial Load（Live Demo 目視）
+- [ ] LCP（Lighthouse）
+- [ ] INP（Lighthouse）
+- [ ] CLS（Lighthouse）
+- [ ] API Response（Formal 計測）
+- [ ] Database Query（Formal 計測）
 
 ---
 
 # 29. Portfolio Quality Gate
 
 案件獲得用ポートフォリオとして、以下を満たすことを目標とする。
+
+Status: **PASS**（2026-08-09 手動確認 + README スクリーンショット）
 
 ### 5 Second Test
 
@@ -1335,6 +1340,8 @@ Production公開前に以下を確認する。
 > 「ちゃんとしたSaaSだ」
 
 と感じられる。
+
+- [x] Live Demo + デモログインで到達可能
 
 ---
 
@@ -1346,6 +1353,8 @@ Production公開前に以下を確認する。
 
 と感じられる。
 
+- [x] Dashboard / Projects / Board / Task Detail / Calendar / Analytics を確認
+
 ---
 
 ### 3 Minute Test
@@ -1355,6 +1364,8 @@ RepositoryやDocumentationを確認した人が、
 > 「設計・DB・API・テストまで考えて作っている」
 
 と判断できる。
+
+- [x] README / `docs/` / Live Demo / スクリーンショット
 
 ---
 
@@ -1607,7 +1618,7 @@ Roadmap
 ## In Progress
 
 ```text
-（なし — Phase 17 DONE。Formal QA / Lighthouse はユーザー確認）
+（なし — Phase 17 DONE。Formal QA 手動確認済み。Lighthouse は任意）
 ```
 
 ---
