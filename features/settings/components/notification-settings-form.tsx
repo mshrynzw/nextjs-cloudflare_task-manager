@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   updateNotificationSettingsAction,
   type SettingsActionState,
@@ -11,19 +12,20 @@ import {
 
 const initialState: SettingsActionState = { status: "idle" };
 
-const TOGGLES = [
-  { name: "emailNotifications", label: "Email notifications" },
-  { name: "inAppNotifications", label: "In-app notifications" },
-  { name: "taskNotifications", label: "Task notifications" },
-  { name: "mentionNotifications", label: "Mention notifications" },
-  { name: "dueSoonNotifications", label: "Due soon notifications" },
+const TOGGLE_KEYS = [
+  "emailNotifications",
+  "inAppNotifications",
+  "taskNotifications",
+  "mentionNotifications",
+  "dueSoonNotifications",
 ] as const;
 
 function SaveButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Save preferences"}
+      {pending ? t.common.saving : t.settings.savePreferences}
     </Button>
   );
 }
@@ -42,6 +44,7 @@ export function NotificationSettingsForm({
   settings,
 }: NotificationSettingsFormProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [state, formAction] = useActionState(
     updateNotificationSettingsAction,
     initialState,
@@ -55,16 +58,16 @@ export function NotificationSettingsForm({
 
   return (
     <form action={formAction} className="space-y-3">
-      {TOGGLES.map((toggle) => (
+      {TOGGLE_KEYS.map((name) => (
         <label
-          key={toggle.name}
+          key={name}
           className="flex items-center justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-200"
         >
-          {toggle.label}
+          {t.settings[name]}
           <input
             type="checkbox"
-            name={toggle.name}
-            defaultChecked={settings[toggle.name]}
+            name={name}
+            defaultChecked={settings[name]}
             className="size-4 rounded border-zinc-700"
           />
         </label>

@@ -3,15 +3,10 @@ import { AppHeader } from "@/components/layout/app-header";
 import { SimpleBarChart } from "@/components/feedback/simple-bar-chart";
 import { StatCard } from "@/components/feedback/stat-card";
 import { getDb } from "@/lib/db/server";
+import { getI18n } from "@/lib/i18n/get-i18n";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { taskPriorityLabel, taskStatusLabel } from "@/lib/i18n/labels";
 import { getAnalyticsPageData } from "@/lib/services/analytics-service";
-
-const STATUS_LABELS: Record<string, string> = {
-  backlog: "Backlog",
-  todo: "To Do",
-  in_progress: "In Progress",
-  review: "Review",
-  done: "Done",
-};
 
 const STATUS_COLORS: Record<string, string> = {
   backlog: "#71717a",
@@ -29,6 +24,7 @@ const PRIORITY_COLORS: Record<string, string> = {
 
 export default async function AnalyticsPage() {
   const session = await auth();
+  const { t } = await getI18n();
   const userId = session!.user!.id!;
   const { overview, trend, distribution, workload, priorities } =
     await getAnalyticsPageData(getDb(), userId);
@@ -41,35 +37,42 @@ export default async function AnalyticsPage() {
   return (
     <>
       <AppHeader
-        title="Analytics"
-        description="Progress and workload from your current data."
+        title={t.analytics.title}
+        description={t.analytics.description}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <StatCard label="Total tasks" value={overview.totalTasks} />
-          <StatCard label="Completed" value={overview.completedTasks} />
+          <StatCard label={t.analytics.totalTasks} value={overview.totalTasks} />
+          <StatCard label={t.analytics.completed} value={overview.completedTasks} />
           <StatCard
-            label="Completion rate"
+            label={t.analytics.completionRate}
             value={`${overview.completionRate}%`}
           />
-          <StatCard label="Overdue" value={overview.overdueTasks} />
-          <StatCard label="Active assignees" value={overview.activeMembers} />
+          <StatCard label={t.analytics.overdue} value={overview.overdueTasks} />
           <StatCard
-            label="Avg completion (days)"
+            label={t.analytics.activeAssignees}
+            value={overview.activeMembers}
+          />
+          <StatCard
+            label={t.analytics.avgCompletion}
             value={overview.averageCompletionTime}
           />
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Panel title="Completion trend (14 days)">
+          <Panel title={t.analytics.trend}>
             <div className="flex h-40 items-end gap-1">
               {trend.map((item) => (
                 <div
                   key={item.date}
                   className="flex flex-1 flex-col items-center justify-end gap-1"
-                  title={`${item.date}: created ${item.created}, completed ${item.completed}`}
+                  title={interpolate(t.analytics.trendTitle, {
+                    date: item.date,
+                    created: item.created,
+                    completed: item.completed,
+                  })}
                 >
                   <div className="flex w-full items-end gap-0.5" style={{ height: "100%" }}>
                     <div
@@ -93,15 +96,13 @@ export default async function AnalyticsPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-xs text-zinc-500">
-              Gray = created · Violet = completed
-            </p>
+            <p className="mt-3 text-xs text-zinc-500">{t.analytics.trendLegend}</p>
           </Panel>
 
-          <Panel title="Task distribution">
+          <Panel title={t.analytics.distribution}>
             <SimpleBarChart
               items={distribution.map((item) => ({
-                label: STATUS_LABELS[item.status] ?? item.status,
+                label: taskStatusLabel(t, item.status),
                 value: item.count,
                 color: STATUS_COLORS[item.status],
               }))}
@@ -110,21 +111,19 @@ export default async function AnalyticsPage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Panel title="Priority breakdown">
+          <Panel title={t.analytics.priorityBreakdown}>
             <SimpleBarChart
               items={priorities.map((item) => ({
-                label: item.priority,
+                label: taskPriorityLabel(t, item.priority),
                 value: item.count,
                 color: PRIORITY_COLORS[item.priority],
               }))}
             />
           </Panel>
 
-          <Panel title="Member workload">
+          <Panel title={t.analytics.workload}>
             {workload.length === 0 ? (
-              <p className="text-sm text-zinc-500">
-                No assigned tasks yet. Assign tasks to see workload.
-              </p>
+              <p className="text-sm text-zinc-500">{t.analytics.emptyWorkload}</p>
             ) : (
               <ul className="space-y-3">
                 {workload.map((member) => (

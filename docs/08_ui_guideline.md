@@ -91,9 +91,13 @@ Version: 1.0
 
 Font Family
 
-```css
-Geist
+```text
+日本語 UI: M PLUS 2
+英語 UI: Geist
+コード / 数値: Geist Mono
 ```
+
+`html[lang="ja"]` では M PLUS 2 を本文フォントにし、`html[lang="en"]` では Geist を使う。
 
 Font Weight
 

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
+import { intlLocale } from "@/lib/i18n/dates";
 import {
   markAllNotificationsReadAction,
   markNotificationReadAction,
@@ -27,14 +29,15 @@ interface NotificationsListProps {
 }
 
 export function NotificationsList({ notifications }: NotificationsListProps) {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   if (notifications.length === 0) {
     return (
       <EmptyState
-        title="No notifications"
-        description="You're all caught up. New activity will show up here."
+        title={t.notifications.emptyTitle}
+        description={t.notifications.emptyDescription}
         icon={<Bell className="size-6" aria-hidden />}
       />
     );
@@ -55,7 +58,7 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
             });
           }}
         >
-          Mark all as read
+          {t.notifications.markAll}
         </Button>
       </div>
 
@@ -79,7 +82,7 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
                         className="ml-2 inline-block size-1.5 rounded-full bg-[color:var(--accent-1)] align-middle"
                         aria-hidden
                       />
-                      <span className="sr-only">Unread</span>
+                      <span className="sr-only">{t.notifications.unread}</span>
                     </>
                   ) : null}
                 </p>
@@ -87,8 +90,10 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
                   <p className="mt-1 text-sm text-zinc-500">{item.body}</p>
                 ) : null}
                 <p className="mt-2 text-[11px] tabular-nums text-zinc-600">
-                  {new Date(item.createdAt * 1000).toLocaleString()} ·{" "}
-                  {item.type}
+                  {new Date(item.createdAt * 1000).toLocaleString(
+                    intlLocale(locale),
+                  )}{" "}
+                  · {item.type}
                 </p>
               </div>
               {unread ? (
@@ -104,10 +109,12 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
                     });
                   }}
                 >
-                  Mark read
+                  {t.notifications.markRead}
                 </Button>
               ) : (
-                <span className="shrink-0 text-xs text-zinc-600">Read</span>
+                <span className="shrink-0 text-xs text-zinc-600">
+                  {t.notifications.read}
+                </span>
               )}
             </li>
           );

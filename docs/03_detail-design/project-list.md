@@ -276,6 +276,7 @@ New Project Dialog
 - Description
 - Color
 - Deadline
+- Visibility（既定はワークスペース公開。チェック時はプロジェクトメンバー以外に非公開）
 - Members
 
 保存後

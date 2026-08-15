@@ -1,5 +1,8 @@
+"use client";
+
 import { SearchX } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { useI18n } from "@/components/providers/locale-provider";
 
 interface SearchEmptyStateProps {
   title?: string;
@@ -8,17 +11,19 @@ interface SearchEmptyStateProps {
 }
 
 export function SearchEmptyState({
-  title = "No matching results",
-  description = "Try clearing search or filters.",
+  title,
+  description,
   clearHref,
 }: SearchEmptyStateProps) {
+  const { t } = useI18n();
+
   return (
     <EmptyState
-      title={title}
-      description={description}
+      title={title ?? t.empty.noMatchingResults}
+      description={description ?? t.empty.tryClearing}
       icon={<SearchX className="size-6" aria-hidden />}
       actionHref={clearHref}
-      actionLabel={clearHref ? "Clear filters" : undefined}
+      actionLabel={clearHref ? t.empty.clearFilters : undefined}
     />
   );
 }

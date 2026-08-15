@@ -15,6 +15,8 @@ export const projectStatusSchema = z.enum([
 
 export const projectPrioritySchema = z.enum(["low", "medium", "high"]);
 
+export const projectVisibilitySchema = z.enum(["workspace", "members"]);
+
 export const taskStatusSchema = z.enum([
   "backlog",
   "todo",

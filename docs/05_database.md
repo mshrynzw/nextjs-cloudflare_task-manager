@@ -177,7 +177,7 @@ users
 | website        | TEXT    |      Yes | Website URL                  |
 | role           | TEXT    |       No | System role                  |
 | timezone       | TEXT    |       No | Timezone                     |
-| language       | TEXT    |       No | Language                     |
+| language       | TEXT    |       No | UI language (`ja` default, or `en`) |
 | created_at     | INTEGER |       No | Created timestamp            |
 | updated_at     | INTEGER |       No | Updated timestamp            |
 
@@ -302,6 +302,7 @@ projects
 | start_date   | INTEGER |      Yes | Start Date           |
 | deadline     | INTEGER |      Yes | Deadline             |
 | created_by   | TEXT    |       No | Creator User ID      |
+| visibility   | TEXT    |       No | workspace / members  |
 | created_at   | INTEGER |       No | Created timestamp    |
 | updated_at   | INTEGER |       No | Updated timestamp    |
 | archived_at  | INTEGER |      Yes | Archived timestamp   |
@@ -331,6 +332,26 @@ low
 medium
 high
 ```
+
+---
+
+# 16.1 Project Visibility
+
+許可する値
+
+```text
+workspace
+members
+```
+
+| 値          | 意味 |
+| ----------- | ---- |
+| workspace   | 同じワークスペースのメンバーは、プロジェクトメンバーでなくても閲覧できる（既定） |
+| members     | プロジェクトメンバーのみ閲覧できる |
+
+- 既定値は `workspace`
+- 変更（作成・更新・削除・コメント投稿など）は、公開範囲に関係なくプロジェクトメンバーの権限に従う
+- ワークスペース外のユーザーには、公開範囲に関係なく非公開
 
 ---
 
@@ -387,6 +408,13 @@ UNIQUE(project_id, user_id)
 ```
 
 Project Memberは、原則としてWorkspace Memberである必要がある。
+
+Workspace Member を削除した場合、アプリケーション層で次を行う。
+
+- そのワークスペース内の `project_members` を削除する
+- そのワークスペース内のタスクで当該ユーザーが担当者なら `assignee_id` を NULL にする
+
+データベースの CASCADE は使わない。認可と整合をサービス層で保証する。
 
 ---
 
@@ -1229,19 +1257,21 @@ drizzle/
 
 ポートフォリオ seed は workspace slug `portfolio-demo` を idempotent に置換する。
 デモアカウントは `demo@example.com` / `DemoPass123!`（`lib/db/demo-credentials.ts`）。
+表示文言（ワークスペース名、プロジェクト名、タスク名、コメント、通知、役職）は日本語。
+メール・username・slug は ASCII のまま。
 
 本番へ空の開発用最小 seed を流し込まない。Live Demo 用は明示的なポートフォリオ seed のみ。
 
 Seedには以下を含める。
 
-- Demo User
-- Demo Workspace
-- Demo Projects
-- Demo Tasks
-- Demo Members
-- Demo Comments
-- Demo Activities
-- Demo Notifications
+- デモユーザー
+- デモワークスペース
+- デモプロジェクト
+- デモタスク
+- デモメンバー
+- デモコメント
+- デモアクティビティ
+- デモ通知
 
 ---
 

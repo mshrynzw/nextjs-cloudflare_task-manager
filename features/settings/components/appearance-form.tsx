@@ -6,18 +6,21 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/feedback/toast";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   updateAppearanceAction,
   type SettingsActionState,
 } from "@/features/settings/actions";
+import type { Locale } from "@/lib/i18n/locale";
 
 const initialState: SettingsActionState = { status: "idle" };
 
 function SaveButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Save appearance"}
+      {pending ? t.common.saving : t.settings.saveAppearance}
     </Button>
   );
 }
@@ -28,12 +31,14 @@ interface AppearanceFormProps {
     accentColor: string;
     density: string;
     animations: boolean;
+    language: Locale;
   };
 }
 
 export function AppearanceForm({ settings }: AppearanceFormProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [state, formAction] = useActionState(
     updateAppearanceAction,
     initialState,
@@ -41,48 +46,55 @@ export function AppearanceForm({ settings }: AppearanceFormProps) {
 
   useEffect(() => {
     if (state.status === "success") {
-      toast(state.message ?? "Appearance saved", "success");
+      toast(state.message ?? t.toasts.appearanceSaved, "success");
       router.refresh();
     }
-  }, [state.status, state.message, router, toast]);
+  }, [state.status, state.message, router, toast, t.toasts.appearanceSaved]);
 
   return (
     <form action={formAction} className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <label className="block text-sm text-zinc-300">
-          Theme
-          <Select
-            name="theme"
-            defaultValue={settings.theme}
-            className="mt-1.5"
-          >
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-            <option value="system">System</option>
+          {t.settings.theme}
+          <Select name="theme" defaultValue={settings.theme} className="mt-1.5">
+            <option value="dark">{t.settings.themeDark}</option>
+            <option value="light">{t.settings.themeLight}</option>
+            <option value="system">{t.settings.themeSystem}</option>
           </Select>
         </label>
         <label className="block text-sm text-zinc-300">
-          Accent
+          {t.settings.accent}
           <Select
             name="accentColor"
             defaultValue={settings.accentColor}
             className="mt-1.5"
           >
-            <option value="violet">Violet</option>
-            <option value="blue">Blue</option>
-            <option value="emerald">Emerald</option>
-            <option value="rose">Rose</option>
+            <option value="violet">{t.settings.accentViolet}</option>
+            <option value="blue">{t.settings.accentBlue}</option>
+            <option value="emerald">{t.settings.accentEmerald}</option>
+            <option value="rose">{t.settings.accentRose}</option>
           </Select>
         </label>
         <label className="block text-sm text-zinc-300">
-          Density
+          {t.settings.density}
           <Select
             name="density"
             defaultValue={settings.density}
             className="mt-1.5"
           >
-            <option value="comfortable">Comfortable</option>
-            <option value="compact">Compact</option>
+            <option value="comfortable">{t.settings.densityComfortable}</option>
+            <option value="compact">{t.settings.densityCompact}</option>
+          </Select>
+        </label>
+        <label className="block text-sm text-zinc-300">
+          {t.settings.language}
+          <Select
+            name="language"
+            defaultValue={settings.language}
+            className="mt-1.5"
+          >
+            <option value="ja">{t.settings.languageJa}</option>
+            <option value="en">{t.settings.languageEn}</option>
           </Select>
         </label>
       </div>
@@ -93,12 +105,9 @@ export function AppearanceForm({ settings }: AppearanceFormProps) {
           defaultChecked={settings.animations}
           className="size-4 rounded border-zinc-700"
         />
-        Enable animations
+        {t.settings.animations}
       </label>
-      <p className="text-xs text-zinc-500">
-        Preferences apply across the app shell immediately after save (theme,
-        accent, density, and motion).
-      </p>
+      <p className="text-xs text-zinc-500">{t.settings.appearanceHint}</p>
       {state.status === "error" ? (
         <p className="text-sm text-rose-400" role="alert">
           {state.message}

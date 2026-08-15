@@ -1,4 +1,7 @@
+"use client";
+
 import { cn, focusRingClass } from "@/lib/utils";
+import { useI18n } from "@/components/providers/locale-provider";
 
 /**
  * First focusable control for keyboard users to bypass chrome.
@@ -9,6 +12,7 @@ export function SkipToMain({
 }: {
   href?: string;
 }) {
+  const { t } = useI18n();
   return (
     <a
       href={href}
@@ -18,7 +22,7 @@ export function SkipToMain({
         focusRingClass,
       )}
     >
-      Skip to main content
+      {t.common.skipToMain}
     </a>
   );
 }

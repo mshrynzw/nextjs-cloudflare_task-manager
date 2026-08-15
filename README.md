@@ -17,10 +17,10 @@ Live Demo: [https://task-manager.iq87io25.workers.dev](https://task-manager.iq87
 
 ## Demo login
 
-| Field    | Value             |
-| -------- | ----------------- |
+| Field    | Value              |
+| -------- | ------------------ |
 | Email    | `demo@example.com` |
-| Password | `DemoPass123!`    |
+| Password | `DemoPass123!`     |
 
 ログイン画面にも同じ案内があります。
 
@@ -100,7 +100,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm db:seed:local`    | Portfolio seed (SQLite)         |
 | `pnpm db:seed:e2e`      | Minimal E2E seed                |
 | `pnpm db:seed:prod`     | Portfolio seed (prod D1, gated) |
-| `pnpm deploy`           | OpenNext build + Workers deploy |
+| `pnpm run deploy`       | OpenNext build + Workers deploy |
 
 ## Testing
 

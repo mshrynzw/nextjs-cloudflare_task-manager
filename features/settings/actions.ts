@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { auth } from "@/auth";
 import { ApiError } from "@/lib/api/errors";
 import {
@@ -9,10 +10,14 @@ import {
   updateUserBodySchema,
 } from "@/lib/api/request-schemas";
 import { getDb } from "@/lib/db/server";
+import { getI18n } from "@/lib/i18n/get-i18n";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { LOCALE_COOKIE, localeCookieOptions } from "@/lib/i18n/locale";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import {
   changeUserPassword,
   patchSettings,
+  updateCurrentUserLanguage,
   updateCurrentUserProfile,
 } from "@/lib/services/user-service";
 
@@ -24,8 +29,9 @@ export type SettingsActionState = {
   message?: string;
 };
 
-function unauthorized(): SettingsActionState {
-  return { status: "error", message: "Authentication required." };
+async function unauthorized(): Promise<SettingsActionState> {
+  const { t } = await getI18n();
+  return { status: "error", message: t.errors.authRequired };
 }
 
 export async function updateProfileAction(
@@ -37,6 +43,8 @@ export async function updateProfileAction(
   if (!userId) {
     return unauthorized();
   }
+
+  const { t } = await getI18n();
 
   const parsed = updateUserBodySchema.safeParse({
     name: formData.get("name") || null,
@@ -50,7 +58,7 @@ export async function updateProfileAction(
   if (!parsed.success) {
     return {
       status: "error",
-      message: "Check profile fields (website/image must be valid URLs).",
+      message: t.errors.profileFields,
     };
   }
 
@@ -60,7 +68,7 @@ export async function updateProfileAction(
     revalidatePath(`/profile/${userId}`);
     revalidatePath("/settings");
     revalidatePath("/settings/profile");
-    return { status: "success", message: "Profile updated." };
+    return { status: "success", message: t.toasts.profileUpdated };
   } catch (error) {
     if (error instanceof ApiError) {
       return { status: "error", message: error.message };
@@ -79,21 +87,32 @@ export async function updateAppearanceAction(
     return unauthorized();
   }
 
+  const { t } = await getI18n();
+
   const parsed = updateSettingsBodySchema.safeParse({
     theme: formData.get("theme") || undefined,
     accentColor: formData.get("accentColor") || undefined,
     density: formData.get("density") || undefined,
     animations: formData.get("animations") === "on",
+    language: formData.get("language") || undefined,
   });
 
   if (!parsed.success) {
-    return { status: "error", message: "Invalid appearance settings." };
+    return { status: "error", message: t.errors.invalidAppearance };
   }
 
+  const { language, ...appearance } = parsed.data;
+
   try {
-    await patchSettings(getDb(), userId, parsed.data);
+    await patchSettings(getDb(), userId, appearance);
+    if (language) {
+      await updateCurrentUserLanguage(getDb(), userId, language);
+      const cookieStore = await cookies();
+      cookieStore.set(LOCALE_COOKIE, language, localeCookieOptions());
+    }
+    revalidatePath("/", "layout");
     revalidatePath("/settings/appearance");
-    return { status: "success", message: "Appearance saved." };
+    return { status: "success", message: t.toasts.appearanceSaved };
   } catch (error) {
     if (error instanceof ApiError) {
       return { status: "error", message: error.message };
@@ -112,6 +131,8 @@ export async function updateNotificationSettingsAction(
     return unauthorized();
   }
 
+  const { t } = await getI18n();
+
   const parsed = updateSettingsBodySchema.safeParse({
     emailNotifications: formData.get("emailNotifications") === "on",
     inAppNotifications: formData.get("inAppNotifications") === "on",
@@ -121,13 +142,13 @@ export async function updateNotificationSettingsAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: "Invalid notification settings." };
+    return { status: "error", message: t.errors.invalidNotifications };
   }
 
   try {
     await patchSettings(getDb(), userId, parsed.data);
     revalidatePath("/settings/notifications");
-    return { status: "success", message: "Notification preferences saved." };
+    return { status: "success", message: t.toasts.notificationsSaved };
   } catch (error) {
     if (error instanceof ApiError) {
       return { status: "error", message: error.message };
@@ -146,6 +167,8 @@ export async function changePasswordAction(
     return unauthorized();
   }
 
+  const { t } = await getI18n();
+
   const rate = checkRateLimit(
     `auth:password:${userId}`,
     PASSWORD_CHANGE_LIMIT,
@@ -154,7 +177,9 @@ export async function changePasswordAction(
   if (!rate.allowed) {
     return {
       status: "error",
-      message: `Too many attempts. Try again in ${rate.retryAfterSeconds} seconds.`,
+      message: interpolate(t.errors.tooManyAttempts, {
+        seconds: rate.retryAfterSeconds,
+      }),
     };
   }
 
@@ -166,14 +191,14 @@ export async function changePasswordAction(
   if (!parsed.success) {
     return {
       status: "error",
-      message: "Passwords must be at least 8 characters.",
+      message: t.errors.passwordLength,
     };
   }
 
   try {
     await changeUserPassword(getDb(), userId, parsed.data);
     revalidatePath("/settings/security");
-    return { status: "success", message: "Password updated." };
+    return { status: "success", message: t.toasts.passwordUpdated };
   } catch (error) {
     if (error instanceof ApiError) {
       return { status: "error", message: error.message };

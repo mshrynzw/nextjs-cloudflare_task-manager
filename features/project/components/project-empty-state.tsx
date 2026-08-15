@@ -1,14 +1,29 @@
 import { FolderKanban } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { CreateProjectDialog } from "@/features/project/components/create-project-dialog";
+import type { WorkspaceMemberOption } from "@/features/project/components/workspace-member-picker";
+import { getI18n } from "@/lib/i18n/get-i18n";
 
-export function ProjectEmptyState() {
+export async function ProjectEmptyState({
+  workspaceMembers,
+  currentUserId,
+}: {
+  workspaceMembers: WorkspaceMemberOption[];
+  currentUserId: string;
+}) {
+  const { t } = await getI18n();
+
   return (
     <EmptyState
-      title="No projects yet"
-      description="Create your first project to start organizing tasks and tracking progress."
+      title={t.projects.emptyTitle}
+      description={t.projects.emptyDescription}
       icon={<FolderKanban className="size-6" aria-hidden />}
-      action={<CreateProjectDialog />}
+      action={
+        <CreateProjectDialog
+          workspaceMembers={workspaceMembers}
+          currentUserId={currentUserId}
+        />
+      }
     />
   );
 }

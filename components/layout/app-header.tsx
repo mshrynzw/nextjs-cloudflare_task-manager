@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +24,8 @@ export function AppHeader({
   userName,
   userEmail,
 }: AppHeaderProps) {
+  const { t } = useI18n();
+
   return (
     <header className="flex flex-col gap-4 border-b border-[color:var(--border-subtle)] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div className="flex items-start gap-3">
@@ -50,7 +55,7 @@ export function AppHeader({
                 </kbd>
               </span>
             </TooltipTrigger>
-            <TooltipContent>Open command palette</TooltipContent>
+            <TooltipContent>{t.header.commandPaletteHint}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
         <div className="hidden text-right text-xs sm:block">
@@ -58,7 +63,7 @@ export function AppHeader({
             href="/profile"
             className="font-medium text-zinc-200 hover:text-[color:var(--accent-1)] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)]"
           >
-            {userName ?? userEmail ?? "User"}
+            {userName ?? userEmail ?? t.common.user}
           </Link>
           {userEmail && userName ? (
             <p className="text-zinc-500">{userEmail}</p>

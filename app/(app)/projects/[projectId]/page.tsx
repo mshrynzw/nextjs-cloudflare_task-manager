@@ -3,24 +3,30 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { AppHeader } from "@/components/layout/app-header";
 import { buttonVariants } from "@/components/ui/button";
-import { AvatarGroup } from "@/features/project/components/avatar-group";
 import {
   ProjectPriorityBadge,
   ProjectStatusBadge,
+  ProjectVisibilityBadge,
 } from "@/features/project/components/project-badges";
 import { ProjectActionsMenu } from "@/features/project/components/project-actions-menu";
+import { ProjectMembersCard } from "@/features/project/components/project-members-card";
 import { ProgressBar } from "@/features/project/components/progress-bar";
 import { TaskEmptyState } from "@/features/task/components/task-empty-state";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Activity } from "lucide-react";
 import {
   formatProjectDeadline,
-  getInitials,
   isDeadlineOverdue,
 } from "@/features/project/utils/labels";
 import { ApiError } from "@/lib/api/errors";
 import { getDb } from "@/lib/db/server";
-import { getProject } from "@/lib/services/project-service";
+import { getI18n } from "@/lib/i18n/get-i18n";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { taskPriorityLabel, taskStatusLabel } from "@/lib/i18n/labels";
+import {
+  getProject,
+  getWorkspaceMembersForUser,
+} from "@/lib/services/project-service";
 import { getTasksForProject } from "@/lib/services/task-service";
 import { cn } from "@/lib/utils";
 
@@ -28,18 +34,11 @@ interface ProjectDetailPageProps {
   params: Promise<{ projectId: string }>;
 }
 
-const TASK_STATUS_LABELS: Record<string, string> = {
-  backlog: "Backlog",
-  todo: "To Do",
-  in_progress: "In Progress",
-  review: "Review",
-  done: "Done",
-};
-
 export default async function ProjectDetailPage({
   params,
 }: ProjectDetailPageProps) {
   const session = await auth();
+  const { t } = await getI18n();
   const { projectId } = await params;
   const userId = session!.user!.id!;
 
@@ -56,37 +55,41 @@ export default async function ProjectDetailPage({
     throw error;
   }
 
-  const tasks = await getTasksForProject(getDb(), userId, projectId, {
-    sort: "updatedAt",
-    order: "desc",
-    limit: 8,
-  });
+  const [tasks, workspaceMembers] = await Promise.all([
+    getTasksForProject(getDb(), userId, projectId, {
+      sort: "updatedAt",
+      order: "desc",
+      limit: 8,
+    }),
+    project.canManage
+      ? getWorkspaceMembersForUser(getDb(), userId, project.workspaceId)
+      : Promise.resolve([]),
+  ]);
   const recentTasks = tasks;
   const deadline = formatProjectDeadline(project.deadline);
   const overdue = isDeadlineOverdue(project.deadline);
-  const openTasks =
-    project.taskSummary.total - project.taskSummary.completed;
+  const openTasks = project.taskSummary.total - project.taskSummary.completed;
 
   return (
     <>
       <AppHeader
         title={project.name}
-        description="Project overview and progress."
+        description={t.project.overviewDescription}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
-        <nav aria-label="Breadcrumb" className="text-xs text-zinc-500">
+        <nav aria-label={t.common.breadcrumb} className="text-xs text-zinc-500">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
               <Link href="/dashboard" className="hover:text-zinc-300">
-                Dashboard
+                {t.common.dashboard}
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
               <Link href="/projects" className="hover:text-zinc-300">
-                Projects
+                {t.nav.projects}
               </Link>
             </li>
             <li aria-hidden>/</li>
@@ -108,19 +111,25 @@ export default async function ProjectDetailPage({
                 </h2>
                 <ProjectStatusBadge status={project.status} />
                 <ProjectPriorityBadge priority={project.priority} />
+                <ProjectVisibilityBadge visibility={project.visibility} />
               </div>
               <p className="max-w-2xl text-sm text-zinc-400">
-                {project.description?.trim() || "No description provided."}
+                {project.description?.trim() || t.project.noDescription}
               </p>
+              {!project.canEdit ? (
+                <p className="mt-3 text-xs text-zinc-500">
+                  {t.project.viewOnlyNotice}
+                </p>
+              ) : null}
               <p className="mt-3 text-xs text-zinc-500">
-                Deadline{" "}
+                {t.project.deadline}{" "}
                 <span
                   className={cn(
                     "tabular-nums",
                     overdue ? "text-rose-400" : "text-zinc-300",
                   )}
                 >
-                  {deadline ?? "—"}
+                  {deadline ?? t.common.dash}
                 </span>
               </p>
             </div>
@@ -129,31 +138,34 @@ export default async function ProjectDetailPage({
                 href={`/projects/${project.id}/board`}
                 className={cn(buttonVariants({ size: "sm" }))}
               >
-                Open board
+                {t.project.openBoard}
               </Link>
-              <ProjectActionsMenu
-                projectId={project.id}
-                projectName={project.name}
-              />
+              {project.canManage ? (
+                <ProjectActionsMenu
+                  projectId={project.id}
+                  projectName={project.name}
+                  visibility={project.visibility}
+                />
+              ) : null}
             </div>
           </div>
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <KpiCard label="Progress">
-            <ProgressBar value={project.progress} />
+          <KpiCard label={t.common.progress}>
+            <ProgressBar value={project.progress} label={t.common.progress} />
           </KpiCard>
-          <KpiCard label="Total tasks">
+          <KpiCard label={t.project.totalTasks}>
             <p className="text-2xl font-semibold tabular-nums text-zinc-50">
               {project.taskSummary.total}
             </p>
           </KpiCard>
-          <KpiCard label="Completed">
+          <KpiCard label={t.project.completed}>
             <p className="text-2xl font-semibold tabular-nums text-emerald-300">
               {project.taskSummary.completed}
             </p>
           </KpiCard>
-          <KpiCard label="Open">
+          <KpiCard label={t.project.open}>
             <p className="text-2xl font-semibold tabular-nums text-amber-300">
               {openTasks}
             </p>
@@ -166,9 +178,11 @@ export default async function ProjectDetailPage({
             className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5"
           >
             <div className="mb-4 flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium text-zinc-200">Recent tasks</h3>
+              <h3 className="text-sm font-medium text-zinc-200">
+                {t.project.recentTasks}
+              </h3>
               <span className="text-xs text-zinc-500">
-                {tasks.length} total
+                {interpolate(t.project.tasksTotal, { count: tasks.length })}
               </span>
             </div>
             {recentTasks.length === 0 ? (
@@ -190,11 +204,11 @@ export default async function ProjectDetailPage({
                         </Link>
                       </p>
                       <p className="mt-0.5 text-xs text-zinc-500">
-                        {TASK_STATUS_LABELS[task.status] ?? task.status}
+                        {taskStatusLabel(t, task.status)}
                       </p>
                     </div>
                     <span className="shrink-0 text-[11px] uppercase tracking-wide text-zinc-500">
-                      {task.priority}
+                      {taskPriorityLabel(t, task.priority)}
                     </span>
                   </li>
                 ))}
@@ -202,42 +216,23 @@ export default async function ProjectDetailPage({
             )}
           </div>
 
-          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-medium text-zinc-200">Members</h3>
-              <AvatarGroup members={project.members} max={5} />
-            </div>
-            {project.members.length === 0 ? (
-              <p className="text-sm text-zinc-500">No members assigned.</p>
-            ) : (
-              <ul className="space-y-3">
-                {project.members.map((member) => (
-                  <li key={member.id} className="flex items-center gap-3">
-                    <span className="flex size-8 items-center justify-center rounded-full bg-zinc-800 text-xs font-semibold text-zinc-200">
-                      {getInitials(member.name)}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm text-zinc-100">
-                        {member.name ?? "Member"}
-                      </p>
-                      <p className="text-xs capitalize text-zinc-500">
-                        {member.role}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <ProjectMembersCard
+            projectId={project.id}
+            members={project.members}
+            workspaceMembers={workspaceMembers}
+            canManage={project.canManage}
+          />
         </section>
 
         <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-          <h3 className="mb-3 text-sm font-medium text-zinc-200">Activity</h3>
+          <h3 className="mb-3 text-sm font-medium text-zinc-200">
+            {t.project.activity}
+          </h3>
           <EmptyState
             size="compact"
             className="border-0 bg-transparent px-0 py-8"
-            title="No activity yet"
-            description="Task events will appear here as your team works."
+            title={t.project.noActivityTitle}
+            description={t.project.noActivityDescription}
             icon={<Activity className="size-5" aria-hidden />}
           />
         </section>

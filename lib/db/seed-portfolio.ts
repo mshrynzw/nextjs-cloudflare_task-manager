@@ -3,7 +3,10 @@ import { and, eq, inArray } from "drizzle-orm";
 import type { AppDatabase } from "./client";
 import { createId, nowUnix } from "./id";
 import {
+  DEMO_PROJECT_NAME,
+  DEMO_TASK_TITLE,
   DEMO_USER_EMAIL,
+  DEMO_USER_NAME,
   DEMO_USER_PASSWORD,
 } from "./demo-credentials";
 import {
@@ -23,7 +26,13 @@ import {
   workspaces,
 } from "./schema";
 
-export { DEMO_USER_EMAIL, DEMO_USER_PASSWORD } from "./demo-credentials";
+export {
+  DEMO_PROJECT_NAME,
+  DEMO_TASK_TITLE,
+  DEMO_USER_EMAIL,
+  DEMO_USER_NAME,
+  DEMO_USER_PASSWORD,
+} from "./demo-credentials";
 
 export const PORTFOLIO_WORKSPACE_SLUG = "portfolio-demo";
 
@@ -47,7 +56,10 @@ async function insertRowsInChunks<T extends Record<string, unknown>>(
   rows: T[],
   paramsPerRow: number,
 ): Promise<void> {
-  const chunkSize = Math.max(1, Math.floor(D1_SAFE_BOUND_PARAMS / paramsPerRow));
+  const chunkSize = Math.max(
+    1,
+    Math.floor(D1_SAFE_BOUND_PARAMS / paramsPerRow),
+  );
   for (let index = 0; index < rows.length; index += chunkSize) {
     await insert(rows.slice(index, index + chunkSize));
   }
@@ -68,107 +80,107 @@ const MEMBER_SPECS = [
     email: "maya@demo.taskmanager.app",
     name: "Maya Chen",
     username: "maya",
-    jobTitle: "Product Designer",
+    jobTitle: "プロダクトデザイナー",
   },
   {
     email: "leo@demo.taskmanager.app",
     name: "Leo Okada",
     username: "leo",
-    jobTitle: "Frontend Engineer",
+    jobTitle: "フロントエンドエンジニア",
   },
   {
     email: "sofia@demo.taskmanager.app",
     name: "Sofia Rahman",
     username: "sofia",
-    jobTitle: "Backend Engineer",
+    jobTitle: "バックエンドエンジニア",
   },
   {
     email: "noah@demo.taskmanager.app",
     name: "Noah Berg",
     username: "noah",
-    jobTitle: "Engineering Manager",
+    jobTitle: "エンジニアリングマネージャー",
   },
   {
     email: "ava@demo.taskmanager.app",
     name: "Ava Rossi",
     username: "ava",
-    jobTitle: "QA Lead",
+    jobTitle: "QA リード",
   },
   {
     email: "kai@demo.taskmanager.app",
     name: "Kai Nakamura",
     username: "kai",
-    jobTitle: "Full-stack Engineer",
+    jobTitle: "フルスタックエンジニア",
   },
 ] as const;
 
 const PROJECT_SPECS = [
   {
-    name: "Website Redesign",
-    description: "Portfolio landing page refresh",
+    name: DEMO_PROJECT_NAME,
+    description: "ポートフォリオ用ランディングページの刷新",
     color: "#8B5CF6",
     status: "active",
     priority: "high",
   },
   {
-    name: "Mobile App Launch",
-    description: "iOS / Android MVP for field teams",
+    name: "モバイルアプリ公開",
+    description: "現場向け iOS / Android MVP",
     color: "#0EA5E9",
     status: "active",
     priority: "high",
   },
   {
-    name: "API Platform",
-    description: "Public REST API and developer portal",
+    name: "API プラットフォーム",
+    description: "公開 REST API と開発者ポータル",
     color: "#22C55E",
     status: "active",
     priority: "medium",
   },
   {
-    name: "Analytics Revamp",
-    description: "Dashboard charts and export pipeline",
+    name: "分析ダッシュボード刷新",
+    description: "チャートとエクスポート基盤の見直し",
     color: "#F59E0B",
     status: "active",
     priority: "medium",
   },
   {
-    name: "Customer Onboarding",
-    description: "Guided setup and checklist for new workspaces",
+    name: "顧客オンボーディング",
+    description: "新規ワークスペース向けの案内とチェックリスト",
     color: "#EC4899",
     status: "active",
     priority: "low",
   },
   {
-    name: "Billing Integration",
-    description: "Stripe subscriptions and invoices",
+    name: "請求連携",
+    description: "Stripe のサブスクリプションと請求書",
     color: "#14B8A6",
     status: "on_hold",
     priority: "medium",
   },
   {
-    name: "Security Hardening",
-    description: "CSP, rate limits, and audit trail",
+    name: "セキュリティ強化",
+    description: "CSP、レート制限、監査ログ",
     color: "#EF4444",
     status: "active",
     priority: "high",
   },
   {
-    name: "Docs Site",
-    description: "Public product and API documentation",
+    name: "ドキュメントサイト",
+    description: "公開プロダクトと API のドキュメント",
     color: "#6366F1",
     status: "active",
     priority: "low",
   },
   {
-    name: "Notification Center",
-    description: "In-app and email notification preferences",
+    name: "通知センター",
+    description: "アプリ内通知とメール通知の設定",
     color: "#A855F7",
     status: "completed",
     priority: "medium",
   },
   {
-    name: "Calendar Sync",
-    description: "Due dates and external calendar export",
+    name: "カレンダー同期",
+    description: "期限と外部カレンダーへのエクスポート",
     color: "#06B6D4",
     status: "active",
     priority: "low",
@@ -186,26 +198,26 @@ const ACTIONS = [
 ] as const;
 
 const TASK_TITLES = [
-  "Design login page",
-  "Wireframe dashboard overview",
-  "Implement project list filters",
-  "Kanban drag-and-drop polish",
-  "Task detail comments API",
-  "Add due date reminders",
-  "Calendar month view",
-  "Analytics completion trend",
-  "Member workload chart",
-  "Settings appearance tokens",
-  "Profile public page",
-  "Notification read-all endpoint",
-  "Authorize project membership",
-  "Seed portfolio demo data",
-  "Write E2E auth journey",
-  "OpenNext Workers deploy",
-  "D1 production migrations",
-  "Rate-limit login attempts",
-  "Empty state illustrations",
-  "Mobile nav accessibility",
+  DEMO_TASK_TITLE,
+  "ダッシュボード概要のワイヤーフレーム",
+  "プロジェクト一覧フィルタの実装",
+  "カンバンのドラッグ＆ドロップ改善",
+  "タスク詳細コメント API",
+  "期限リマインダーの追加",
+  "カレンダー月表示",
+  "完了トレンドの分析",
+  "メンバー負荷チャート",
+  "表示設定トークン",
+  "公開プロフィールページ",
+  "通知の一括既読エンドポイント",
+  "プロジェクトメンバー認可",
+  "ポートフォリオデモデータの投入",
+  "認証 E2E ジャーニーの作成",
+  "OpenNext Workers デプロイ",
+  "本番 D1 マイグレーション",
+  "ログイン試行のレート制限",
+  "空状態のイラスト",
+  "モバイルナビのアクセシビリティ",
 ];
 
 async function ensureUser(
@@ -251,7 +263,7 @@ async function ensureUser(
     passwordHash,
     role: "user",
     timezone: "UTC",
-    language: "en",
+    language: "ja",
     createdAt: input.now,
     updatedAt: input.now,
   });
@@ -343,9 +355,9 @@ export async function seedPortfolioData(
 
   const demoUserId = await ensureUser(db, {
     email: DEMO_USER_EMAIL,
-    name: "Demo User",
+    name: DEMO_USER_NAME,
     username: "demo",
-    jobTitle: "Product Owner",
+    jobTitle: "プロダクトオーナー",
     password: DEMO_USER_PASSWORD,
     now,
   });
@@ -386,9 +398,10 @@ export async function seedPortfolioData(
   const workspaceId = createId("workspace");
   await db.insert(workspaces).values({
     id: workspaceId,
-    name: "Vantage Demo",
+    name: "Vantage デモ",
     slug: PORTFOLIO_WORKSPACE_SLUG,
-    description: "Portfolio Live Demo workspace with sample projects and tasks",
+    description:
+      "サンプルのプロジェクトとタスクを含む Live Demo 用ワークスペース",
     createdBy: demoUserId,
     createdAt: now,
     updatedAt: now,
@@ -447,10 +460,11 @@ export async function seedPortfolioData(
       const status = STATUSES[(projectIndex + taskIndex) % STATUSES.length];
       const priority =
         PRIORITIES[(projectIndex * 3 + taskIndex) % PRIORITIES.length];
-      const assigneeId = allUserIds[(taskIndex + projectIndex) % allUserIds.length];
+      const assigneeId =
+        allUserIds[(taskIndex + projectIndex) % allUserIds.length];
       const title =
         projectIndex === 0 && taskIndex === 0
-          ? "Design login page"
+          ? DEMO_TASK_TITLE
           : TASK_TITLES[(projectIndex * 5 + taskIndex) % TASK_TITLES.length];
       const createdAt = now - (projectIndex * 5 + taskIndex) * DAY;
       const dueDate =
@@ -460,7 +474,7 @@ export async function seedPortfolioData(
         id: taskId,
         projectId,
         title,
-        description: `${title} for ${PROJECT_SPECS[projectIndex]?.name ?? "project"}`,
+        description: `${PROJECT_SPECS[projectIndex]?.name ?? "プロジェクト"}向け: ${title}`,
         status,
         priority,
         assigneeId,
@@ -483,8 +497,8 @@ export async function seedPortfolioData(
           authorId,
           content:
             c === 0
-              ? `Starting work on "${title}".`
-              : "Looks good — ready for review after the last polish pass.",
+              ? `「${title}」の作業を開始します。`
+              : "問題なさそうです。最終調整のあとレビューに出せます。",
           createdAt: createdAt + (c + 1) * 7200,
           updatedAt: createdAt + (c + 1) * 7200,
         });
@@ -510,7 +524,7 @@ export async function seedPortfolioData(
           id: createId("notification"),
           userId: assigneeId,
           type: "task_assigned",
-          title: "You were assigned a task",
+          title: "タスクが割り当てられました",
           body: title,
           entityType: "portfolio_seed",
           entityId: taskId,

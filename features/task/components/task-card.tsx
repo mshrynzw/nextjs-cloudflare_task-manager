@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/providers/locale-provider";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { taskPriorityLabel } from "@/lib/i18n/labels";
 import {
   formatDueDate,
-  TASK_PRIORITY_LABELS,
   type BoardMember,
   type BoardTask,
   type TaskPriority,
@@ -34,6 +38,7 @@ export function TaskCard({
   style,
   statusSelect,
 }: TaskCardProps) {
+  const { t } = useI18n();
   const priority = (
     task.priority in PRIORITY_STYLES ? task.priority : "medium"
   ) as TaskPriority;
@@ -61,7 +66,7 @@ export function TaskCard({
           <button
             type="button"
             className="shrink-0 rounded px-1.5 py-0.5 text-xs text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200"
-            aria-label={`Drag ${task.title}`}
+            aria-label={interpolate(t.board.drag, { title: task.title })}
             {...dragHandleProps}
           >
             ⋮⋮
@@ -82,17 +87,17 @@ export function TaskCard({
             PRIORITY_STYLES[priority],
           )}
         >
-          {TASK_PRIORITY_LABELS[priority]}
+          {taskPriorityLabel(t, priority)}
         </span>
         {due ? (
           <span className="text-[10px] tabular-nums text-zinc-500">
-            Due {due}
+            {interpolate(t.task.due, { date: due })}
           </span>
         ) : null}
         {assignee ? (
           <span
-            aria-label={assignee.name ?? "Assignee"}
-            title={assignee.name ?? "Assignee"}
+            aria-label={assignee.name ?? t.task.assignee}
+            title={assignee.name ?? t.task.assignee}
             className="ml-auto flex size-6 items-center justify-center rounded-full bg-zinc-800 text-[10px] font-semibold text-zinc-200"
           >
             <span aria-hidden>{getInitials(assignee.name)}</span>

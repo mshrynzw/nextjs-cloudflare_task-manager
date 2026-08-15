@@ -12,29 +12,32 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { useI18n } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 import {
   createTaskAction,
   type TaskActionState,
 } from "@/features/task/actions";
 import {
-  TASK_PRIORITY_LABELS,
-  TASK_STATUS_LABELS,
   TASK_STATUSES,
   type BoardMember,
+  type TaskPriority,
   type TaskStatus,
 } from "@/features/task/types";
 
 const initialState: TaskActionState = { status: "idle" };
+
+const PRIORITIES: TaskPriority[] = ["low", "medium", "high"];
 
 const fieldClassName =
   "mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none focus-visible:border-[color:var(--accent-ring)] focus-visible:ring-2 focus-visible:ring-[color:var(--accent-soft)]";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" loading={pending}>
-      {pending ? "Creating…" : "Create task"}
+      {pending ? t.common.creating : t.task.create}
     </Button>
   );
 }
@@ -59,6 +62,7 @@ function CreateTaskForm({
   defaultStatus: TaskStatus;
   onSuccess: () => void;
 }) {
+  const { t } = useI18n();
   const boundAction = createTaskAction.bind(null, projectId);
   const [state, formAction] = useActionState(
     async (prev: TaskActionState, formData: FormData) => {
@@ -74,17 +78,17 @@ function CreateTaskForm({
   return (
     <form action={formAction} className="mt-5 space-y-4">
       <label className="block text-sm text-zinc-300">
-        Title
+        {t.task.title}
         <Input
           name="title"
           required
           maxLength={200}
           className="mt-1.5"
-          placeholder="Design landing page"
+          placeholder={t.task.titlePlaceholder}
         />
       </label>
       <label className="block text-sm text-zinc-300">
-        Description
+        {t.task.description}
         <textarea
           name="description"
           rows={3}
@@ -94,7 +98,7 @@ function CreateTaskForm({
       </label>
       <div className="grid grid-cols-2 gap-3">
         <label className="block text-sm text-zinc-300">
-          Status
+          {t.task.status}
           <Select
             name="status"
             defaultValue={defaultStatus}
@@ -102,21 +106,17 @@ function CreateTaskForm({
           >
             {TASK_STATUSES.map((status) => (
               <option key={status} value={status}>
-                {TASK_STATUS_LABELS[status]}
+                {t.taskStatus[status]}
               </option>
             ))}
           </Select>
         </label>
         <label className="block text-sm text-zinc-300">
-          Priority
+          {t.task.priority}
           <Select name="priority" defaultValue="medium" className="mt-1.5">
-            {(
-              Object.keys(TASK_PRIORITY_LABELS) as Array<
-                keyof typeof TASK_PRIORITY_LABELS
-              >
-            ).map((priority) => (
+            {PRIORITIES.map((priority) => (
               <option key={priority} value={priority}>
-                {TASK_PRIORITY_LABELS[priority]}
+                {t.priority[priority]}
               </option>
             ))}
           </Select>
@@ -124,9 +124,9 @@ function CreateTaskForm({
       </div>
       <div className="grid grid-cols-2 gap-3">
         <label className="block text-sm text-zinc-300">
-          Assignee
+          {t.task.assignee}
           <Select name="assigneeId" defaultValue="" className="mt-1.5">
-            <option value="">Unassigned</option>
+            <option value="">{t.task.unassigned}</option>
             {members.map((member) => (
               <option key={member.id} value={member.id}>
                 {member.name ?? member.id}
@@ -135,7 +135,7 @@ function CreateTaskForm({
           </Select>
         </label>
         <label className="block text-sm text-zinc-300">
-          Due date
+          {t.task.dueDate}
           <Input type="date" name="dueDate" className="mt-1.5" />
         </label>
       </div>
@@ -146,7 +146,7 @@ function CreateTaskForm({
       ) : null}
       <div className="flex justify-end gap-2">
         <DialogClose className={cn(buttonVariants({ variant: "outline" }))}>
-          Cancel
+          {t.common.cancel}
         </DialogClose>
         <SubmitButton />
       </div>
@@ -162,6 +162,7 @@ export function CreateTaskDialog({
   onOpenChange,
   onCreated,
 }: CreateTaskDialogProps) {
+  const { t } = useI18n();
   return (
     <Dialog
       open={open}
@@ -171,10 +172,8 @@ export function CreateTaskDialog({
     >
       {open ? (
         <DialogPopup>
-          <DialogTitle>Create task</DialogTitle>
-          <DialogDescription>
-            Add a task to this project. You can change status and assignee later.
-          </DialogDescription>
+          <DialogTitle>{t.task.createTitle}</DialogTitle>
+          <DialogDescription>{t.task.createDescription}</DialogDescription>
           <CreateTaskForm
             key={`${projectId}-${defaultStatus}-${String(open)}`}
             projectId={projectId}
@@ -202,11 +201,12 @@ export function CreateTaskButton({
   members,
   onCreated,
 }: CreateTaskButtonProps) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
     <>
       <Button type="button" onClick={() => setOpen(true)}>
-        New Task
+        {t.task.newTask}
       </Button>
       <CreateTaskDialog
         projectId={projectId}

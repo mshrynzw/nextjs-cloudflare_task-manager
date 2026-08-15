@@ -4,6 +4,8 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
+import { intlLocale } from "@/lib/i18n/dates";
 import {
   addCommentAction,
   type TaskActionState,
@@ -14,9 +16,10 @@ const initialState: TaskActionState = { status: "idle" };
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" size="sm" disabled={pending}>
-      {pending ? "Posting…" : "Post comment"}
+      {pending ? t.task.posting : t.task.postComment}
     </Button>
   );
 }
@@ -32,13 +35,16 @@ interface CommentsSectionProps {
     authorImage: string | null;
     createdAt: number;
   }>;
+  canEdit?: boolean;
 }
 
 export function CommentsSection({
   projectId,
   taskId,
   comments,
+  canEdit = true,
 }: CommentsSectionProps) {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const boundAdd = addCommentAction.bind(null, projectId, taskId);
   const [state, formAction] = useActionState(boundAdd, initialState);
@@ -51,10 +57,12 @@ export function CommentsSection({
 
   return (
     <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-      <h2 className="mb-4 text-sm font-medium text-zinc-200">Comments</h2>
+      <h2 className="mb-4 text-sm font-medium text-zinc-200">
+        {t.task.comments}
+      </h2>
 
       {comments.length === 0 ? (
-        <p className="mb-4 text-sm text-zinc-500">No comments yet.</p>
+        <p className="mb-4 text-sm text-zinc-500">{t.task.noComments}</p>
       ) : (
         <ul className="mb-4 space-y-3">
           {comments.map((comment) => (
@@ -68,10 +76,12 @@ export function CommentsSection({
                 </span>
                 <div>
                   <p className="text-xs font-medium text-zinc-200">
-                    {comment.authorName ?? "Member"}
+                    {comment.authorName ?? t.common.member}
                   </p>
                   <p className="text-[10px] tabular-nums text-zinc-500">
-                    {new Date(comment.createdAt * 1000).toLocaleString()}
+                    {new Date(comment.createdAt * 1000).toLocaleString(
+                      intlLocale(locale),
+                    )}
                   </p>
                 </div>
               </div>
@@ -83,22 +93,26 @@ export function CommentsSection({
         </ul>
       )}
 
-      <form action={formAction} className="space-y-2">
-        <label className="block">
-          <span className="sr-only">Comment</span>
-          <textarea
-            name="content"
-            required
-            rows={3}
-            maxLength={5000}
-            placeholder="Write a comment…"
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none focus-visible:border-violet-500/50"
-          />
-        </label>
-        <div className="flex justify-end">
-          <SubmitButton />
-        </div>
-      </form>
+      {canEdit ? (
+        <form action={formAction} className="space-y-2">
+          <label className="block">
+            <span className="sr-only">{t.task.comment}</span>
+            <textarea
+              name="content"
+              required
+              rows={3}
+              maxLength={5000}
+              placeholder={t.task.commentPlaceholder}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none focus-visible:border-violet-500/50"
+            />
+          </label>
+          <div className="flex justify-end">
+            <SubmitButton />
+          </div>
+        </form>
+      ) : (
+        <p className="text-xs text-zinc-500">{t.project.viewOnlyNotice}</p>
+      )}
       {state.status === "error" ? (
         <p className="mt-2 text-sm text-rose-400" role="alert">
           {state.message}

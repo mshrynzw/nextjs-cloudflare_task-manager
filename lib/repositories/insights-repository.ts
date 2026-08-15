@@ -1,11 +1,30 @@
-import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, ne, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  lt,
+  lte,
+  ne,
+  or,
+  sql,
+} from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
+import {
+  canReadProjectSql,
+  projectMembershipJoin,
+  workspaceMembershipJoin,
+} from "@/lib/db/access";
 import {
   activities,
   projectMembers,
   projects,
   tasks,
   users,
+  workspaceMembers,
 } from "@/lib/db/schema";
 
 /** Lean task rows for analytics / insights (no description). */
@@ -29,14 +48,15 @@ export async function listAccessibleTasksForUser(
     })
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
+    .where(
       and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
+        isNull(tasks.archivedAt),
+        isNull(projects.archivedAt),
+        canReadProjectSql(),
       ),
     )
-    .where(and(isNull(tasks.archivedAt), isNull(projects.archivedAt)))
     .orderBy(desc(tasks.updatedAt))
     .all();
 }
@@ -58,14 +78,15 @@ export async function getAccessibleTaskKpis(
     })
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
+    .where(
       and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
+        isNull(tasks.archivedAt),
+        isNull(projects.archivedAt),
+        canReadProjectSql(),
       ),
     )
-    .where(and(isNull(tasks.archivedAt), isNull(projects.archivedAt)))
     .get();
 
   return {
@@ -99,17 +120,13 @@ export async function listAccessibleOpenTasksDueBetween(
     .select(taskSummarySelect)
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
-      and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
-      ),
-    )
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
       and(
         isNull(tasks.archivedAt),
         isNull(projects.archivedAt),
+        canReadProjectSql(),
         ne(tasks.status, "done"),
         gte(tasks.dueDate, startUnix),
         lte(tasks.dueDate, endUnix),
@@ -130,17 +147,13 @@ export async function listAccessibleOverdueTasks(
     .select(taskSummarySelect)
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
-      and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
-      ),
-    )
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
       and(
         isNull(tasks.archivedAt),
         isNull(projects.archivedAt),
+        canReadProjectSql(),
         ne(tasks.status, "done"),
         lt(tasks.dueDate, beforeUnix),
       ),
@@ -160,17 +173,13 @@ export async function listAccessibleUpcomingTasks(
     .select(taskSummarySelect)
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
-      and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
-      ),
-    )
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
       and(
         isNull(tasks.archivedAt),
         isNull(projects.archivedAt),
+        canReadProjectSql(),
         ne(tasks.status, "done"),
         gte(tasks.dueDate, afterUnix + 1),
       ),
@@ -196,14 +205,9 @@ export async function listAccessibleProjectsForUser(
       updatedAt: projects.updatedAt,
     })
     .from(projects)
-    .innerJoin(
-      projectMembers,
-      and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
-      ),
-    )
-    .where(isNull(projects.archivedAt))
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
+    .where(and(isNull(projects.archivedAt), canReadProjectSql()))
     .orderBy(desc(projects.updatedAt))
     .limit(limit)
     .all();
@@ -224,9 +228,7 @@ export async function getTaskCountsByProjectIds(
       completed: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
     })
     .from(tasks)
-    .where(
-      and(inArray(tasks.projectId, projectIds), isNull(tasks.archivedAt)),
-    )
+    .where(and(inArray(tasks.projectId, projectIds), isNull(tasks.archivedAt)))
     .groupBy(tasks.projectId)
     .all();
 }
@@ -250,14 +252,22 @@ export async function listRecentActivitiesForUser(
     })
     .from(activities)
     .innerJoin(users, eq(users.id, activities.userId))
-    .leftJoin(projects, eq(projects.id, activities.projectId))
     .innerJoin(
+      workspaceMembers,
+      and(
+        eq(workspaceMembers.workspaceId, activities.workspaceId),
+        eq(workspaceMembers.userId, userId),
+      ),
+    )
+    .leftJoin(projects, eq(projects.id, activities.projectId))
+    .leftJoin(
       projectMembers,
       and(
         eq(projectMembers.projectId, activities.projectId),
         eq(projectMembers.userId, userId),
       ),
     )
+    .where(or(isNull(activities.projectId), canReadProjectSql()))
     .orderBy(desc(activities.createdAt))
     .limit(limit)
     .all();
@@ -273,7 +283,7 @@ export async function listTasksInDateRange(
   const conditions = [
     isNull(tasks.archivedAt),
     isNull(projects.archivedAt),
-    eq(projectMembers.userId, userId),
+    canReadProjectSql(),
     gte(tasks.dueDate, startUnix),
     lte(tasks.dueDate, endUnix),
   ];
@@ -298,10 +308,8 @@ export async function listTasksInDateRange(
     })
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
-      eq(projectMembers.projectId, projects.id),
-    )
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(and(...conditions))
     .orderBy(tasks.dueDate)
     .all();
@@ -315,7 +323,7 @@ export async function listMemberWorkload(
   const conditions = [
     isNull(tasks.archivedAt),
     isNull(projects.archivedAt),
-    eq(projectMembers.userId, userId),
+    canReadProjectSql(),
   ];
   if (projectId) {
     conditions.push(eq(tasks.projectId, projectId));
@@ -330,13 +338,8 @@ export async function listMemberWorkload(
     })
     .from(tasks)
     .innerJoin(projects, eq(projects.id, tasks.projectId))
-    .innerJoin(
-      projectMembers,
-      and(
-        eq(projectMembers.projectId, projects.id),
-        eq(projectMembers.userId, userId),
-      ),
-    )
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .innerJoin(users, eq(users.id, tasks.assigneeId))
     .where(and(...conditions))
     .groupBy(users.id, users.name)

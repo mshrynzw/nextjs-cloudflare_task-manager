@@ -5,14 +5,10 @@ import { AppHeader } from "@/components/layout/app-header";
 import { ChecklistSection } from "@/features/task/components/checklist-section";
 import { CommentsSection } from "@/features/task/components/comments-section";
 import { TaskDetailForm } from "@/features/task/components/task-detail-form";
-import {
-  TASK_PRIORITY_LABELS,
-  TASK_STATUS_LABELS,
-  isTaskStatus,
-  type TaskPriority,
-} from "@/features/task/types";
 import { ApiError } from "@/lib/api/errors";
 import { getDb } from "@/lib/db/server";
+import { getI18n } from "@/lib/i18n/get-i18n";
+import { taskPriorityLabel, taskStatusLabel } from "@/lib/i18n/labels";
 import { getProject } from "@/lib/services/project-service";
 import { getTaskDetail } from "@/lib/services/task-service";
 
@@ -22,6 +18,7 @@ interface TaskDetailPageProps {
 
 export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const session = await auth();
+  const { t } = await getI18n();
   const { projectId, taskId } = await params;
   const userId = session!.user!.id!;
 
@@ -46,28 +43,23 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
     notFound();
   }
 
-  const statusLabel = isTaskStatus(task.status)
-    ? TASK_STATUS_LABELS[task.status]
-    : task.status;
-  const priorityLabel =
-    task.priority in TASK_PRIORITY_LABELS
-      ? TASK_PRIORITY_LABELS[task.priority as TaskPriority]
-      : task.priority;
+  const statusLabel = taskStatusLabel(t, task.status);
+  const priorityLabel = taskPriorityLabel(t, task.priority);
 
   return (
     <>
       <AppHeader
         title={task.title}
-        description="Task detail"
+        description={t.task.detail}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
-        <nav aria-label="Breadcrumb" className="text-xs text-zinc-500">
+        <nav aria-label={t.common.breadcrumb} className="text-xs text-zinc-500">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
               <Link href="/dashboard" className="hover:text-zinc-300">
-                Dashboard
+                {t.common.dashboard}
               </Link>
             </li>
             <li aria-hidden>/</li>
@@ -85,7 +77,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
                 href={`/projects/${project.id}/board`}
                 className="hover:text-zinc-300"
               >
-                Board
+                {t.board.crumb}
               </Link>
             </li>
             <li aria-hidden>/</li>
@@ -106,7 +98,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
           <div className="space-y-4">
             <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
               <h2 className="mb-4 text-sm font-medium text-zinc-200">
-                Task information
+                {t.task.information}
               </h2>
               <TaskDetailForm
                 projectId={projectId}
@@ -116,12 +108,14 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
                   name: member.name,
                   image: member.image,
                 }))}
+                canEdit={project.canEdit}
               />
             </section>
             <CommentsSection
               projectId={projectId}
               taskId={taskId}
               comments={task.comments}
+              canEdit={project.canEdit}
             />
           </div>
           <div className="space-y-4">
@@ -129,13 +123,14 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
               projectId={projectId}
               taskId={taskId}
               items={task.checklist}
+              canEdit={project.canEdit}
             />
             <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
               <h2 className="mb-3 text-sm font-medium text-zinc-200">
-                Activity
+                {t.task.activity}
               </h2>
               <p className="rounded-xl border border-dashed border-zinc-800 px-4 py-8 text-center text-sm text-zinc-500">
-                Activity history will appear when the timeline API is connected.
+                {t.task.activityPlaceholder}
               </p>
             </section>
           </div>

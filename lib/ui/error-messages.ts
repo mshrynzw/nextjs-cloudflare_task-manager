@@ -1,6 +1,8 @@
 import type { ApiErrorCode } from "@/lib/api/errors";
 import { ApiError } from "@/lib/api/errors";
 import type { ErrorStateVariant } from "@/components/feedback/error-state";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locale";
 
 export interface UserFacingError {
   variant: ErrorStateVariant;
@@ -9,65 +11,73 @@ export interface UserFacingError {
   code?: ApiErrorCode | "NETWORK_ERROR";
 }
 
-const CODE_MAP: Record<ApiErrorCode, UserFacingError> = {
-  UNAUTHORIZED: {
-    variant: "auth",
-    title: "Sign in required",
-    description: "Please sign in to continue.",
-    code: "UNAUTHORIZED",
-  },
-  FORBIDDEN: {
-    variant: "permission",
-    title: "Access denied",
-    description: "You do not have permission to perform this action.",
-    code: "FORBIDDEN",
-  },
-  NOT_FOUND: {
-    variant: "not-found",
-    title: "Not found",
-    description: "The requested resource could not be found.",
-    code: "NOT_FOUND",
-  },
-  VALIDATION_ERROR: {
-    variant: "generic",
-    title: "Invalid input",
-    description: "Please check your input and try again.",
-    code: "VALIDATION_ERROR",
-  },
-  RATE_LIMITED: {
-    variant: "generic",
-    title: "Too many attempts",
-    description: "Please wait a moment and try again.",
-    code: "RATE_LIMITED",
-  },
-  CONFLICT: {
-    variant: "generic",
-    title: "Conflict",
-    description: "This change conflicts with the current state. Refresh and retry.",
-    code: "CONFLICT",
-  },
-  INTERNAL_ERROR: {
-    variant: "database",
-    title: "Server error",
-    description: "Something went wrong on our side. Please try again.",
-    code: "INTERNAL_ERROR",
-  },
-};
+function codeMap(locale: Locale): Record<ApiErrorCode, UserFacingError> {
+  const t = getDictionary(locale);
+  return {
+    UNAUTHORIZED: {
+      variant: "auth",
+      title: t.errors.authTitle,
+      description: t.errors.authDescription,
+      code: "UNAUTHORIZED",
+    },
+    FORBIDDEN: {
+      variant: "permission",
+      title: t.errors.permissionTitle,
+      description: t.errors.permissionDescription,
+      code: "FORBIDDEN",
+    },
+    NOT_FOUND: {
+      variant: "not-found",
+      title: t.errors.notFoundTitle,
+      description: t.errors.notFoundDescription,
+      code: "NOT_FOUND",
+    },
+    VALIDATION_ERROR: {
+      variant: "generic",
+      title: t.errors.validationTitle,
+      description: t.errors.validationDescription,
+      code: "VALIDATION_ERROR",
+    },
+    RATE_LIMITED: {
+      variant: "generic",
+      title: t.errors.rateLimitedTitle,
+      description: t.errors.rateLimitedDescription,
+      code: "RATE_LIMITED",
+    },
+    CONFLICT: {
+      variant: "generic",
+      title: t.errors.conflictTitle,
+      description: t.errors.conflictDescription,
+      code: "CONFLICT",
+    },
+    INTERNAL_ERROR: {
+      variant: "database",
+      title: t.errors.serverTitle,
+      description: t.errors.serverDescription,
+      code: "INTERNAL_ERROR",
+    },
+  };
+}
 
-export function getUserFacingError(error: unknown): UserFacingError {
+export function getUserFacingError(
+  error: unknown,
+  locale: Locale = DEFAULT_LOCALE,
+): UserFacingError {
+  const t = getDictionary(locale);
+  const mapped = codeMap(locale);
+
   if (error instanceof ApiError) {
     return {
-      ...CODE_MAP[error.code],
-      description: error.message || CODE_MAP[error.code].description,
+      ...mapped[error.code],
+      description: error.message || mapped[error.code].description,
     };
   }
 
   if (error instanceof TypeError) {
     return {
       variant: "network",
-      title: "Connection problem",
-      description:
-        "We could not reach the server. Check your network and try again.",
+      title: t.errors.networkTitle,
+      description: t.errors.networkDescription,
       code: "NETWORK_ERROR",
     };
   }
@@ -75,16 +85,15 @@ export function getUserFacingError(error: unknown): UserFacingError {
   if (error instanceof Error && /fetch|network|Failed to fetch/i.test(error.message)) {
     return {
       variant: "network",
-      title: "Connection problem",
-      description:
-        "We could not reach the server. Check your network and try again.",
+      title: t.errors.networkTitle,
+      description: t.errors.networkDescription,
       code: "NETWORK_ERROR",
     };
   }
 
   return {
     variant: "generic",
-    title: "Something went wrong",
-    description: "An unexpected error occurred. Please try again.",
+    title: t.errors.genericTitle,
+    description: t.errors.genericDescription,
   };
 }

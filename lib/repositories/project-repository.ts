@@ -10,8 +10,19 @@ import {
   sql,
 } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
+import {
+  canReadProjectSql,
+  projectMembershipJoin,
+  workspaceMembershipJoin,
+} from "@/lib/db/access";
 import { createId, nowUnix } from "@/lib/db/id";
-import { projectMembers, projects, tasks, users } from "@/lib/db/schema";
+import {
+  projectMembers,
+  projects,
+  tasks,
+  users,
+  workspaceMembers,
+} from "@/lib/db/schema";
 
 export interface ListProjectsQuery {
   page: number;
@@ -29,7 +40,7 @@ export async function listProjectsForUser(
   query: ListProjectsQuery,
 ) {
   const offset = (query.page - 1) * query.limit;
-  const conditions = [eq(projectMembers.userId, userId)];
+  const conditions = [canReadProjectSql()];
 
   if (query.status === "archived") {
     conditions.push(eq(projects.status, "archived"));
@@ -62,7 +73,8 @@ export async function listProjectsForUser(
       role: projectMembers.role,
     })
     .from(projects)
-    .innerJoin(projectMembers, eq(projectMembers.projectId, projects.id))
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(whereClause)
     .orderBy(orderBy)
     .limit(query.limit)
@@ -72,7 +84,8 @@ export async function listProjectsForUser(
   const totalRow = await db
     .select({ value: count() })
     .from(projects)
-    .innerJoin(projectMembers, eq(projectMembers.projectId, projects.id))
+    .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(whereClause)
     .get();
 
@@ -97,6 +110,7 @@ export async function createProject(
     priority: string;
     deadline?: number | null;
     createdBy: string;
+    visibility?: string;
   },
 ) {
   const timestamp = nowUnix();
@@ -114,6 +128,7 @@ export async function createProject(
       priority: input.priority,
       deadline: input.deadline ?? null,
       createdBy: input.createdBy,
+      visibility: input.visibility ?? "workspace",
       createdAt: timestamp,
       updatedAt: timestamp,
     })
@@ -142,6 +157,7 @@ export async function updateProject(
     priority: string;
     deadline: number | null;
     archivedAt: number | null;
+    visibility: string;
   }>,
 ) {
   return db
@@ -229,6 +245,62 @@ export async function removeProjectMember(
       ),
     )
     .run();
+}
+
+export async function listWorkspaceMembers(
+  db: AppDatabase,
+  workspaceId: string,
+) {
+  return db
+    .select({
+      id: users.id,
+      name: users.name,
+      image: users.image,
+      role: workspaceMembers.role,
+    })
+    .from(workspaceMembers)
+    .innerJoin(users, eq(users.id, workspaceMembers.userId))
+    .where(eq(workspaceMembers.workspaceId, workspaceId))
+    .all();
+}
+
+export async function listWorkspaceMemberIds(
+  db: AppDatabase,
+  workspaceId: string,
+  userIds: string[],
+) {
+  if (userIds.length === 0) {
+    return [];
+  }
+
+  return db
+    .select({ userId: workspaceMembers.userId })
+    .from(workspaceMembers)
+    .where(
+      and(
+        eq(workspaceMembers.workspaceId, workspaceId),
+        inArray(workspaceMembers.userId, userIds),
+      ),
+    )
+    .all();
+}
+
+export async function countProjectMembersWithRole(
+  db: AppDatabase,
+  projectId: string,
+  role: string,
+) {
+  const row = await db
+    .select({ value: count() })
+    .from(projectMembers)
+    .where(
+      and(
+        eq(projectMembers.projectId, projectId),
+        eq(projectMembers.role, role),
+      ),
+    )
+    .get();
+  return row?.value ?? 0;
 }
 
 export async function getTaskCountsByProject(

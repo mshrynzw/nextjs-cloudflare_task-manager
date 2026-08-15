@@ -110,6 +110,7 @@ Dashboard / Projects / Website Renewal
 - Color
 - Status
 - Priority
+- Visibility
 - Deadline
 - Created Date
 - Last Updated
@@ -117,6 +118,7 @@ Dashboard / Projects / Website Renewal
 右上に
 
 - Edit
+- Visibility（Owner のみ。ワークスペース公開 / メンバー限定）
 - Archive
 - Delete
 
@@ -210,6 +212,12 @@ Repository はGitHubアイコン付きリンクで表示する。
 - Online Status
 
 クリックすると Profile画面へ遷移する。
+
+Owner はメンバーの追加・削除ができる。
+
+- 追加できるのは同じワークスペースのメンバーのみ
+- 最後の Owner は削除できない
+- メンバー管理は Owner のみ
 
 ---
 

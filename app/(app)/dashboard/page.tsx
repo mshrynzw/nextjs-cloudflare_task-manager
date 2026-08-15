@@ -5,69 +5,78 @@ import { StatCard } from "@/components/feedback/stat-card";
 import { buttonVariants } from "@/components/ui/button";
 import { ProgressBar } from "@/features/project/components/progress-bar";
 import { getDb } from "@/lib/db/server";
+import { getI18n, intlLocale } from "@/lib/i18n/get-i18n";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { activityLabel } from "@/lib/i18n/labels";
 import { getDashboardOverview } from "@/lib/services/dashboard-service";
 import { cn } from "@/lib/utils";
-
-const ACTION_LABELS: Record<string, string> = {
-  task_created: "created a task",
-  task_status_changed: "updated task status",
-  task_assignee_changed: "changed assignee",
-  comment_added: "added a comment",
-};
 
 export default async function DashboardPage() {
   const session = await auth();
   const userId = session!.user!.id!;
-  const data = await getDashboardOverview(getDb(), userId);
+  const [{ locale, t }, data] = await Promise.all([
+    getI18n(),
+    getDashboardOverview(getDb(), userId),
+  ]);
   const firstName =
-    session?.user?.name?.split(" ")[0] ?? session?.user?.email ?? "there";
+    session?.user?.name?.split(" ")[0] ??
+    session?.user?.email ??
+    t.dashboard.welcomeFallback;
 
   return (
     <>
       <AppHeader
-        title="Overview"
-        description={`Welcome back, ${firstName}.`}
+        title={t.dashboard.title}
+        description={interpolate(t.dashboard.welcome, { name: firstName })}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Today's tasks" value={data.kpis.todayTasks} />
+          <StatCard label={t.dashboard.todayTasks} value={data.kpis.todayTasks} />
           <StatCard
-            label="Completed today"
+            label={t.dashboard.completedToday}
             value={data.kpis.completedToday}
           />
           <StatCard
-            label="Completion rate"
+            label={t.dashboard.completionRate}
             value={`${data.kpis.completionRate}%`}
           />
           <StatCard
-            label="Overdue"
+            label={t.dashboard.overdue}
             value={data.kpis.overdueTasks}
-            hint={`${data.kpis.openTasks} open tasks`}
+            hint={interpolate(t.dashboard.openTasksHint, {
+              count: data.kpis.openTasks,
+            })}
           />
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Panel title="Today's tasks">
+          <Panel title={t.dashboard.todayTasksPanel}>
             <TaskList
               tasks={data.todayTasks}
-              empty="No tasks due today."
+              empty={t.dashboard.emptyToday}
+              dash={t.common.dash}
             />
           </Panel>
-          <Panel title="Overdue">
+          <Panel title={t.dashboard.overduePanel}>
             <TaskList
               tasks={data.overdueTasks}
-              empty="Nothing overdue. Nice work."
+              empty={t.dashboard.emptyOverdue}
+              dash={t.common.dash}
               danger
             />
           </Panel>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-          <Panel title="Project progress">
+          <Panel title={t.dashboard.projectProgress}>
             {data.projects.length === 0 ? (
-              <Empty text="No projects yet." href="/projects" label="Create one" />
+              <Empty
+                text={t.dashboard.emptyProjects}
+                href="/projects"
+                label={t.dashboard.createOne}
+              />
             ) : (
               <ul className="space-y-4">
                 {data.projects.map((project) => (
@@ -83,37 +92,40 @@ export default async function DashboardPage() {
                         {project.completedTaskCount}/{project.taskCount}
                       </span>
                     </div>
-                    <ProgressBar value={project.progress} />
+                    <ProgressBar
+                      value={project.progress}
+                      label={t.common.progress}
+                    />
                   </li>
                 ))}
               </ul>
             )}
           </Panel>
 
-          <Panel title="Upcoming">
+          <Panel title={t.dashboard.upcoming}>
             <TaskList
               tasks={data.upcomingTasks}
-              empty="No upcoming deadlines."
+              empty={t.dashboard.emptyUpcoming}
+              dash={t.common.dash}
             />
           </Panel>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-          <Panel title="Recent activity">
+          <Panel title={t.dashboard.recentActivity}>
             {data.activities.length === 0 ? (
-              <p className="text-sm text-zinc-500">No recent activity.</p>
+              <p className="text-sm text-zinc-500">{t.dashboard.emptyActivity}</p>
             ) : (
               <ul className="space-y-3">
                 {data.activities.map((item) => (
                   <li key={item.id} className="text-sm text-zinc-400">
                     <span className="text-zinc-200">
-                      {item.userName ?? "Someone"}
+                      {item.userName ?? t.common.someone}
                     </span>{" "}
-                    {ACTION_LABELS[item.action] ?? item.action}
+                    {activityLabel(t, item.action)}
                     {item.projectName ? (
                       <>
                         {" "}
-                        in{" "}
                         <Link
                           href={`/projects/${item.projectId}`}
                           className="text-violet-300 hover:underline"
@@ -123,7 +135,9 @@ export default async function DashboardPage() {
                       </>
                     ) : null}
                     <span className="mt-0.5 block text-[11px] tabular-nums text-zinc-600">
-                      {new Date(item.createdAt * 1000).toLocaleString()}
+                      {new Date(item.createdAt * 1000).toLocaleString(
+                        intlLocale(locale),
+                      )}
                     </span>
                   </li>
                 ))}
@@ -131,13 +145,13 @@ export default async function DashboardPage() {
             )}
           </Panel>
 
-          <Panel title="Quick actions">
+          <Panel title={t.dashboard.quickActions}>
             <div className="flex flex-col gap-2">
               <Link
                 href="/projects"
                 className={cn(buttonVariants({ size: "lg" }), "justify-start")}
               >
-                Browse projects
+                {t.dashboard.browseProjects}
               </Link>
               <Link
                 href="/calendar"
@@ -146,7 +160,7 @@ export default async function DashboardPage() {
                   "justify-start",
                 )}
               >
-                Open calendar
+                {t.dashboard.openCalendar}
               </Link>
               <Link
                 href="/analytics"
@@ -155,7 +169,7 @@ export default async function DashboardPage() {
                   "justify-start",
                 )}
               >
-                View analytics
+                {t.dashboard.viewAnalytics}
               </Link>
               <Link
                 href="/notifications"
@@ -164,7 +178,7 @@ export default async function DashboardPage() {
                   "justify-start",
                 )}
               >
-                Notifications
+                {t.dashboard.notifications}
               </Link>
             </div>
           </Panel>
@@ -192,6 +206,7 @@ function Panel({
 function TaskList({
   tasks,
   empty,
+  dash,
   danger,
 }: {
   tasks: Array<{
@@ -203,6 +218,7 @@ function TaskList({
     priority: string;
   }>;
   empty: string;
+  dash: string;
   danger?: boolean;
 }) {
   if (tasks.length === 0) {
@@ -228,7 +244,7 @@ function TaskList({
               danger ? "text-rose-400" : "text-zinc-500",
             )}
           >
-            {task.dueDate?.slice(0, 10) ?? "—"}
+            {task.dueDate?.slice(0, 10) ?? dash}
           </span>
         </li>
       ))}

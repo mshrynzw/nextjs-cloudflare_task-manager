@@ -17,6 +17,10 @@ import {
 } from "date-fns";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
+import { dateFnsLocale } from "@/lib/i18n/dates";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { taskPriorityLabel, taskStatusLabel } from "@/lib/i18n/labels";
 import { cn } from "@/lib/utils";
 
 export interface CalendarEvent {
@@ -43,13 +47,9 @@ const PRIORITY_DOT: Record<string, string> = {
   low: "bg-zinc-400",
 };
 
-const PRIORITY_LABEL: Record<string, string> = {
-  high: "High",
-  medium: "Medium",
-  low: "Low",
-};
-
 export function CalendarView({ events, initialDate }: CalendarViewProps) {
+  const { t, locale } = useI18n();
+  const dfLocale = dateFnsLocale(locale);
   const router = useRouter();
   const [cursor, setCursor] = useState(
     () => (initialDate ? new Date(initialDate) : new Date()),
@@ -58,6 +58,14 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
   const [selected, setSelected] = useState<Date>(
     () => (initialDate ? new Date(initialDate) : new Date()),
   );
+
+  const weekdayHeaders = useMemo(() => {
+    const start = startOfWeek(new Date(), { weekStartsOn: 1, locale: dfLocale });
+    return eachDayOfInterval({
+      start,
+      end: addDays(start, 6),
+    }).map((day) => format(day, "EEE", { locale: dfLocale }));
+  }, [dfLocale]);
 
   const navigateToMonth = (date: Date) => {
     setCursor(date);
@@ -78,14 +86,20 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
 
   const days = useMemo(() => {
     if (view === "week") {
-      const start = startOfWeek(selected, { weekStartsOn: 1 });
-      const end = endOfWeek(selected, { weekStartsOn: 1 });
+      const start = startOfWeek(selected, { weekStartsOn: 1, locale: dfLocale });
+      const end = endOfWeek(selected, { weekStartsOn: 1, locale: dfLocale });
       return eachDayOfInterval({ start, end });
     }
-    const start = startOfWeek(startOfMonth(cursor), { weekStartsOn: 1 });
-    const end = endOfWeek(endOfMonth(cursor), { weekStartsOn: 1 });
+    const start = startOfWeek(startOfMonth(cursor), {
+      weekStartsOn: 1,
+      locale: dfLocale,
+    });
+    const end = endOfWeek(endOfMonth(cursor), {
+      weekStartsOn: 1,
+      locale: dfLocale,
+    });
     return eachDayOfInterval({ start, end });
-  }, [cursor, selected, view]);
+  }, [cursor, selected, view, dfLocale]);
 
   const selectedKey = format(selected, "yyyy-MM-dd");
   const agenda = eventsByDay.get(selectedKey) ?? [];
@@ -109,7 +123,7 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                 }
               }}
             >
-              Prev
+              {t.calendar.prev}
             </Button>
             <Button
               type="button"
@@ -117,7 +131,7 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
               size="sm"
               onClick={() => navigateToMonth(new Date())}
             >
-              Today
+              {t.calendar.today}
             </Button>
             <Button
               type="button"
@@ -133,13 +147,19 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                 }
               }}
             >
-              Next
+              {t.calendar.next}
             </Button>
           </div>
           <h2 className="text-sm font-medium text-zinc-100">
             {view === "month"
-              ? format(cursor, "MMMM yyyy")
-              : `Week of ${format(startOfWeek(selected, { weekStartsOn: 1 }), "MMM d")}`}
+              ? format(cursor, "MMMM yyyy", { locale: dfLocale })
+              : interpolate(t.calendar.weekOf, {
+                  date: format(
+                    startOfWeek(selected, { weekStartsOn: 1, locale: dfLocale }),
+                    "MMM d",
+                    { locale: dfLocale },
+                  ),
+                })}
           </h2>
           <div className="flex gap-1 rounded-lg border border-zinc-800 p-1">
             {(["month", "week"] as const).map((mode) => (
@@ -148,20 +168,20 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                 type="button"
                 onClick={() => setView(mode)}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs capitalize",
+                  "rounded-md px-2.5 py-1 text-xs",
                   view === mode
                     ? "bg-violet-500/20 text-violet-200"
                     : "text-zinc-500 hover:text-zinc-300",
                 )}
               >
-                {mode}
+                {mode === "month" ? t.calendar.month : t.calendar.week}
               </button>
             ))}
           </div>
         </div>
 
         <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[11px] text-zinc-500">
-          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          {weekdayHeaders.map((day) => (
             <div key={day}>{day}</div>
           ))}
         </div>
@@ -208,7 +228,7 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                     <li
                       key={event.id}
                       className="truncate rounded px-1 py-0.5 text-[10px] text-zinc-300"
-                      title={`${event.title} (${PRIORITY_LABEL[event.priority] ?? event.priority})`}
+                      title={`${event.title} (${taskPriorityLabel(t, event.priority)})`}
                     >
                       <span
                         className={cn(
@@ -218,15 +238,18 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                         aria-hidden
                       />
                       <span className="sr-only">
-                        {PRIORITY_LABEL[event.priority] ?? event.priority}{" "}
-                        priority.{" "}
+                        {interpolate(t.calendar.prioritySr, {
+                          priority: taskPriorityLabel(t, event.priority),
+                        })}
                       </span>
                       {event.title}
                     </li>
                   ))}
                   {dayEvents.length > (view === "week" ? 4 : 2) ? (
                     <li className="text-[10px] text-zinc-600">
-                      +{dayEvents.length - (view === "week" ? 4 : 2)} more
+                      {interpolate(t.calendar.more, {
+                        count: dayEvents.length - (view === "week" ? 4 : 2),
+                      })}
                     </li>
                   ) : null}
                 </ul>
@@ -237,12 +260,14 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
       </section>
 
       <aside className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-        <h2 className="mb-1 text-sm font-medium text-zinc-200">Agenda</h2>
+        <h2 className="mb-1 text-sm font-medium text-zinc-200">
+          {t.calendar.agenda}
+        </h2>
         <p className="mb-4 text-xs text-zinc-500">
-          {format(selected, "EEEE, MMM d")}
+          {format(selected, "EEEE, MMM d", { locale: dfLocale })}
         </p>
         {agenda.length === 0 ? (
-          <p className="text-sm text-zinc-500">No tasks due this day.</p>
+          <p className="text-sm text-zinc-500">{t.calendar.emptyDay}</p>
         ) : (
           <ul className="space-y-3">
             {agenda.map((event) => (
@@ -257,8 +282,9 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
                   {event.title}
                 </Link>
                 <p className="mt-1 text-xs text-zinc-500">{event.projectName}</p>
-                <p className="mt-1 text-[11px] uppercase tracking-wide text-zinc-600">
-                  {event.priority} · {event.status}
+                <p className="mt-1 text-[11px] tracking-wide text-zinc-600">
+                  {taskPriorityLabel(t, event.priority)} ·{" "}
+                  {taskStatusLabel(t, event.status)}
                 </p>
               </li>
             ))}
@@ -267,23 +293,29 @@ export function CalendarView({ events, initialDate }: CalendarViewProps) {
 
         <div className="mt-6 border-t border-zinc-800 pt-4">
           <h3 className="mb-3 text-xs font-medium tracking-wide text-zinc-500 uppercase">
-            Upcoming
+            {t.calendar.upcoming}
           </h3>
-          <UpcomingList events={events} />
+          <UpcomingList events={events} emptyLabel={t.calendar.emptyUpcoming} />
         </div>
       </aside>
     </div>
   );
 }
 
-function UpcomingList({ events }: { events: CalendarEvent[] }) {
+function UpcomingList({
+  events,
+  emptyLabel,
+}: {
+  events: CalendarEvent[];
+  emptyLabel: string;
+}) {
   const today = format(new Date(), "yyyy-MM-dd");
   const upcoming = events
     .filter((event) => event.start >= today)
     .slice(0, 6);
 
   if (upcoming.length === 0) {
-    return <p className="text-sm text-zinc-500">No upcoming due dates.</p>;
+    return <p className="text-sm text-zinc-500">{emptyLabel}</p>;
   }
 
   return (

@@ -7,6 +7,7 @@ import { BoardToolbar } from "@/features/task/components/board-toolbar";
 import { TaskBoard } from "@/features/task/components/task-board";
 import { ApiError } from "@/lib/api/errors";
 import { getDb } from "@/lib/db/server";
+import { getI18n } from "@/lib/i18n/get-i18n";
 import { getProject } from "@/lib/services/project-service";
 import { getTasksForProject } from "@/lib/services/task-service";
 import type { BoardTask } from "@/features/task/types";
@@ -16,9 +17,7 @@ interface BoardPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function firstValue(
-  value: string | string[] | undefined,
-): string | undefined {
+function firstValue(value: string | string[] | undefined): string | undefined {
   if (Array.isArray(value)) {
     return value[0];
   }
@@ -30,6 +29,7 @@ export default async function ProjectBoardPage({
   searchParams,
 }: BoardPageProps) {
   const session = await auth();
+  const { t } = await getI18n();
   const { projectId } = await params;
   const raw = await searchParams;
   const search = firstValue(raw.search) ?? "";
@@ -74,23 +74,26 @@ export default async function ProjectBoardPage({
   return (
     <>
       <AppHeader
-        title="Task Board"
+        title={t.board.title}
         description={project.name}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex min-h-0 flex-1 flex-col px-4 py-6 sm:px-6">
-        <nav aria-label="Breadcrumb" className="mb-4 text-xs text-zinc-500">
+        <nav
+          aria-label={t.common.breadcrumb}
+          className="mb-4 text-xs text-zinc-500"
+        >
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
               <Link href="/dashboard" className="hover:text-zinc-300">
-                Dashboard
+                {t.common.dashboard}
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
               <Link href="/projects" className="hover:text-zinc-300">
-                Projects
+                {t.nav.projects}
               </Link>
             </li>
             <li aria-hidden>/</li>
@@ -103,7 +106,7 @@ export default async function ProjectBoardPage({
               </Link>
             </li>
             <li aria-hidden>/</li>
-            <li className="text-zinc-300">Board</li>
+            <li className="text-zinc-300">{t.board.crumb}</li>
           </ol>
         </nav>
 
@@ -127,6 +130,7 @@ export default async function ProjectBoardPage({
           }))}
           search={search}
           priority={priority}
+          canEdit={project.canEdit}
         />
       </main>
     </>

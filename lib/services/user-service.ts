@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { fromUnixDate } from "@/lib/api/schemas";
 import { forbidden, notFound, validationError } from "@/lib/api/errors";
 import type { AppDatabase } from "@/lib/db/client";
+import { parseLocale, type Locale } from "@/lib/i18n/locale";
 import {
   userSettings,
   workspaceMembers,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/db/schema";
 import {
   findUserById,
+  updateUserLanguage,
   updateUserPasswordHash,
   updateUserProfile,
 } from "@/lib/repositories/user-repository";
@@ -216,11 +218,13 @@ export async function getSettings(db: AppDatabase, userId: string) {
   if (!settings) {
     throw notFound("Settings not found");
   }
-  return serializeSettings(settings);
+  const user = await findUserById(db, userId);
+  return serializeSettings(settings, user?.language);
 }
 
 function serializeSettings(
   settings: NonNullable<Awaited<ReturnType<typeof findUserSettings>>>,
+  language?: string | null,
 ) {
   return {
     userId: settings.userId,
@@ -228,6 +232,7 @@ function serializeSettings(
     accentColor: settings.accentColor,
     density: settings.density,
     animations: Boolean(settings.animations),
+    language: parseLocale(language),
     emailNotifications: Boolean(settings.emailNotifications),
     inAppNotifications: Boolean(settings.inAppNotifications),
     taskNotifications: Boolean(settings.taskNotifications),
@@ -294,7 +299,20 @@ export async function patchSettings(
     throw notFound("Settings not found");
   }
 
-  return serializeSettings(updated);
+  const user = await findUserById(db, userId);
+  return serializeSettings(updated, user?.language);
+}
+
+export async function updateCurrentUserLanguage(
+  db: AppDatabase,
+  userId: string,
+  language: Locale,
+) {
+  const updated = await updateUserLanguage(db, userId, language);
+  if (!updated) {
+    throw notFound("User not found");
+  }
+  return parseLocale(updated.language);
 }
 
 export async function getUserWorkspaces(db: AppDatabase, userId: string) {

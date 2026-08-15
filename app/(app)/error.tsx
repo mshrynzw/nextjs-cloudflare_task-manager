@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { ErrorState } from "@/components/feedback/error-state";
+import { useI18n } from "@/components/providers/locale-provider";
 import { getUserFacingError } from "@/lib/ui/error-messages";
 
 interface AppErrorProps {
@@ -10,7 +11,8 @@ interface AppErrorProps {
 }
 
 export default function AppError({ error, reset }: AppErrorProps) {
-  const facing = getUserFacingError(error);
+  const { locale, t } = useI18n();
+  const facing = getUserFacingError(error, locale);
 
   useEffect(() => {
     console.error(error);
@@ -24,7 +26,7 @@ export default function AppError({ error, reset }: AppErrorProps) {
         description={facing.description}
         onRetry={reset}
         backHref="/dashboard"
-        backLabel="Back to dashboard"
+        backLabel={t.errors.backToDashboard}
       />
     </main>
   );

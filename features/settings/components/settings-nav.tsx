@@ -2,24 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 const SECTIONS = [
-  { href: "/settings/profile", label: "Profile" },
-  { href: "/settings/appearance", label: "Appearance" },
-  { href: "/settings/notifications", label: "Notifications" },
-  { href: "/settings/security", label: "Security" },
-  { href: "/settings/account", label: "Account" },
-  { href: "/settings/workspace", label: "Workspace" },
-  { href: "/settings/about", label: "About" },
+  { href: "/settings/profile", key: "profile" },
+  { href: "/settings/appearance", key: "appearance" },
+  { href: "/settings/notifications", key: "notifications" },
+  { href: "/settings/security", key: "security" },
+  { href: "/settings/account", key: "account" },
+  { href: "/settings/workspace", key: "workspace" },
+  { href: "/settings/about", key: "about" },
 ] as const;
 
 export function SettingsNav() {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   return (
     <nav
-      aria-label="Settings"
+      aria-label={t.settings.title}
       className="flex gap-1 overflow-x-auto pb-2 lg:w-48 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0"
     >
       {SECTIONS.map((section) => {
@@ -36,7 +38,7 @@ export function SettingsNav() {
             )}
             aria-current={isActive ? "page" : undefined}
           >
-            {section.label}
+            {t.settings.nav[section.key]}
           </Link>
         );
       })}

@@ -15,6 +15,7 @@ describe("API validation boundary", () => {
       description: "Portfolio landing page refresh",
     });
     expect(result.name).toBe("Website Redesign");
+    expect(result.visibility).toBe("workspace");
   });
 
   it("rejects an empty project name", () => {

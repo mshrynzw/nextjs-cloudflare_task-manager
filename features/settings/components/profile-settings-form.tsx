@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   updateProfileAction,
   type SettingsActionState,
@@ -16,9 +17,10 @@ const initialState: SettingsActionState = { status: "idle" };
 
 function SaveButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Save profile"}
+      {pending ? t.common.saving : t.settings.saveProfile}
     </Button>
   );
 }
@@ -36,6 +38,7 @@ interface ProfileSettingsFormProps {
 
 export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [state, formAction] = useActionState(updateProfileAction, initialState);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
     <form action={formAction} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm text-zinc-300">
-          Display name
+          {t.settings.displayName}
           <input
             name="name"
             defaultValue={profile.name ?? ""}
@@ -57,7 +60,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
           />
         </label>
         <label className="block text-sm text-zinc-300">
-          Username
+          {t.settings.username}
           <input
             name="username"
             defaultValue={profile.username ?? ""}
@@ -67,7 +70,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
         </label>
       </div>
       <label className="block text-sm text-zinc-300">
-        Job title
+        {t.settings.jobTitle}
         <input
           name="jobTitle"
           defaultValue={profile.jobTitle ?? ""}
@@ -76,7 +79,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
         />
       </label>
       <label className="block text-sm text-zinc-300">
-        Bio
+        {t.settings.bio}
         <textarea
           name="bio"
           rows={4}
@@ -87,7 +90,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm text-zinc-300">
-          Website
+          {t.settings.website}
           <input
             name="website"
             type="url"
@@ -97,7 +100,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
           />
         </label>
         <label className="block text-sm text-zinc-300">
-          Avatar URL
+          {t.settings.avatarUrl}
           <input
             name="image"
             type="url"

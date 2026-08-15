@@ -1,9 +1,11 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-import {
-  PROJECT_PRIORITY_LABELS,
-  PROJECT_STATUS_LABELS,
-  type ProjectPriority,
-  type ProjectStatus,
+import { useI18n } from "@/components/providers/locale-provider";
+import { projectPriorityLabel, projectStatusLabel } from "@/lib/i18n/labels";
+import type {
+  ProjectPriority,
+  ProjectStatus,
 } from "@/features/project/utils/labels";
 
 const STATUS_STYLES: Record<ProjectStatus, string> = {
@@ -21,6 +23,7 @@ const PRIORITY_STYLES: Record<ProjectPriority, string> = {
 };
 
 export function ProjectStatusBadge({ status }: { status: string }) {
+  const { t } = useI18n();
   const key = (status in STATUS_STYLES ? status : "planning") as ProjectStatus;
   return (
     <span
@@ -29,12 +32,13 @@ export function ProjectStatusBadge({ status }: { status: string }) {
         STATUS_STYLES[key],
       )}
     >
-      {PROJECT_STATUS_LABELS[key]}
+      {projectStatusLabel(t, key)}
     </span>
   );
 }
 
 export function ProjectPriorityBadge({ priority }: { priority: string }) {
+  const { t } = useI18n();
   const key = (
     priority in PRIORITY_STYLES ? priority : "medium"
   ) as ProjectPriority;
@@ -45,7 +49,19 @@ export function ProjectPriorityBadge({ priority }: { priority: string }) {
         PRIORITY_STYLES[key],
       )}
     >
-      {PROJECT_PRIORITY_LABELS[key]}
+      {projectPriorityLabel(t, key)}
+    </span>
+  );
+}
+
+export function ProjectVisibilityBadge({ visibility }: { visibility: string }) {
+  const { t } = useI18n();
+  if (visibility !== "members") {
+    return null;
+  }
+  return (
+    <span className="inline-flex rounded-md bg-zinc-500/15 px-2 py-0.5 text-[11px] font-medium text-zinc-300">
+      {t.projects.visibilityPrivate}
     </span>
   );
 }

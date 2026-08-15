@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { AppHeader } from "@/components/layout/app-header";
 import { SettingsNav } from "@/features/settings/components/settings-nav";
+import { getI18n } from "@/lib/i18n/get-i18n";
 
 export default async function SettingsLayout({
   children,
@@ -8,12 +9,13 @@ export default async function SettingsLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const { t } = await getI18n();
 
   return (
     <>
       <AppHeader
-        title="Settings"
-        description="Manage your account and preferences."
+        title={t.settings.title}
+        description={t.settings.description}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />

@@ -7,6 +7,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { getInitials } from "@/features/project/utils/labels";
 import { ApiError } from "@/lib/api/errors";
 import { getDb } from "@/lib/db/server";
+import { getI18n, intlLocale } from "@/lib/i18n/get-i18n";
+import { interpolate } from "@/lib/i18n/interpolate";
+import { activityLabel, taskStatusLabel } from "@/lib/i18n/labels";
 import { getProfilePageData } from "@/lib/services/user-service";
 import { cn } from "@/lib/utils";
 
@@ -14,15 +17,9 @@ interface ProfilePageProps {
   params: Promise<{ userId: string }>;
 }
 
-const ACTION_LABELS: Record<string, string> = {
-  task_created: "created a task",
-  task_status_changed: "updated a task",
-  task_assignee_changed: "changed an assignee",
-  comment_added: "commented",
-};
-
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const session = await auth();
+  const { locale, t } = await getI18n();
   const { userId } = await params;
   const actorId = session!.user!.id!;
 
@@ -42,21 +39,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <>
       <AppHeader
-        title={isOwnProfile ? "Your profile" : (profile.name ?? "Profile")}
-        description="Member profile and activity."
+        title={isOwnProfile ? t.profile.yourProfile : (profile.name ?? t.profile.title)}
+        description={t.profile.description}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
-        <nav aria-label="Breadcrumb" className="text-xs text-zinc-500">
+        <nav aria-label={t.common.breadcrumb} className="text-xs text-zinc-500">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
               <Link href="/dashboard" className="hover:text-zinc-300">
-                Dashboard
+                {t.common.dashboard}
               </Link>
             </li>
             <li aria-hidden>/</li>
-            <li className="text-zinc-300">{profile.name ?? "Profile"}</li>
+            <li className="text-zinc-300">{profile.name ?? t.profile.title}</li>
           </ol>
         </nav>
 
@@ -77,10 +74,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-zinc-50">
-                  {profile.name ?? "Unnamed user"}
+                  {profile.name ?? t.common.unnamed}
                 </h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                  {profile.jobTitle ?? "No job title"}
+                  {profile.jobTitle ?? t.profile.noJobTitle}
                   {profile.username ? ` · @${profile.username}` : null}
                 </p>
                 {profile.bio ? (
@@ -108,22 +105,22 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 href="/settings/profile"
                 className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
               >
-                Edit profile
+                {t.profile.edit}
               </Link>
             ) : null}
           </div>
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">
-          <StatCard label="Assigned tasks" value={stats.assignedTasks} />
-          <StatCard label="Completed" value={stats.completedTasks} />
-          <StatCard label="Projects" value={stats.projects} />
+          <StatCard label={t.profile.assignedTasks} value={stats.assignedTasks} />
+          <StatCard label={t.profile.completed} value={stats.completedTasks} />
+          <StatCard label={t.profile.projects} value={stats.projects} />
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Panel title="Assigned tasks">
+          <Panel title={t.profile.assignedTasks}>
             {assignedTasks.length === 0 ? (
-              <p className="text-sm text-zinc-500">No assigned tasks.</p>
+              <p className="text-sm text-zinc-500">{t.profile.noAssigned}</p>
             ) : (
               <ul className="divide-y divide-zinc-800/80">
                 {assignedTasks.map((task) => (
@@ -135,7 +132,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                       {task.title}
                     </Link>
                     <p className="mt-0.5 text-xs text-zinc-500">
-                      {task.projectName} · {task.status}
+                      {task.projectName} · {taskStatusLabel(t, task.status)}
                     </p>
                   </li>
                 ))}
@@ -143,9 +140,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             )}
           </Panel>
 
-          <Panel title="Projects">
+          <Panel title={t.profile.projects}>
             {projects.length === 0 ? (
-              <p className="text-sm text-zinc-500">No projects.</p>
+              <p className="text-sm text-zinc-500">{t.profile.noProjects}</p>
             ) : (
               <ul className="space-y-2">
                 {projects.map((project) => (
@@ -168,28 +165,31 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </Panel>
         </section>
 
-        <Panel title="Recent activity">
+        <Panel title={t.profile.recentActivity}>
           {activities.length === 0 ? (
-            <p className="text-sm text-zinc-500">No recent activity.</p>
+            <p className="text-sm text-zinc-500">{t.profile.noActivity}</p>
           ) : (
             <ul className="space-y-3">
               {activities.map((item) => (
                 <li key={item.id} className="text-sm text-zinc-400">
-                  {ACTION_LABELS[item.action] ?? item.action}
+                  {activityLabel(t, item.action)}
                   {item.projectName ? (
                     <>
                       {" "}
-                      in{" "}
                       <Link
                         href={`/projects/${item.projectId}`}
                         className="text-violet-300 hover:underline"
                       >
-                        {item.projectName}
+                        {interpolate(t.activity.inProject, {
+                          name: item.projectName,
+                        })}
                       </Link>
                     </>
                   ) : null}
                   <span className="mt-0.5 block text-[11px] tabular-nums text-zinc-600">
-                    {new Date(item.createdAt * 1000).toLocaleString()}
+                    {new Date(item.createdAt * 1000).toLocaleString(
+                      intlLocale(locale),
+                    )}
                   </span>
                 </li>
               ))}

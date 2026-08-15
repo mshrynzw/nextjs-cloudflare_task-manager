@@ -1,7 +1,13 @@
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import type { AppDatabase } from "./client";
-import { DEMO_USER_EMAIL, DEMO_USER_PASSWORD } from "./demo-credentials";
+import {
+  DEMO_PROJECT_NAME,
+  DEMO_TASK_TITLE,
+  DEMO_USER_EMAIL,
+  DEMO_USER_NAME,
+  DEMO_USER_PASSWORD,
+} from "./demo-credentials";
 import { createId, nowUnix } from "./id";
 import {
   activities,
@@ -23,7 +29,13 @@ export interface SeedResult {
   taskId: string;
 }
 
-export { DEMO_USER_EMAIL, DEMO_USER_PASSWORD };
+export {
+  DEMO_PROJECT_NAME,
+  DEMO_TASK_TITLE,
+  DEMO_USER_EMAIL,
+  DEMO_USER_NAME,
+  DEMO_USER_PASSWORD,
+};
 
 /**
  * Insert a minimal demo dataset for local development and tests.
@@ -44,13 +56,13 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
 
   await db.insert(users).values({
     id: userId,
-    name: "Demo User",
+    name: DEMO_USER_NAME,
     username: "demo",
     email: DEMO_USER_EMAIL,
     passwordHash,
     role: "user",
     timezone: "UTC",
-    language: "en",
+    language: "ja",
     createdAt: timestamp,
     updatedAt: timestamp,
   });
@@ -72,9 +84,9 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
 
   await db.insert(workspaces).values({
     id: workspaceId,
-    name: "Demo Workspace",
+    name: "デモワークスペース",
     slug: "demo",
-    description: "Local development workspace",
+    description: "ローカル開発用ワークスペース",
     createdBy: userId,
     createdAt: timestamp,
     updatedAt: timestamp,
@@ -92,8 +104,8 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
   await db.insert(projects).values({
     id: projectId,
     workspaceId,
-    name: "Website Redesign",
-    description: "Portfolio landing page refresh",
+    name: DEMO_PROJECT_NAME,
+    description: "ポートフォリオ用ランディングページの刷新",
     color: "#8B5CF6",
     status: "active",
     priority: "high",
@@ -113,8 +125,8 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
   await db.insert(tasks).values({
     id: taskId,
     projectId,
-    title: "Design login page",
-    description: "Implement the Login screen from the UI reference",
+    title: DEMO_TASK_TITLE,
+    description: "UI リファレンスに沿ってログイン画面を実装する",
     status: "todo",
     priority: "high",
     assigneeId: userId,
@@ -128,7 +140,7 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
     id: commentId,
     taskId,
     authorId: userId,
-    content: "Start with the gradient background and login card.",
+    content: "グラデーション背景とログインカードから着手してください。",
     createdAt: timestamp,
     updatedAt: timestamp,
   });
@@ -140,7 +152,7 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
     taskId,
     userId,
     action: "task_created",
-    metadata: JSON.stringify({ title: "Design login page" }),
+    metadata: JSON.stringify({ title: DEMO_TASK_TITLE }),
     createdAt: timestamp,
   });
 
@@ -148,8 +160,8 @@ export async function seedDemoData(db: AppDatabase): Promise<SeedResult> {
     id: notificationId,
     userId,
     type: "task_assigned",
-    title: "You were assigned a task",
-    body: "Design login page",
+    title: "タスクが割り当てられました",
+    body: DEMO_TASK_TITLE,
     entityType: "task",
     entityId: taskId,
     createdAt: timestamp,

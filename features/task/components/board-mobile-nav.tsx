@@ -1,10 +1,8 @@
 "use client";
 
-import {
-  TASK_STATUS_LABELS,
-  TASK_STATUSES,
-  type TaskStatus,
-} from "@/features/task/types";
+import { useI18n } from "@/components/providers/locale-provider";
+import { taskStatusLabel } from "@/lib/i18n/labels";
+import { TASK_STATUSES, type TaskStatus } from "@/features/task/types";
 import { cn, focusRingClass } from "@/lib/utils";
 
 interface BoardColumnTabsProps {
@@ -18,11 +16,13 @@ export function BoardColumnTabs({
   counts,
   onSelect,
 }: BoardColumnTabsProps) {
+  const { t } = useI18n();
+
   return (
     <div
       className="mb-3 flex gap-2 overflow-x-auto pb-1 md:hidden"
       role="tablist"
-      aria-label="Board columns"
+      aria-label={t.board.columns}
       onKeyDown={(event) => {
         const currentIndex = TASK_STATUSES.indexOf(activeStatus);
         if (event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -67,7 +67,7 @@ export function BoardColumnTabs({
                 : "border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:text-zinc-200",
             )}
           >
-            {TASK_STATUS_LABELS[status]}
+            {taskStatusLabel(t, status)}
             <span className="ml-1.5 tabular-nums text-zinc-500">
               {counts[status]}
             </span>

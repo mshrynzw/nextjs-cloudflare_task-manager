@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 export type ErrorStateVariant =
@@ -12,38 +13,6 @@ export type ErrorStateVariant =
   | "auth"
   | "not-found"
   | "database";
-
-const VARIANT_COPY: Record<
-  ErrorStateVariant,
-  { title: string; description: string }
-> = {
-  generic: {
-    title: "Something went wrong",
-    description: "An unexpected error occurred. You can try again or go back.",
-  },
-  network: {
-    title: "Connection problem",
-    description:
-      "We could not reach the server. Check your network and try again.",
-  },
-  permission: {
-    title: "Access denied",
-    description: "You do not have permission to view this resource.",
-  },
-  auth: {
-    title: "Sign in required",
-    description: "Your session may have expired. Please sign in again.",
-  },
-  "not-found": {
-    title: "Not found",
-    description: "This page or resource does not exist, or is no longer available.",
-  },
-  database: {
-    title: "Temporary data issue",
-    description:
-      "We could not load data right now. Please retry in a moment.",
-  },
-};
 
 interface ErrorStateProps {
   variant?: ErrorStateVariant;
@@ -61,12 +30,38 @@ export function ErrorState({
   title,
   description,
   onRetry,
-  retryLabel = "Try again",
+  retryLabel,
   backHref,
-  backLabel = "Go back",
+  backLabel,
   className,
 }: ErrorStateProps) {
-  const copy = VARIANT_COPY[variant];
+  const { t } = useI18n();
+  const copy = {
+    generic: {
+      title: t.errors.genericTitle,
+      description: t.errors.genericDescription,
+    },
+    network: {
+      title: t.errors.networkTitle,
+      description: t.errors.networkDescription,
+    },
+    permission: {
+      title: t.errors.permissionTitle,
+      description: t.errors.permissionDescription,
+    },
+    auth: {
+      title: t.errors.authTitle,
+      description: t.errors.authDescription,
+    },
+    "not-found": {
+      title: t.errors.notFoundTitle,
+      description: t.errors.notFoundDescription,
+    },
+    database: {
+      title: t.errors.databaseTitle,
+      description: t.errors.databaseDescription,
+    },
+  }[variant];
 
   return (
     <div
@@ -89,7 +84,7 @@ export function ErrorState({
         {onRetry ? (
           <Button type="button" onClick={onRetry}>
             <RefreshCw data-icon="inline-start" className="size-4" />
-            {retryLabel}
+            {retryLabel ?? t.errors.tryAgain}
           </Button>
         ) : null}
         {backHref ? (
@@ -97,7 +92,7 @@ export function ErrorState({
             href={backHref}
             className={cn(buttonVariants({ variant: "outline" }))}
           >
-            {backLabel}
+            {backLabel ?? t.errors.goBack}
           </Link>
         ) : null}
       </div>

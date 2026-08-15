@@ -4,11 +4,7 @@ import path from "node:path";
 import { createSqliteDatabase } from "@/lib/db/sqlite";
 import type { AppSchema } from "@/lib/db/client";
 import { createId, nowUnix } from "@/lib/db/id";
-import {
-  users,
-  workspaceMembers,
-  workspaces,
-} from "@/lib/db/schema";
+import { users, workspaceMembers, workspaces } from "@/lib/db/schema";
 
 export type TestDatabase = BetterSQLite3Database<AppSchema>;
 
@@ -20,7 +16,9 @@ export function createTestDatabase(): TestDatabase {
   return db;
 }
 
-export async function seedWorkspaceOwner(db: TestDatabase = createTestDatabase()) {
+export async function seedWorkspaceOwner(
+  db: TestDatabase = createTestDatabase(),
+) {
   const timestamp = nowUnix();
   const userId = createId("user");
   const outsiderId = createId("user");
@@ -60,4 +58,29 @@ export async function seedWorkspaceOwner(db: TestDatabase = createTestDatabase()
   });
 
   return { db, userId, outsiderId, workspaceId };
+}
+
+export async function seedWorkspaceOwnerAndMember(
+  db: TestDatabase = createTestDatabase(),
+) {
+  const seeded = await seedWorkspaceOwner(db);
+  const timestamp = nowUnix();
+  const memberId = createId("user");
+
+  await seeded.db.insert(users).values({
+    id: memberId,
+    email: "member@example.com",
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  });
+  await seeded.db.insert(workspaceMembers).values({
+    id: createId("wsmem"),
+    workspaceId: seeded.workspaceId,
+    userId: memberId,
+    role: "member",
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  });
+
+  return { ...seeded, memberId };
 }

@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   DEMO_USER_EMAIL,
   DEMO_USER_PASSWORD,
@@ -27,6 +28,7 @@ interface ApiErrorBody {
 async function completeCredentialsSignIn(
   email: string,
   password: string,
+  invalidMessage: string,
 ): Promise<string | undefined> {
   const result = await signIn("credentials", {
     email,
@@ -35,7 +37,7 @@ async function completeCredentialsSignIn(
   });
 
   if (result?.error) {
-    return "Invalid email or password.";
+    return invalidMessage;
   }
 
   // Full navigation so the App Router picks up the new session cookie.
@@ -46,6 +48,7 @@ async function completeCredentialsSignIn(
 async function registerAccount(
   email: string,
   password: string,
+  fallbackMessage: string,
 ): Promise<string | undefined> {
   const response = await fetch("/api/v1/auth/register", {
     method: "POST",
@@ -57,7 +60,7 @@ async function registerAccount(
     return undefined;
   }
 
-  let message = "Unable to create an account.";
+  let message = fallbackMessage;
   try {
     const body = (await response.json()) as ApiErrorBody;
     if (body.error?.message) {
@@ -74,6 +77,7 @@ export function LoginForm({
   githubEnabled,
   googleEnabled,
 }: LoginFormProps) {
+  const { t } = useI18n();
   const [signInError, setSignInError] = useState<string | undefined>();
   const [registerError, setRegisterError] = useState<string | undefined>();
   const [signInPending, setSignInPending] = useState(false);
@@ -94,12 +98,16 @@ export function LoginForm({
     const password = String(formData.get("password") ?? "");
 
     try {
-      const errorMessage = await completeCredentialsSignIn(email, password);
+      const errorMessage = await completeCredentialsSignIn(
+        email,
+        password,
+        t.auth.invalidCredentials,
+      );
       if (errorMessage) {
         setSignInError(errorMessage);
       }
     } catch {
-      setSignInError("Unable to sign in. Please try again.");
+      setSignInError(t.auth.unableSignIn);
     } finally {
       setSignInPending(false);
     }
@@ -117,20 +125,26 @@ export function LoginForm({
     const password = String(formData.get("password") ?? "");
 
     try {
-      const registerMessage = await registerAccount(email, password);
+      const registerMessage = await registerAccount(
+        email,
+        password,
+        t.auth.unableRegister,
+      );
       if (registerMessage) {
         setRegisterError(registerMessage);
         return;
       }
 
-      const errorMessage = await completeCredentialsSignIn(email, password);
+      const errorMessage = await completeCredentialsSignIn(
+        email,
+        password,
+        t.auth.invalidCredentials,
+      );
       if (errorMessage) {
-        setRegisterError(
-          "Account created, but sign-in failed. Try signing in.",
-        );
+        setRegisterError(t.auth.registerThenSignInFailed);
       }
     } catch {
-      setRegisterError("Unable to create an account. Please try again.");
+      setRegisterError(t.auth.registerRetry);
     } finally {
       setRegisterPending(false);
     }
@@ -148,7 +162,7 @@ export function LoginForm({
           <form onSubmit={handleSignIn} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="text-sm text-zinc-300">
-                Email
+                {t.auth.email}
               </label>
               <input
                 id="email"
@@ -162,7 +176,7 @@ export function LoginForm({
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="password" className="text-sm text-zinc-300">
-                Password
+                {t.auth.password}
               </label>
               <input
                 id="password"
@@ -186,12 +200,12 @@ export function LoginForm({
               disabled={signInPending}
               size="lg"
             >
-              {signInPending ? "Please wait…" : "Sign In"}
+              {signInPending ? t.common.pleaseWait : t.auth.signIn}
             </Button>
           </form>
 
           <p className="rounded-lg border border-zinc-800/80 bg-zinc-950/30 px-3 py-2 text-xs leading-relaxed text-zinc-500">
-            Demo:{" "}
+            {t.auth.demo}:{" "}
             <span className="select-all font-mono text-zinc-400">
               {DEMO_USER_EMAIL}
             </span>
@@ -203,7 +217,7 @@ export function LoginForm({
 
           <details className="rounded-lg border border-zinc-800 bg-zinc-950/40 p-3">
             <summary className="cursor-pointer text-sm text-zinc-400">
-              Create an account
+              {t.auth.createAccount}
             </summary>
             <form onSubmit={handleRegister} className="mt-4 flex flex-col gap-4">
               <div className="flex flex-col gap-2">
@@ -211,7 +225,7 @@ export function LoginForm({
                   htmlFor="register-email"
                   className="text-sm text-zinc-300"
                 >
-                  Email
+                  {t.auth.email}
                 </label>
                 <input
                   id="register-email"
@@ -228,7 +242,7 @@ export function LoginForm({
                   htmlFor="register-password"
                   className="text-sm text-zinc-300"
                 >
-                  Password
+                  {t.auth.password}
                 </label>
                 <input
                   id="register-password"
@@ -252,14 +266,14 @@ export function LoginForm({
                 disabled={registerPending}
                 size="lg"
               >
-                {registerPending ? "Please wait…" : "Create account"}
+                {registerPending ? t.common.pleaseWait : t.auth.createAccountButton}
               </Button>
             </form>
           </details>
         </>
       ) : (
         <p className="text-sm text-zinc-400">
-          Email authentication is disabled. Use an OAuth provider below.
+          {t.auth.emailDisabled}
         </p>
       )}
 
@@ -267,7 +281,7 @@ export function LoginForm({
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3 text-xs tracking-wide text-zinc-500 uppercase">
             <div className="h-px flex-1 bg-zinc-800" />
-            Or continue with
+            {t.auth.orContinueWith}
             <div className="h-px flex-1 bg-zinc-800" />
           </div>
           {githubEnabled ? (
@@ -280,8 +294,8 @@ export function LoginForm({
               onClick={() => handleOAuth("github")}
             >
               {oauthPending === "github"
-                ? "Please wait…"
-                : "Continue with GitHub"}
+                ? t.common.pleaseWait
+                : t.auth.continueGithub}
             </Button>
           ) : null}
           {googleEnabled ? (
@@ -294,8 +308,8 @@ export function LoginForm({
               onClick={() => handleOAuth("google")}
             >
               {oauthPending === "google"
-                ? "Please wait…"
-                : "Continue with Google"}
+                ? t.common.pleaseWait
+                : t.auth.continueGoogle}
             </Button>
           ) : null}
         </div>

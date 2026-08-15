@@ -10,25 +10,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
-const PRIORITY_OPTIONS = [
-  { value: "", label: "All priorities" },
-  { value: "high", label: "High" },
-  { value: "medium", label: "Medium" },
-  { value: "low", label: "Low" },
-] as const;
-
 export function BoardToolbar() {
+  const { t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const priority = searchParams.get("priority") ?? "";
+
+  const priorityOptions = [
+    { value: "", label: t.projects.allPriorities },
+    { value: "high", label: t.priority.high },
+    { value: "medium", label: t.priority.medium },
+    { value: "low", label: t.priority.low },
+  ] as const;
+
   const priorityLabel =
-    PRIORITY_OPTIONS.find((option) => option.value === priority)?.label ??
-    "All priorities";
+    priorityOptions.find((option) => option.value === priority)?.label ??
+    t.projects.allPriorities;
 
   function updateParams(updates: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -50,7 +53,7 @@ export function BoardToolbar() {
       className={`mb-4 flex flex-col gap-3 sm:flex-row sm:items-center ${isPending ? "opacity-70" : ""}`}
     >
       <label className="relative block min-w-0 flex-1">
-        <span className="sr-only">Search tasks</span>
+        <span className="sr-only">{t.board.search}</span>
         <Search
           className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-500"
           aria-hidden
@@ -58,7 +61,7 @@ export function BoardToolbar() {
         <Input
           type="search"
           defaultValue={searchParams.get("search") ?? ""}
-          placeholder="Search tasks…"
+          placeholder={t.board.searchPlaceholder}
           className="h-10 rounded-xl border-zinc-800 bg-zinc-950/60 pr-3 pl-10"
           onChange={(event) => {
             const value = event.target.value;
@@ -76,13 +79,13 @@ export function BoardToolbar() {
           className={cn(
             "inline-flex h-10 items-center justify-between gap-2 rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 text-sm text-zinc-200 outline-none focus-visible:border-[color:var(--accent-ring)]",
           )}
-          aria-label="Filter by priority"
+          aria-label={t.board.filterPriority}
         >
           {priorityLabel}
           <ChevronDown className="size-4 opacity-60" aria-hidden />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
-          {PRIORITY_OPTIONS.map((option) => (
+          {priorityOptions.map((option) => (
             <DropdownMenuItem
               key={option.value || "all"}
               onClick={() => updateParams({ priority: option.value })}

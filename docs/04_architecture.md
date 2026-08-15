@@ -299,6 +299,16 @@ URL Search Parameters
 
 ---
 
+## Locale
+
+UI 言語は Cookie `vantage_locale`（`ja` | `en`）で解決する。未設定時は日本語。
+
+ログイン後に Appearance で変更すると Cookie と `users.language` を同期する。
+
+日本語 UI は M PLUS 2、英語 UI は Geist を `html[lang]` で切り替える。
+
+---
+
 # 10. Data Flow
 
 基本的なデータフロー
@@ -484,20 +494,27 @@ Authorization
 What are you allowed to do?
 ```
 
-Project単位でMembershipを確認する。
+Projectの閲覧は、公開範囲（`visibility`）と Membership の組み合わせで確認する。
 
 ```text
 User
  │
  ▼
-Project Membership
+Workspace Membership
  │
  ▼
-Role
+Project Membership または visibility = workspace
+ │
+ ▼
+Role（変更操作のみ Project Membership）
  │
  ▼
 Permission
 ```
+
+- `visibility = workspace`（既定）: ワークスペースメンバーはプロジェクト情報・タスクを閲覧できる
+- `visibility = members`: プロジェクトメンバーのみ閲覧できる
+- 作成・更新・削除・コメント投稿などの変更は、公開範囲に関係なくプロジェクトメンバーのロールに従う
 
 ---
 

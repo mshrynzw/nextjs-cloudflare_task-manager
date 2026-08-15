@@ -4,6 +4,7 @@ import {
   paginationSchema,
   projectPrioritySchema,
   projectStatusSchema,
+  projectVisibilitySchema,
   taskPrioritySchema,
   taskStatusSchema,
 } from "@/lib/api/schemas";
@@ -36,6 +37,8 @@ export const createProjectBodySchema = z.object({
   priority: projectPrioritySchema.default("medium"),
   color: hexColorSchema.default("#4f7cff"),
   deadline: z.string().optional().nullable(),
+  visibility: projectVisibilitySchema.default("workspace"),
+  memberIds: z.array(z.string().min(1).max(64)).max(50).optional(),
 });
 
 export const updateProjectBodySchema = z.object({
@@ -45,11 +48,26 @@ export const updateProjectBodySchema = z.object({
   priority: projectPrioritySchema.optional(),
   color: hexColorSchema.optional(),
   deadline: z.string().nullable().optional(),
+  visibility: projectVisibilitySchema.optional(),
 });
 
 export const addMemberBodySchema = z.object({
   userId: z.string().min(1),
   role: membershipRoleSchema.default("member"),
+});
+
+export const addWorkspaceMemberBodySchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email()
+    .max(320)
+    .transform((value) => value.toLowerCase()),
+  role: membershipRoleSchema.default("member"),
+});
+
+export const updateWorkspaceMemberBodySchema = z.object({
+  role: membershipRoleSchema,
 });
 
 export const listTasksQuerySchema = z.object({
@@ -133,6 +151,7 @@ export const updateSettingsBodySchema = z.object({
   accentColor: z.enum(["violet", "blue", "emerald", "rose"]).optional(),
   density: z.enum(["comfortable", "compact"]).optional(),
   animations: z.boolean().optional(),
+  language: z.enum(["ja", "en"]).optional(),
   emailNotifications: z.boolean().optional(),
   inAppNotifications: z.boolean().optional(),
   taskNotifications: z.boolean().optional(),

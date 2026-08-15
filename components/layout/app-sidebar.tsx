@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, focusRingClass } from "@/lib/utils";
-import { APP_NAV_ITEMS } from "@/components/layout/nav-items";
+import { APP_NAV_ITEMS, navLabel } from "@/components/layout/nav-items";
+import { useI18n } from "@/components/providers/locale-provider";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-[color:var(--border-subtle)] bg-[color:var(--bg-surface)]/70 px-3 py-5 backdrop-blur md:flex">
@@ -22,7 +24,7 @@ export function AppSidebar() {
         </span>
       </div>
 
-      <nav aria-label="Main" className="flex flex-1 flex-col gap-1">
+      <nav aria-label={t.nav.main} className="flex flex-1 flex-col gap-1">
         {APP_NAV_ITEMS.filter((item) => item.href !== "/profile").map(
           (item) => {
             const Icon = item.icon;
@@ -49,7 +51,7 @@ export function AppSidebar() {
                   />
                 ) : null}
                 <Icon className="size-4" aria-hidden />
-                {item.label}
+                {navLabel(t, item.labelKey)}
               </Link>
             );
           },

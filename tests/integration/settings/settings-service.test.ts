@@ -7,6 +7,7 @@ import {
   getSettings,
   getUserPublicProfile,
   patchSettings,
+  updateCurrentUserLanguage,
   updateCurrentUserProfile,
 } from "@/lib/services/user-service";
 import { createTestDatabase } from "../../helpers/db";
@@ -65,6 +66,15 @@ describe("settings and profile services", () => {
 
     const loaded = await getSettings(db, userId);
     expect(loaded.theme).toBe("light");
+    expect(loaded.language).toBe("ja");
+  });
+
+  it("updates the user language preference", async () => {
+    const { db, userId } = await seedUser();
+    const language = await updateCurrentUserLanguage(db, userId, "en");
+    expect(language).toBe("en");
+    const loaded = await getSettings(db, userId);
+    expect(loaded.language).toBe("en");
   });
 
   it("changes password when the current password is valid", async () => {

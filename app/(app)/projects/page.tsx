@@ -10,23 +10,29 @@ import { ProjectPagination } from "@/features/project/components/project-paginat
 import { ProjectToolbar } from "@/features/project/components/project-toolbar";
 import { listProjectsQuerySchema } from "@/lib/api/request-schemas";
 import { getDb } from "@/lib/db/server";
-import { getProjects } from "@/lib/services/project-service";
+import { getI18n } from "@/lib/i18n/get-i18n";
+import {
+  getProjects,
+  getWorkspaceMembersForUser,
+  resolveDefaultWorkspaceId,
+} from "@/lib/services/project-service";
 
 interface ProjectsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function firstValue(
-  value: string | string[] | undefined,
-): string | undefined {
+function firstValue(value: string | string[] | undefined): string | undefined {
   if (Array.isArray(value)) {
     return value[0];
   }
   return value;
 }
 
-export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+export default async function ProjectsPage({
+  searchParams,
+}: ProjectsPageProps) {
   const session = await auth();
+  const { t } = await getI18n();
   const raw = await searchParams;
   const query = listProjectsQuerySchema.parse({
     page: firstValue(raw.page),
@@ -39,6 +45,11 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   });
 
   const result = await getProjects(getDb(), session!.user!.id!, query);
+  const userId = session!.user!.id!;
+  const workspaceId = await resolveDefaultWorkspaceId(getDb(), userId);
+  const workspaceMembers = workspaceId
+    ? await getWorkspaceMembersForUser(getDb(), userId, workspaceId)
+    : [];
   const filterParams = {
     search: query.search,
     status: query.status,
@@ -51,8 +62,8 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   return (
     <>
       <AppHeader
-        title="Projects"
-        description="Search, filter, and manage your projects."
+        title={t.projects.title}
+        description={t.projects.description}
         userName={session?.user?.name}
         userEmail={session?.user?.email}
       />
@@ -63,18 +74,24 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               <ProjectToolbar />
             </div>
           </Suspense>
-          <CreateProjectDialog />
+          <CreateProjectDialog
+            workspaceMembers={workspaceMembers}
+            currentUserId={userId}
+          />
         </div>
 
         {result.data.length === 0 ? (
           query.search || query.status || query.priority ? (
             <SearchEmptyState
-              title="No matching projects"
-              description="Try clearing search or filters."
+              title={t.projects.noMatching}
+              description={t.projects.noMatchingDescription}
               clearHref="/projects"
             />
           ) : (
-            <ProjectEmptyState />
+            <ProjectEmptyState
+              workspaceMembers={workspaceMembers}
+              currentUserId={userId}
+            />
           )
         ) : (
           <>

@@ -6,6 +6,7 @@ describe("getUserFacingError", () => {
   it("maps API permission errors", () => {
     const result = getUserFacingError(
       new ApiError("FORBIDDEN", "Project access denied", 403),
+      "en",
     );
     expect(result.variant).toBe("permission");
     expect(result.code).toBe("FORBIDDEN");
@@ -13,13 +14,13 @@ describe("getUserFacingError", () => {
   });
 
   it("maps network TypeErrors", () => {
-    const result = getUserFacingError(new TypeError("Failed to fetch"));
+    const result = getUserFacingError(new TypeError("Failed to fetch"), "en");
     expect(result.variant).toBe("network");
     expect(result.code).toBe("NETWORK_ERROR");
   });
 
   it("falls back for unknown errors", () => {
-    const result = getUserFacingError(new Error("boom"));
+    const result = getUserFacingError(new Error("boom"), "en");
     expect(result.variant).toBe("generic");
   });
 });

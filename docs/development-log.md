@@ -1899,3 +1899,88 @@ Live Demo 向けのリッチなデモデータ、README、デモログイン案�
 - ルート `/` は従来どおり login / dashboard redirect（ランディングは作らない）
 - 本番 seed は `getPlatformProxy` remote がハングするため、D1 HTTP API クライアント（`scripts/http-d1.ts`）を採用。`CONFIRM_PROD_SEED=yes pnpm db:seed:prod` で投入済み（Projects 10 / Tasks 75 / Comments 106 / Activities 190）
 - 追記: Live Demo 手動 Formal QA 完了（Functional / Visual / Auth 境界）。README スクリーンショット追加済み。Lighthouse は未計測のまま任意
+
+---
+
+# Phase 18 — Japanese / English UI
+
+## Date
+
+2026-08-15
+
+## Summary
+
+UI 文言を日本語既定にし、Settings → Appearance で English に切り替えられるようにした。日本語時は M PLUS 2、英語時は Geist を使う。
+
+## Details
+
+- 依存追加なし。`lib/i18n` の辞書 + Cookie `vantage_locale` + `users.language`
+- 未ログイン含む初回表示は日本語（Cookie 未設定時）
+- Appearance の Language セレクトで `ja` / `en` を保存し、Cookie と DB を同期
+- `next/font/google` の `M_PLUS_2` を追加。`html[lang]` で `--font-sans` を切替
+- ユーザー生成コンテンツ（プロジェクト名、タスク名など）は翻訳しない
+- E2E は既定日本語ラベルに合わせて更新
+- 追記: ポートフォリオ / E2E seed の表示文言を日本語化（`seedPortfolioData` / `seedDemoData`）。本番反映は `CONFIRM_PROD_SEED=yes pnpm db:seed:prod`
+
+---
+
+# Phase 19 — Project visibility
+
+## Date
+
+2026-08-15
+
+## Summary
+
+プロジェクトに公開範囲（`visibility`）を追加した。既定はワークスペース内公開で、メンバー限定に切り替えられる。
+
+## Details
+
+- `projects.visibility`: `workspace`（既定）/ `members`
+- 閲覧: プロジェクトメンバー、または `workspace` かつ同一ワークスペースメンバー
+- 変更: 公開範囲に関係なくプロジェクトメンバーのロールに従う。`visibility` 変更は Owner のみ
+- Dashboard / Calendar / Analytics / Profile の集計も同じ閲覧境界を使う
+- UI: 作成ダイアログの「メンバー以外に非公開」チェック、詳細の Owner 向け切替、非公開バッジ
+
+---
+
+# Phase 20 — Project member management
+
+## Date
+
+2026-08-15
+
+## Summary
+
+プロジェクトの作成画面と詳細画面から、メンバーの追加・削除ができるようにした。
+
+## Details
+
+- Owner のみがメンバーを管理できる
+- 追加できるのは同じワークスペースのメンバーのみ
+- 最後の Owner は削除できない
+- 作成時は `memberIds` で初期メンバーを指定できる（作成者は Owner、追加メンバーは `member`）
+- `GET /api/v1/workspaces/:workspaceId/members` を候補一覧用に追加（email は返さない）
+
+---
+
+# Phase 21 — Workspace member management
+
+## Date
+
+2026-08-15
+
+## Summary
+
+Settings → Workspace から、ワークスペースメンバーの追加・ロール変更・削除ができるようにした。
+
+## Details
+
+- Workspace Owner のみがメンバーを管理できる
+- 追加は登録済みユーザーのメールアドレス指定。未登録への招待は行わない
+- ロールは `owner` / `member` / `viewer`
+- 最後の Owner は削除できず、ロールも変更できない
+- ワークスペースから外すと、そのワークスペース内のプロジェクトメンバーシップも削除し、担当タスクを未割り当てにする
+- 一覧 API は従来どおり email を返さない
+
+---

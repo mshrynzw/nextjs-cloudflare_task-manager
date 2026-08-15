@@ -849,7 +849,6 @@ Email Notification
 Push Notification
 Payment
 Native Mobile App
-Multi-language
 Advanced Automation
 Enterprise SSO
 ```

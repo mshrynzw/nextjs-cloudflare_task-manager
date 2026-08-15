@@ -15,6 +15,13 @@
       "when": 1786186408231,
       "tag": "0001_auth_phase3",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786784826760,
+      "tag": "0002_project_visibility",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,10 @@
 import { forbidden, notFound } from "@/lib/api/errors";
 import { fromUnixDate, toUnixDate } from "@/lib/api/schemas";
 import { findProjectMembership } from "@/lib/auth/membership";
+import {
+  requireProjectWriteAccess,
+  resolveProjectAccess,
+} from "@/lib/auth/project-access";
 import { hasMinimumRole, type MembershipRole } from "@/lib/auth/roles";
 import type { AppDatabase } from "@/lib/db/client";
 import { findProjectById } from "@/lib/repositories/project-repository";
@@ -37,11 +41,11 @@ async function requireProjectAccess(
   projectId: string,
   minimumRole: MembershipRole = "viewer",
 ) {
-  const membership = await findProjectMembership(db, userId, projectId);
-  if (!membership || !hasMinimumRole(asRole(membership.role), minimumRole)) {
-    throw forbidden("Project access denied");
+  if (minimumRole === "viewer") {
+    await resolveProjectAccess(db, userId, projectId);
+    return;
   }
-  return membership;
+  await requireProjectWriteAccess(db, userId, projectId, minimumRole);
 }
 
 async function requireTaskAccess(

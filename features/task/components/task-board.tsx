@@ -40,12 +40,16 @@ import {
 } from "@/components/ui/popover";
 import { SearchEmptyState } from "@/components/feedback/search-empty-state";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { HelpCircle, ListTodo } from "lucide-react";interface TaskBoardProps {
+import { useI18n } from "@/components/providers/locale-provider";
+import { HelpCircle, ListTodo } from "lucide-react";
+
+interface TaskBoardProps {
   projectId: string;
   initialTasks: BoardTask[];
   members: BoardMember[];
   search?: string;
   priority?: string;
+  canEdit?: boolean;
 }
 
 function cloneBoard(
@@ -75,10 +79,7 @@ function findContainer(
   return null;
 }
 
-function normalizeColumn(
-  tasks: BoardTask[],
-  status: TaskStatus,
-): BoardTask[] {
+function normalizeColumn(tasks: BoardTask[], status: TaskStatus): BoardTask[] {
   return tasks.map((task, index) => ({
     ...task,
     status,
@@ -92,7 +93,9 @@ export function TaskBoard({
   members,
   search = "",
   priority = "",
+  canEdit = true,
 }: TaskBoardProps) {
+  const { t } = useI18n();
   const router = useRouter();
   const [board, setBoard] = useState(() => groupTasksByStatus(initialTasks));
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -164,8 +167,7 @@ export function TaskBoard({
       taskId: string,
       status: TaskStatus,
     ) => {
-      const position =
-        next[status].findIndex((task) => task.id === taskId) + 1;
+      const position = next[status].findIndex((task) => task.id === taskId) + 1;
       startTransition(async () => {
         const result = await moveTaskAction({
           projectId,
@@ -175,14 +177,14 @@ export function TaskBoard({
         });
         if (result.status === "error") {
           setBoard(previous);
-          setError(result.message ?? "Failed to move task.");
+          setError(result.message ?? t.board.moveFailed);
           return;
         }
         setError(null);
         router.refresh();
       });
     },
-    [projectId, router],
+    [projectId, router, t.board.moveFailed],
   );
 
   function handleStatusChange(taskId: string, status: TaskStatus) {
@@ -338,31 +340,29 @@ export function TaskBoard({
     <div className={isPending ? "opacity-90" : undefined}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <p className="text-sm text-zinc-500">
-            Drag cards between columns, or use the status menu on each card.
-          </p>
+          <p className="text-sm text-zinc-500">{t.board.hint}</p>
           <Popover>
             <PopoverTrigger
               className="inline-flex size-7 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200"
-              aria-label="Board tips"
+              aria-label={t.board.tips}
             >
               <HelpCircle className="size-4" aria-hidden />
             </PopoverTrigger>
             <PopoverContent align="start" className="w-64">
-              <PopoverTitle>Board tips</PopoverTitle>
-              <PopoverDescription>
-                On mobile, switch columns with the tabs. Reorder within a column
-                by dragging after a short press. Status can always be changed
-                from the card menu.
-              </PopoverDescription>
+              <PopoverTitle>{t.board.tips}</PopoverTitle>
+              <PopoverDescription>{t.board.tipsBody}</PopoverDescription>
             </PopoverContent>
           </Popover>
         </div>
-        <CreateTaskButton
-          projectId={projectId}
-          members={members}
-          onCreated={() => router.refresh()}
-        />
+        {canEdit ? (
+          <CreateTaskButton
+            projectId={projectId}
+            members={members}
+            onCreated={() => router.refresh()}
+          />
+        ) : (
+          <p className="text-xs text-zinc-500">{t.project.viewOnlyNotice}</p>
+        )}
       </div>
 
       {error ? (
@@ -386,63 +386,64 @@ export function TaskBoard({
       ) : null}
       {totalCount === 0 ? (
         <EmptyState
-          title="No tasks yet"
-          description="Use New Task above to create your first card."
+          title={t.board.noTasksTitle}
+          description={t.board.noTasksDescription}
           icon={<ListTodo className="size-6" aria-hidden />}
         />
       ) : null}
 
       {totalCount > 0 && filteredCount === 0 && hasFilters ? (
         <SearchEmptyState
-          title="No matching tasks"
-          description="Try a different search or priority filter."
+          title={t.board.noMatchingTitle}
+          description={t.board.noMatchingDescription}
         />
       ) : null}
 
       {totalCount > 0 && !(filteredCount === 0 && hasFilters) ? (
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex gap-3 overflow-x-auto pb-4 md:flex">
-          {TASK_STATUSES.map((status) => (
-            <div
-              key={status}
-              id={`board-panel-${status}`}
-              role="tabpanel"
-              aria-labelledby={`board-tab-${status}`}
-              className={
-                status === mobileStatus
-                  ? "w-full shrink-0 md:w-auto"
-                  : "hidden md:block"
-              }
-              data-column-status={status}
-            >
-              <BoardColumn
-                status={status}
-                tasks={filteredBoard[status]}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex gap-3 overflow-x-auto pb-4 md:flex">
+            {TASK_STATUSES.map((status) => (
+              <div
+                key={status}
+                id={`board-panel-${status}`}
+                role="tabpanel"
+                aria-labelledby={`board-tab-${status}`}
+                className={
+                  status === mobileStatus
+                    ? "w-full shrink-0 md:w-auto"
+                    : "hidden md:block"
+                }
+                data-column-status={status}
+              >
+                <BoardColumn
+                  status={status}
+                  tasks={filteredBoard[status]}
+                  projectId={projectId}
+                  members={members}
+                  onStatusChange={handleStatusChange}
+                  onAddTask={setCreateStatus}
+                  canEdit={canEdit}
+                />
+              </div>
+            ))}
+          </div>
+          <DragOverlay>
+            {activeTask ? (
+              <TaskCard
+                task={activeTask}
                 projectId={projectId}
                 members={members}
-                onStatusChange={handleStatusChange}
-                onAddTask={setCreateStatus}
+                isDragging
               />
-            </div>
-          ))}
-        </div>
-        <DragOverlay>
-          {activeTask ? (
-            <TaskCard
-              task={activeTask}
-              projectId={projectId}
-              members={members}
-              isDragging
-            />
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       ) : null}
 
       <CreateTaskDialog

@@ -3,18 +3,11 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { APP_NAV_ITEMS } from "@/components/layout/nav-items";
+import { APP_NAV_ITEMS, navLabel } from "@/components/layout/nav-items";
+import { useI18n } from "@/components/providers/locale-provider";
+import { interpolate } from "@/lib/i18n/interpolate";
 import { trapTabKey } from "@/lib/ui/focus-trap";
 import { cn, focusRingClass } from "@/lib/utils";
-
-const ACTIONS = [
-  ...APP_NAV_ITEMS.map((item) => ({
-    href: item.href,
-    label: `Go to ${item.label}`,
-  })),
-  { href: "/projects", label: "Create project" },
-  { href: "/settings/appearance", label: "Appearance settings" },
-] as const;
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -26,6 +19,19 @@ export function CommandPalette() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const { t } = useI18n();
+
+  const actions = useMemo(
+    () => [
+      ...APP_NAV_ITEMS.map((item) => ({
+        href: item.href,
+        label: interpolate(t.command.goTo, { label: navLabel(t, item.labelKey) }),
+      })),
+      { href: "/projects", label: t.command.createProject },
+      { href: "/settings/appearance", label: t.command.appearanceSettings },
+    ],
+    [t],
+  );
 
   function close() {
     setOpen(false);
@@ -58,10 +64,10 @@ export function CommandPalette() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) {
-      return ACTIONS;
+      return actions;
     }
-    return ACTIONS.filter((action) => action.label.toLowerCase().includes(q));
-  }, [query]);
+    return actions.filter((action) => action.label.toLowerCase().includes(q));
+  }, [query, actions]);
 
   useEffect(() => {
     if (!open) {
@@ -131,7 +137,7 @@ export function CommandPalette() {
       <button
         type="button"
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        aria-label="Close command palette"
+        aria-label={t.command.close}
         onClick={close}
         tabIndex={-1}
       />
@@ -143,7 +149,7 @@ export function CommandPalette() {
         className="animate-in-fade absolute left-1/2 top-[18%] w-[min(100%-2rem,28rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-[color:var(--border-subtle)] bg-[color:var(--bg-elevated)] shadow-[var(--shadow-pop)]"
       >
         <h2 id={titleId} className="sr-only">
-          Command palette
+          {t.command.title}
         </h2>
         <div className="flex items-center gap-2 border-b border-[color:var(--border-subtle)] px-3">
           <Search className="size-4 text-zinc-500" aria-hidden />
@@ -154,12 +160,12 @@ export function CommandPalette() {
               setQuery(event.target.value);
               setActiveIndex(0);
             }}
-            placeholder="Jump to…"
+            placeholder={t.command.placeholder}
             className={cn(
               "h-11 w-full bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500",
               focusRingClass,
             )}
-            aria-label="Search commands"
+            aria-label={t.command.search}
             aria-controls={listId}
             aria-activedescendant={activeId}
             role="combobox"
@@ -177,7 +183,7 @@ export function CommandPalette() {
         >
           {filtered.length === 0 ? (
             <li className="px-3 py-6 text-center text-sm text-zinc-500">
-              No matches
+              {t.command.noMatches}
             </li>
           ) : (
             filtered.map((action, index) => (

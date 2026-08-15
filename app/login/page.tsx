@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import { redirect } from "next/navigation";
 import { authConfig } from "@/auth.config";
 import { LoginForm } from "@/features/auth/components/login-form";
+import { getI18n } from "@/lib/i18n/get-i18n";
 import { isEmailAuthEnabled } from "@/lib/auth/flags";
 import {
   DEMO_USER_EMAIL,
@@ -27,6 +28,8 @@ export default async function LoginPage() {
     process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET,
   );
 
+  const { t } = await getI18n();
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-950 px-4 py-16 text-zinc-50">
       <div
@@ -36,11 +39,11 @@ export default async function LoginPage() {
       <section className="relative z-10 w-full max-w-md rounded-2xl border border-zinc-800/80 bg-zinc-950/80 p-8 shadow-2xl backdrop-blur">
         <div className="mb-8 flex flex-col gap-2 text-center">
           <p className="text-xs tracking-[0.2em] text-sky-400 uppercase">
-            Task Manager
+            {t.auth.kicker}
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{t.auth.signInTitle}</h1>
           <p className="text-sm text-zinc-400">
-            Continue with email or your connected provider.
+            {t.auth.signInSubtitle}
           </p>
         </div>
         <LoginForm
@@ -49,7 +52,7 @@ export default async function LoginPage() {
           googleEnabled={googleEnabled}
         />
         <p className="mt-6 text-center text-xs text-zinc-500">
-          Demo:{" "}
+          {t.auth.demo}:{" "}
           <span className="font-mono text-zinc-400">{DEMO_USER_EMAIL}</span>
           {" / "}
           <span className="font-mono text-zinc-400">{DEMO_USER_PASSWORD}</span>

@@ -286,6 +286,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
       "description": "Company website redesign.",
       "status": "active",
       "priority": "high",
+      "visibility": "workspace",
       "progress": 72,
       "deadline": "2026-09-30",
       "taskCount": 48,
@@ -318,11 +319,17 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
   "status": "planning",
   "priority": "medium",
   "deadline": "2026-09-30",
-  "color": "#4f7cff"
+  "color": "#4f7cff",
+  "visibility": "workspace",
+  "memberIds": ["user_02"]
 }
 ```
 
 `workspaceId` は省略可能。省略時は、認証ユーザーが所属する Workspace を自動選択する。
+
+`visibility` は省略可能。省略時は `workspace`（ワークスペース内公開）。`members` を指定すると、プロジェクトメンバー以外には非公開になる。
+
+`memberIds` は省略可能。作成者は自動で Owner になる。指定したユーザーは同じワークスペースのメンバーである必要があり、`member` ロールで追加される。
 
 ### Response
 
@@ -353,6 +360,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
     "description": "Company website redesign.",
     "status": "active",
     "priority": "high",
+    "visibility": "workspace",
     "progress": 72,
     "deadline": "2026-09-30",
     "members": [],
@@ -379,7 +387,8 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
   "name": "Website Redesign v2",
   "status": "active",
   "priority": "high",
-  "deadline": "2026-10-15"
+  "deadline": "2026-10-15",
+  "visibility": "members"
 }
 ```
 
@@ -434,7 +443,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ## POST /api/v1/projects/:projectId/members
 
-プロジェクトへユーザーを追加する。
+プロジェクトへユーザーを追加する。Owner のみ実行可能。対象ユーザーは同じワークスペースのメンバーである必要がある。既に参加している場合は 409 を返す。
 
 ### Request
 
@@ -449,7 +458,84 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ## DELETE /api/v1/projects/:projectId/members/:userId
 
-プロジェクトからユーザーを削除する。
+プロジェクトからユーザーを削除する。Owner のみ実行可能。最後の Owner は削除できない。
+
+---
+
+# 9.1 Workspace Members API
+
+## GET /api/v1/workspaces/:workspaceId/members
+
+ワークスペースメンバーを取得する。プロジェクトメンバー追加の候補一覧と設定画面で使う。メールアドレスは返さない。
+
+ワークスペースメンバーのみ実行可能。
+
+### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "user_01",
+      "name": "John Doe",
+      "image": null,
+      "role": "owner"
+    }
+  ]
+}
+```
+
+---
+
+## POST /api/v1/workspaces/:workspaceId/members
+
+ワークスペースへ登録済みユーザーを追加する。Workspace Owner のみ実行可能。対象は既存アカウントで、メールアドレスで指定する。未登録ユーザーへの招待は行わない。既に参加している場合は 409 を返す。ユーザーが存在しない場合は 404 を返す。
+
+### Request
+
+```json
+{
+  "email": "member@example.com",
+  "role": "member"
+}
+```
+
+`role` は `owner` / `member` / `viewer`。省略時は `member`。
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "user_02",
+    "name": "Emily Smith",
+    "image": null,
+    "role": "member"
+  }
+}
+```
+
+---
+
+## PATCH /api/v1/workspaces/:workspaceId/members/:userId
+
+ワークスペースメンバーのロールを変更する。Workspace Owner のみ実行可能。最後の Owner のロールは変更できない。
+
+### Request
+
+```json
+{
+  "role": "viewer"
+}
+```
+
+---
+
+## DELETE /api/v1/workspaces/:workspaceId/members/:userId
+
+ワークスペースからユーザーを削除する。Workspace Owner のみ実行可能。最後の Owner は削除できない。
+
+削除時は、そのワークスペース内のプロジェクトメンバーシップも削除し、担当タスクの `assignee_id` を未割り当てにする。
 
 ---
 
@@ -925,9 +1011,12 @@ unreadOnly
   "theme": "dark",
   "accentColor": "blue",
   "density": "comfortable",
-  "animations": true
+  "animations": true,
+  "language": "ja"
 }
 ```
+
+`language` は `ja` または `en`。Appearance 保存時に Cookie `vantage_locale` と `users.language` の両方を更新する。UI の既定言語は日本語。
 
 ---
 
@@ -1051,14 +1140,18 @@ Session
   ↓
 User ID
   ↓
-Project Membership
+Workspace Membership
   ↓
-Permission
+Project Membership または visibility = workspace（閲覧）
+  ↓
+Project Membership + Role（変更）
   ↓
 Operation
 ```
 
 の順番で確認する。
+
+公開プロジェクト（`visibility = workspace`）は、同じワークスペースのメンバーがプロジェクトメンバーでなくても閲覧できる。変更操作はプロジェクトメンバーのロールが必要。非公開プロジェクト（`visibility = members`）の閲覧はプロジェクトメンバーに限定する。`visibility` の変更は Owner のみ可能。
 
 ---
 
@@ -1080,7 +1173,8 @@ viewer
 - Task作成
 - Task編集
 - Task削除
-- Member管理
+- Project Member管理
+- Workspace Member管理（Workspace Owner）
 
 ## Member
 

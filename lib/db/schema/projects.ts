@@ -27,6 +27,7 @@ export const projects = sqliteTable(
     createdBy: text("created_by")
       .notNull()
       .references(() => users.id),
+    visibility: text("visibility").notNull().default("workspace"),
     createdAt: integer("created_at").notNull(),
     updatedAt: integer("updated_at").notNull(),
     archivedAt: integer("archived_at"),

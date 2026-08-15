@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
+import { interpolate } from "@/lib/i18n/interpolate";
 import { cn } from "@/lib/utils";
 
 interface ProjectPaginationProps {
@@ -15,6 +19,7 @@ export function ProjectPagination({
   total,
   searchParams,
 }: ProjectPaginationProps) {
+  const { t } = useI18n();
   const totalPages = Math.max(1, Math.ceil(total / limit));
   if (totalPages <= 1) {
     return null;
@@ -33,11 +38,11 @@ export function ProjectPagination({
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={t.projects.paginationNav}
       className="mt-8 flex items-center justify-between gap-3 border-t border-zinc-800/80 pt-4"
     >
       <p className="text-xs text-zinc-500">
-        Page {page} of {totalPages} · {total} projects
+        {interpolate(t.projects.pagination, { page, totalPages, total })}
       </p>
       <div className="flex gap-2">
         {page > 1 ? (
@@ -45,7 +50,7 @@ export function ProjectPagination({
             href={hrefFor(page - 1)}
             className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
           >
-            Previous
+            {t.common.previous}
           </Link>
         ) : (
           <span
@@ -54,7 +59,7 @@ export function ProjectPagination({
               "pointer-events-none opacity-40",
             )}
           >
-            Previous
+            {t.common.previous}
           </span>
         )}
         {page < totalPages ? (
@@ -62,7 +67,7 @@ export function ProjectPagination({
             href={hrefFor(page + 1)}
             className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
           >
-            Next
+            {t.common.next}
           </Link>
         ) : (
           <span
@@ -71,7 +76,7 @@ export function ProjectPagination({
               "pointer-events-none opacity-40",
             )}
           >
-            Next
+            {t.common.next}
           </span>
         )}
       </div>

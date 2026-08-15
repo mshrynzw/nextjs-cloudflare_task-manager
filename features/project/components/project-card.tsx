@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { AvatarGroup } from "@/features/project/components/avatar-group";
 import {
   ProjectPriorityBadge,
   ProjectStatusBadge,
+  ProjectVisibilityBadge,
 } from "@/features/project/components/project-badges";
 import { ProgressBar } from "@/features/project/components/progress-bar";
+import { useI18n } from "@/components/providers/locale-provider";
+import { interpolate } from "@/lib/i18n/interpolate";
 import {
   formatProjectDeadline,
   isDeadlineOverdue,
@@ -19,6 +24,7 @@ export interface ProjectCardData {
   priority: string;
   color: string;
   progress: number;
+  visibility?: string;
   deadline: string | null;
   taskCount: number;
   completedTaskCount: number;
@@ -36,6 +42,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const deadline = formatProjectDeadline(project.deadline);
   const overdue = isDeadlineOverdue(project.deadline);
+  const { t } = useI18n();
 
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-5 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.7)] transition hover:border-zinc-700 hover:bg-zinc-900/80">
@@ -58,14 +65,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
           <ProjectStatusBadge status={project.status} />
           <ProjectPriorityBadge priority={project.priority} />
+          <ProjectVisibilityBadge
+            visibility={project.visibility ?? "workspace"}
+          />
         </div>
       </div>
 
       <p className="mb-4 line-clamp-2 min-h-10 text-sm text-zinc-500">
-        {project.description?.trim() || "No description"}
+        {project.description?.trim() || t.projects.noDescription}
       </p>
 
-      <ProgressBar value={project.progress} className="mb-4" />
+      <ProgressBar
+        value={project.progress}
+        className="mb-4"
+        label={t.common.progress}
+      />
 
       <div className="mt-auto flex items-end justify-between gap-3 pt-2">
         <div className="space-y-2">
@@ -75,7 +89,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {project.completedTaskCount}
             </span>
             {" / "}
-            <span className="tabular-nums">{project.taskCount}</span> tasks
+            <span className="tabular-nums">{project.taskCount}</span>{" "}
+            {t.projects.tasks}
           </p>
         </div>
         <div className="text-right">
@@ -86,16 +101,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 overdue ? "text-rose-400" : "text-zinc-500",
               )}
             >
-              Due {deadline}
+              {interpolate(t.projects.due, { date: deadline })}
             </p>
           ) : (
-            <p className="text-xs text-zinc-600">No deadline</p>
+            <p className="text-xs text-zinc-600">{t.projects.noDeadline}</p>
           )}
           <Link
             href={`/projects/${project.id}`}
             className="mt-1 inline-flex text-xs font-medium text-violet-300 opacity-80 transition group-hover:opacity-100 hover:underline"
           >
-            Open project
+            {t.projects.openProject}
           </Link>
         </div>
       </div>

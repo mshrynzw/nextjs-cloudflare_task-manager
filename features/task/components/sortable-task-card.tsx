@@ -15,6 +15,7 @@ interface SortableTaskCardProps {
   projectId: string;
   members: BoardMember[];
   onStatusChange: (taskId: string, status: TaskStatus) => void;
+  canEdit?: boolean;
 }
 
 export function SortableTaskCard({
@@ -22,6 +23,7 @@ export function SortableTaskCard({
   projectId,
   members,
   onStatusChange,
+  canEdit = true,
 }: SortableTaskCardProps) {
   const {
     attributes,
@@ -32,6 +34,7 @@ export function SortableTaskCard({
     isDragging,
   } = useSortable({
     id: task.id,
+    disabled: !canEdit,
     data: { type: "task", status: task.status },
   });
 
@@ -48,14 +51,16 @@ export function SortableTaskCard({
         projectId={projectId}
         members={members}
         isDragging={isDragging}
-        dragHandleProps={{ ...attributes, ...listeners }}
+        dragHandleProps={canEdit ? { ...attributes, ...listeners } : undefined}
         statusSelect={
-          <TaskStatusMenu
-            taskId={task.id}
-            taskTitle={task.title}
-            status={task.status as TaskStatus}
-            onStatusChange={onStatusChange}
-          />
+          canEdit ? (
+            <TaskStatusMenu
+              taskId={task.id}
+              taskTitle={task.title}
+              status={task.status as TaskStatus}
+              onStatusChange={onStatusChange}
+            />
+          ) : null
         }
       />
     </div>

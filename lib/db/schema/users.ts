@@ -26,7 +26,7 @@ export const users = sqliteTable(
     website: text("website"),
     role: text("role").notNull().default("user"),
     timezone: text("timezone").notNull().default("UTC"),
-    language: text("language").notNull().default("en"),
+    language: text("language").notNull().default("ja"),
     createdAt: integer("created_at").notNull().$defaultFn(unixNow),
     updatedAt: integer("updated_at").notNull().$defaultFn(unixNow),
   },

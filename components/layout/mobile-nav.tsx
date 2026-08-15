@@ -7,11 +7,13 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trapTabKey } from "@/lib/ui/focus-trap";
 import { cn, focusRingClass } from "@/lib/utils";
-import { APP_NAV_ITEMS } from "@/components/layout/nav-items";
+import { APP_NAV_ITEMS, navLabel } from "@/components/layout/nav-items";
+import { useI18n } from "@/components/providers/locale-provider";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useI18n();
   const titleId = useId();
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -55,7 +57,7 @@ export function MobileNav() {
         size="icon-sm"
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
-        aria-label={open ? "Close navigation" : "Open navigation"}
+        aria-label={open ? t.nav.close : t.nav.open}
         onClick={() => setOpen((value) => !value)}
       >
         {open ? <X aria-hidden /> : <Menu aria-hidden />}
@@ -66,7 +68,7 @@ export function MobileNav() {
           <button
             type="button"
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            aria-label="Close navigation"
+            aria-label={t.nav.close}
             onClick={() => setOpen(false)}
             tabIndex={-1}
           />
@@ -87,13 +89,13 @@ export function MobileNav() {
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                aria-label="Close navigation"
+                aria-label={t.nav.close}
                 onClick={() => setOpen(false)}
               >
                 <X aria-hidden />
               </Button>
             </div>
-            <nav aria-label="Mobile" className="flex flex-col gap-1">
+            <nav aria-label={t.nav.mobile} className="flex flex-col gap-1">
               {APP_NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive =
@@ -114,7 +116,7 @@ export function MobileNav() {
                     aria-current={isActive ? "page" : undefined}
                   >
                     <Icon className="size-4" aria-hidden />
-                    {item.label}
+                    {navLabel(t, item.labelKey)}
                   </Link>
                 );
               })}

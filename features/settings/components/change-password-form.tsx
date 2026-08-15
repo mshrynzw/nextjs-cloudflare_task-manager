@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/providers/locale-provider";
 import {
   changePasswordAction,
   type SettingsActionState,
@@ -15,9 +16,10 @@ const initialState: SettingsActionState = { status: "idle" };
 
 function SaveButton() {
   const { pending } = useFormStatus();
+  const { t } = useI18n();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Updating…" : "Update password"}
+      {pending ? t.settings.updating : t.settings.updatePassword}
     </Button>
   );
 }
@@ -27,6 +29,7 @@ interface ChangePasswordFormProps {
 }
 
 export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
+  const { t } = useI18n();
   const [state, formAction] = useActionState(changePasswordAction, initialState);
 
   useEffect(() => {
@@ -40,17 +43,14 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
 
   if (!hasPassword) {
     return (
-      <p className="text-sm text-zinc-500">
-        This account uses a social provider. Password change is available for
-        email accounts only.
-      </p>
+      <p className="text-sm text-zinc-500">{t.settings.oauthPassword}</p>
     );
   }
 
   return (
     <form id="change-password-form" action={formAction} className="space-y-4">
       <label className="block text-sm text-zinc-300">
-        Current password
+        {t.settings.currentPassword}
         <input
           type="password"
           name="currentPassword"
@@ -60,7 +60,7 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
         />
       </label>
       <label className="block text-sm text-zinc-300">
-        New password
+        {t.settings.newPassword}
         <input
           type="password"
           name="newPassword"

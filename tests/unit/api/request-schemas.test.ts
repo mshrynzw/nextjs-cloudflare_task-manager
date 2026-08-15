@@ -18,6 +18,21 @@ describe("createProjectBodySchema", () => {
     expect(parsed.status).toBe("planning");
     expect(parsed.priority).toBe("medium");
     expect(parsed.color).toBe("#4f7cff");
+    expect(parsed.visibility).toBe("workspace");
+  });
+
+  it("accepts memberIds and rejects oversized lists", () => {
+    const parsed = createProjectBodySchema.parse({
+      name: "Team",
+      memberIds: ["user_01"],
+    });
+    expect(parsed.memberIds).toEqual(["user_01"]);
+    expect(() =>
+      createProjectBodySchema.parse({
+        name: "Too many",
+        memberIds: Array.from({ length: 51 }, (_, index) => `user_${index}`),
+      }),
+    ).toThrow();
   });
 
   it("rejects an empty name", () => {
@@ -103,9 +118,7 @@ describe("updateSettingsBodySchema", () => {
   });
 
   it("rejects unknown theme values", () => {
-    expect(() =>
-      updateSettingsBodySchema.parse({ theme: "neon" }),
-    ).toThrow();
+    expect(() => updateSettingsBodySchema.parse({ theme: "neon" })).toThrow();
   });
 });
 
