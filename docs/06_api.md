@@ -968,7 +968,7 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ## GET /api/v1/notifications
 
-通知一覧を取得する。
+通知一覧を取得する。タスクに紐づく通知は、対象プロジェクトを閲覧できる場合のみ返す。非公開プロジェクト（`visibility = members`）の通知は、プロジェクトメンバー以外には返さない。
 
 ### Query Parameters
 

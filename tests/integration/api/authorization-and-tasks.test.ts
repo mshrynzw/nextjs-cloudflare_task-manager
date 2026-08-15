@@ -147,6 +147,29 @@ describe("authorization boundaries", () => {
     expect(overview.kpis.totalProjects).toBe(1);
     expect(overview.kpis.openTasks).toBe(1);
   });
+
+  it("hides members-only project tasks from dashboard insights", async () => {
+    const { db, userId, memberId, workspaceId } =
+      await seedWorkspaceOwnerAndMember();
+    const project = await createProjectForUser(db, userId, {
+      workspaceId,
+      name: "Secret insights",
+      status: "active",
+      priority: "medium",
+      color: "#111111",
+      visibility: "members",
+    });
+    await createTaskForProject(db, userId, project.id!, {
+      title: "Hidden task",
+    });
+
+    const overview = await getDashboardOverview(db, memberId);
+    expect(overview.projects.some((item) => item.id === project.id)).toBe(
+      false,
+    );
+    expect(overview.kpis.totalProjects).toBe(0);
+    expect(Number(overview.kpis.openTasks ?? 0)).toBe(0);
+  });
 });
 
 describe("project members", () => {

@@ -1,4 +1,4 @@
-import { and, eq, isNotNull, or } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, or } from "drizzle-orm";
 import { projectMembers, projects, workspaceMembers } from "@/lib/db/schema";
 
 export function workspaceMembershipJoin(userId: string) {
@@ -17,4 +17,13 @@ export function projectMembershipJoin(userId: string) {
 
 export function canReadProjectSql() {
   return or(eq(projects.visibility, "workspace"), isNotNull(projectMembers.id));
+}
+
+/** Keep unscoped rows; otherwise apply the same project read boundary. */
+export function canReadLinkedProjectOrUnscopedSql() {
+  return or(
+    isNull(projects.id),
+    isNotNull(projectMembers.id),
+    and(eq(projects.visibility, "workspace"), isNotNull(workspaceMembers.id)),
+  );
 }

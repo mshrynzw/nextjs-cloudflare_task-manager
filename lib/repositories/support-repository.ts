@@ -1,7 +1,21 @@
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, or } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
+import {
+  canReadLinkedProjectOrUnscopedSql,
+  projectMembershipJoin,
+  workspaceMembershipJoin,
+} from "@/lib/db/access";
 import { createId, nowUnix } from "@/lib/db/id";
-import { checklistItems, comments, notifications, users } from "@/lib/db/schema";
+import {
+  checklistItems,
+  comments,
+  notifications,
+  projectMembers,
+  projects,
+  tasks,
+  users,
+  workspaceMembers,
+} from "@/lib/db/schema";
 
 export async function listCommentsForTask(db: AppDatabase, taskId: string) {
   return db
@@ -147,7 +161,25 @@ export async function listNotificationsForUser(
       createdAt: notifications.createdAt,
     })
     .from(notifications)
-    .where(eq(notifications.userId, userId))
+    .leftJoin(
+      tasks,
+      and(
+        eq(tasks.id, notifications.entityId),
+        or(
+          eq(notifications.entityType, "task"),
+          eq(notifications.entityType, "portfolio_seed"),
+        ),
+      ),
+    )
+    .leftJoin(projects, eq(projects.id, tasks.projectId))
+    .leftJoin(workspaceMembers, workspaceMembershipJoin(userId))
+    .leftJoin(projectMembers, projectMembershipJoin(userId))
+    .where(
+      and(
+        eq(notifications.userId, userId),
+        canReadLinkedProjectOrUnscopedSql(),
+      ),
+    )
     .orderBy(desc(notifications.createdAt))
     .limit(limit)
     .all();

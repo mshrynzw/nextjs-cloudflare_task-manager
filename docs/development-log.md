@@ -1984,3 +1984,20 @@ Settings → Workspace から、ワークスペースメンバーの追加・ロ
 - 一覧 API は従来どおり email を返さない
 
 ---
+
+# Phase 22 — Private project visibility gaps
+
+## Date
+
+2026-08-15
+
+## Summary
+
+非公開プロジェクトの情報が、メンバー以外の通知やデモデータ上で漏れないようにした。
+
+## Details
+
+- 通知一覧は関連タスクのプロジェクト閲覧権限でフィルタする
+- ポートフォリオ seed は全員を全プロジェクトのメンバーにしない。1 件を `visibility = members` にする
+
+---

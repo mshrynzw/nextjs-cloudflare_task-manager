@@ -764,6 +764,8 @@ notifications
 | read_at     | INTEGER |      Yes | Read timestamp     |
 | created_at  | INTEGER |       No | Created timestamp  |
 
+通知一覧は `user_id` だけでなく、関連プロジェクトの閲覧権限でも絞り込む。`entity_type` が `task`（またはデモ seed の `portfolio_seed`）で `entity_id` がタスクを指す場合、非公開プロジェクトの通知はプロジェクトメンバー以外に返さない。プロジェクトに紐づかない通知はそのまま返す。
+
 ---
 
 # 34. User Settings
@@ -1259,6 +1261,8 @@ drizzle/
 デモアカウントは `demo@example.com` / `DemoPass123!`（`lib/db/demo-credentials.ts`）。
 表示文言（ワークスペース名、プロジェクト名、タスク名、コメント、通知、役職）は日本語。
 メール・username・slug は ASCII のまま。
+
+プロジェクトメンバーは全ユーザーを全プロジェクトに入れない。先頭プロジェクトは全員、非公開プロジェクトは Owner と 1 名、その他は Owner と 2 名。非公開の閲覧境界をデモできるようにする。
 
 本番へ空の開発用最小 seed を流し込まない。Live Demo 用は明示的なポートフォリオ seed のみ。
 

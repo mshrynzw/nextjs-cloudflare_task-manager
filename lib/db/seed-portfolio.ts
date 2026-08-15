@@ -184,6 +184,7 @@ const PROJECT_SPECS = [
     color: "#06B6D4",
     status: "active",
     priority: "low",
+    visibility: "members",
   },
 ] as const;
 
@@ -219,6 +220,39 @@ const TASK_TITLES = [
   "空状態のイラスト",
   "モバイルナビのアクセシビリティ",
 ];
+
+function projectVisibility(
+  spec: (typeof PROJECT_SPECS)[number],
+): "workspace" | "members" {
+  return "visibility" in spec && spec.visibility === "members"
+    ? "members"
+    : "workspace";
+}
+
+function memberIdsForProject(
+  allUserIds: string[],
+  projectIndex: number,
+  visibility: "workspace" | "members",
+): string[] {
+  const ownerId = allUserIds[0];
+  if (!ownerId) {
+    return [];
+  }
+  if (projectIndex === 0) {
+    return [...allUserIds];
+  }
+  if (visibility === "members") {
+    const collaborator = allUserIds[1];
+    return collaborator ? [ownerId, collaborator] : [ownerId];
+  }
+  const extras = allUserIds.slice(1);
+  if (extras.length === 0) {
+    return [ownerId];
+  }
+  const first = extras[projectIndex % extras.length]!;
+  const second = extras[(projectIndex + 3) % extras.length]!;
+  return [...new Set([ownerId, first, second])];
+}
 
 async function ensureUser(
   db: AppDatabase,
@@ -419,9 +453,13 @@ export async function seedPortfolioData(
   );
 
   const projectIds: string[] = [];
+  const projectMemberIdsByIndex: string[][] = [];
   for (const [index, spec] of PROJECT_SPECS.entries()) {
     const projectId = createId("project");
     projectIds.push(projectId);
+    const visibility = projectVisibility(spec);
+    const memberIds = memberIdsForProject(allUserIds, index, visibility);
+    projectMemberIdsByIndex.push(memberIds);
     await db.insert(projects).values({
       id: projectId,
       workspaceId,
@@ -433,12 +471,13 @@ export async function seedPortfolioData(
       startDate: now - (30 - index) * DAY,
       deadline: now + (14 + index * 3) * DAY,
       createdBy: demoUserId,
+      visibility,
       createdAt: now - (40 - index) * DAY,
       updatedAt: now - index * 3600,
     });
 
     await db.insert(projectMembers).values(
-      allUserIds.map((userId, memberIndex) => ({
+      memberIds.map((userId, memberIndex) => ({
         id: createId("prjmem"),
         projectId,
         userId,
@@ -454,6 +493,7 @@ export async function seedPortfolioData(
   const notificationRows: (typeof notifications.$inferInsert)[] = [];
 
   for (const [projectIndex, projectId] of projectIds.entries()) {
+    const memberIds = projectMemberIdsByIndex[projectIndex] ?? [demoUserId];
     const tasksPerProject = projectIndex === 0 ? 12 : 7;
     for (let taskIndex = 0; taskIndex < tasksPerProject; taskIndex += 1) {
       const taskId = createId("task");
@@ -461,7 +501,7 @@ export async function seedPortfolioData(
       const priority =
         PRIORITIES[(projectIndex * 3 + taskIndex) % PRIORITIES.length];
       const assigneeId =
-        allUserIds[(taskIndex + projectIndex) % allUserIds.length];
+        memberIds[(taskIndex + projectIndex) % memberIds.length] ?? demoUserId;
       const title =
         projectIndex === 0 && taskIndex === 0
           ? DEMO_TASK_TITLE
@@ -490,7 +530,7 @@ export async function seedPortfolioData(
 
       const commentsForTask = taskIndex % 3 === 0 ? 2 : 1;
       for (let c = 0; c < commentsForTask; c += 1) {
-        const authorId = allUserIds[(taskIndex + c) % allUserIds.length];
+        const authorId = memberIds[(taskIndex + c) % memberIds.length] ?? demoUserId;
         await db.insert(comments).values({
           id: createId("comment"),
           taskId,
@@ -511,7 +551,7 @@ export async function seedPortfolioData(
           workspaceId,
           projectId,
           taskId,
-          userId: allUserIds[(taskIndex + a) % allUserIds.length],
+          userId: memberIds[(taskIndex + a) % memberIds.length]!,
           action: ACTIONS[(taskIndex + a) % ACTIONS.length],
           metadata: JSON.stringify({ title, status }),
           createdAt: createdAt + a * 1800,
@@ -540,7 +580,7 @@ export async function seedPortfolioData(
         workspaceId,
         projectId,
         taskId: null,
-        userId: allUserIds[extra % allUserIds.length]!,
+        userId: memberIds[extra % memberIds.length]!,
         action: "project_updated",
         metadata: JSON.stringify({
           name: PROJECT_SPECS[projectIndex]?.name,
