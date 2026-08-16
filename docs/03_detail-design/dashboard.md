@@ -28,11 +28,14 @@ Dashboardはログイン後に最初に表示される画面であり、ユー�
 
 本画面では以下を提供する。
 
-- 今日の作業状況
+- 今日の作業状況（自分が担当者のタスク）
 - プロジェクト概要
 - タスク状況
 - 最近の更新
 - クイックアクション
+
+KPI Cards、Today's Tasks、Overdue、Upcoming は `tasks.assignee_id = 現在のユーザー` に限定する。
+プロジェクト進捗と Recent Activity は閲覧可能なプロジェクト全体を対象とする。
 
 ---
 
@@ -134,7 +137,7 @@ Let's make today productive.
 
 説明
 
-今日のタスク数
+今日のタスク数（担当分）
 
 ---
 
@@ -202,6 +205,8 @@ Project Detail
 ---
 
 # 7. Today's Tasks
+
+自分が担当者の、期限が今日の未完了タスク。
 
 表示件数
 

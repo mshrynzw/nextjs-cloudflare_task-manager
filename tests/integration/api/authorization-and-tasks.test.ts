@@ -128,7 +128,7 @@ describe("authorization boundaries", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
-  it("includes public project tasks in dashboard insights for workspace members", async () => {
+  it("includes public projects on the dashboard without counting unassigned tasks", async () => {
     const { db, userId, memberId, workspaceId } =
       await seedWorkspaceOwnerAndMember();
     const project = await createProjectForUser(db, userId, {
@@ -145,7 +145,28 @@ describe("authorization boundaries", () => {
     const overview = await getDashboardOverview(db, memberId);
     expect(overview.projects.some((item) => item.id === project.id)).toBe(true);
     expect(overview.kpis.totalProjects).toBe(1);
+    expect(overview.kpis.openTasks).toBe(0);
+    expect(overview.todayTasks).toHaveLength(0);
+  });
+
+  it("counts dashboard KPIs for tasks assigned to the current user", async () => {
+    const { db, userId, memberId, workspaceId } =
+      await seedWorkspaceOwnerAndMember();
+    const project = await createProjectForUser(db, userId, {
+      workspaceId,
+      name: "Assigned insights",
+      status: "active",
+      priority: "medium",
+      color: "#111111",
+    });
+    await createTaskForProject(db, userId, project.id!, {
+      title: "Mine",
+      assigneeId: memberId,
+    });
+
+    const overview = await getDashboardOverview(db, memberId);
     expect(overview.kpis.openTasks).toBe(1);
+    expect(overview.kpis.todayTasks).toBe(0);
   });
 
   it("hides members-only project tasks from dashboard insights", async () => {

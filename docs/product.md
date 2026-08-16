@@ -187,9 +187,9 @@ Activity
 
 Dashboardで、
 
-- Today's Tasks
-- Upcoming Tasks
-- Overdue Tasks
+- Today's Tasks（自分の担当）
+- Upcoming Tasks（自分の担当）
+- Overdue Tasks（自分の担当）
 - Recent Activity
 
 を確認できるようにする。

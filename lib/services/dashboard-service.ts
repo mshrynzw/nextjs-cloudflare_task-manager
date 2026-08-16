@@ -29,6 +29,7 @@ function calcProgress(total: number, completed: number): number {
   return Math.round((completed / total) * 100);
 }
 
+/** Personal work overview: KPIs and task lists are assignee-scoped. */
 export async function getDashboardOverview(db: AppDatabase, userId: string) {
   const todayStart = startOfDayUnix();
   const todayEnd = endOfDayUnix();
@@ -36,13 +37,7 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
   const [kpis, todayTasks, overdueTasks, upcomingTasks, projects, activities] =
     await Promise.all([
       getAccessibleTaskKpis(db, userId, todayStart, todayEnd),
-      listAccessibleOpenTasksDueBetween(
-        db,
-        userId,
-        todayStart,
-        todayEnd,
-        8,
-      ),
+      listAccessibleOpenTasksDueBetween(db, userId, todayStart, todayEnd, 8),
       listAccessibleOverdueTasks(db, userId, todayStart, 8),
       listAccessibleUpcomingTasks(db, userId, todayEnd, 8),
       listAccessibleProjectsForUser(db, userId, 6),

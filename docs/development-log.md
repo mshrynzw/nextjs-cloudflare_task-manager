@@ -2001,3 +2001,22 @@ Settings → Workspace から、ワークスペースメンバーの追加・ロ
 - ポートフォリオ seed は全員を全プロジェクトのメンバーにしない。1 件を `visibility = members` にする
 
 ---
+
+# Phase 23 — Dashboard assignee scope
+
+## Date
+
+2026-08-16
+
+## Summary
+
+Dashboard の KPI・今日のタスク・期限切れ・今後の予定を、閲覧可能なプロジェクトのうち自分が担当者のタスクに限定した。
+
+## Details
+
+- `getAccessibleTaskKpis` / today / overdue / upcoming に `tasks.assignee_id = userId`
+- プロジェクト進捗と Recent Activity はチーム全体のまま
+- 未割り当てタスクは Dashboard の個人指標に含めない
+- Analytics / Calendar は従来どおり閲覧可能な全タスク
+
+---

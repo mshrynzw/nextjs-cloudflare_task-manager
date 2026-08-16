@@ -11,6 +11,7 @@ import {
   ne,
   or,
   sql,
+  type SQL,
 } from "drizzle-orm";
 import type { AppDatabase } from "@/lib/db/client";
 import {
@@ -26,6 +27,17 @@ import {
   users,
   workspaceMembers,
 } from "@/lib/db/schema";
+
+/** Dashboard KPIs / task lists: visible projects, assigned to the current user. */
+function assignedAccessibleTaskWhere(userId: string, extra: SQL[] = []) {
+  return and(
+    isNull(tasks.archivedAt),
+    isNull(projects.archivedAt),
+    canReadProjectSql(),
+    eq(tasks.assigneeId, userId),
+    ...extra,
+  );
+}
 
 /** Lean task rows for analytics / insights (no description). */
 export async function listAccessibleTasksForUser(
@@ -80,13 +92,7 @@ export async function getAccessibleTaskKpis(
     .innerJoin(projects, eq(projects.id, tasks.projectId))
     .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
     .leftJoin(projectMembers, projectMembershipJoin(userId))
-    .where(
-      and(
-        isNull(tasks.archivedAt),
-        isNull(projects.archivedAt),
-        canReadProjectSql(),
-      ),
-    )
+    .where(assignedAccessibleTaskWhere(userId))
     .get();
 
   return {
@@ -123,14 +129,11 @@ export async function listAccessibleOpenTasksDueBetween(
     .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
     .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
-      and(
-        isNull(tasks.archivedAt),
-        isNull(projects.archivedAt),
-        canReadProjectSql(),
+      assignedAccessibleTaskWhere(userId, [
         ne(tasks.status, "done"),
         gte(tasks.dueDate, startUnix),
         lte(tasks.dueDate, endUnix),
-      ),
+      ]),
     )
     .orderBy(asc(tasks.dueDate))
     .limit(limit)
@@ -150,13 +153,10 @@ export async function listAccessibleOverdueTasks(
     .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
     .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
-      and(
-        isNull(tasks.archivedAt),
-        isNull(projects.archivedAt),
-        canReadProjectSql(),
+      assignedAccessibleTaskWhere(userId, [
         ne(tasks.status, "done"),
         lt(tasks.dueDate, beforeUnix),
-      ),
+      ]),
     )
     .orderBy(asc(tasks.dueDate))
     .limit(limit)
@@ -176,13 +176,10 @@ export async function listAccessibleUpcomingTasks(
     .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
     .leftJoin(projectMembers, projectMembershipJoin(userId))
     .where(
-      and(
-        isNull(tasks.archivedAt),
-        isNull(projects.archivedAt),
-        canReadProjectSql(),
+      assignedAccessibleTaskWhere(userId, [
         ne(tasks.status, "done"),
         gte(tasks.dueDate, afterUnix + 1),
-      ),
+      ]),
     )
     .orderBy(asc(tasks.dueDate))
     .limit(limit)

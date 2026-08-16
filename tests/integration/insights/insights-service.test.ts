@@ -101,6 +101,7 @@ async function seedWorkspace() {
       title: "Overdue task",
       status: "todo",
       priority: "low",
+      assigneeId: userId,
       dueDate: todayStart - 86400,
       position: 3,
       createdAt: timestamp,
@@ -108,7 +109,7 @@ async function seedWorkspace() {
     },
   ]);
 
-  return { db, userId, projectId, todayStart };
+  return { db, userId, projectId, workspaceId, todayStart };
 }
 
 describe("insights services", () => {
@@ -120,6 +121,50 @@ describe("insights services", () => {
     expect(dashboard.kpis.overdueTasks).toBeGreaterThanOrEqual(1);
     expect(dashboard.kpis.completionRate).toBeGreaterThan(0);
     expect(dashboard.projects).toHaveLength(1);
+  });
+
+  it("limits dashboard KPIs and task lists to the current assignee", async () => {
+    const { db, userId, projectId, workspaceId, todayStart } =
+      await seedWorkspace();
+    const timestamp = nowUnix();
+    const teammateId = createId("user");
+
+    await db.insert(users).values({
+      id: teammateId,
+      email: "teammate@example.com",
+      name: "Teammate",
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+    await db.insert(workspaceMembers).values({
+      id: createId("wsmem"),
+      workspaceId,
+      userId: teammateId,
+      role: "member",
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+    await db.insert(tasks).values({
+      id: createId("task"),
+      projectId,
+      title: "Teammate due today",
+      status: "todo",
+      priority: "high",
+      assigneeId: teammateId,
+      dueDate: todayStart + 7200,
+      position: 4,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+
+    const dashboard = await getDashboardOverview(db, userId);
+    expect(
+      dashboard.todayTasks.some((task) => task.title === "Due today"),
+    ).toBe(true);
+    expect(
+      dashboard.todayTasks.some((task) => task.title === "Teammate due today"),
+    ).toBe(false);
+    expect(dashboard.kpis.todayTasks).toBe(1);
   });
 
   it("returns calendar events in range", async () => {
@@ -141,9 +186,9 @@ describe("insights services", () => {
     expect(overview.completedTasks).toBe(1);
     expect(distribution.find((item) => item.status === "done")?.count).toBe(1);
     expect(page.overview.totalTasks).toBe(3);
-    expect(page.distribution.find((item) => item.status === "done")?.count).toBe(
-      1,
-    );
+    expect(
+      page.distribution.find((item) => item.status === "done")?.count,
+    ).toBe(1);
   });
 });
 
