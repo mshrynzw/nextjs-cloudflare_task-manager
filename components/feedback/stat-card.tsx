@@ -15,7 +15,7 @@ export function StatCard({ label, value, hint, className }: StatCardProps) {
         className,
       )}
     >
-      <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
+      <p className="text-xs font-medium leading-snug tracking-wide text-zinc-500">
         {label}
       </p>
       <p className="mt-2 text-2xl font-semibold tabular-nums text-zinc-50">

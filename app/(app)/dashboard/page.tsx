@@ -33,11 +33,8 @@ export default async function DashboardPage() {
       />
       <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label={t.dashboard.todayTasks} value={data.kpis.todayTasks} />
-          <StatCard
-            label={t.dashboard.completedToday}
-            value={data.kpis.completedToday}
-          />
+          <StatCard label={t.dashboard.openTasks} value={data.kpis.openTasks} />
+          <StatCard label={t.dashboard.dueToday} value={data.kpis.todayTasks} />
           <StatCard
             label={t.dashboard.completionRate}
             value={`${data.kpis.completionRate}%`}
@@ -45,9 +42,6 @@ export default async function DashboardPage() {
           <StatCard
             label={t.dashboard.overdue}
             value={data.kpis.overdueTasks}
-            hint={interpolate(t.dashboard.openTasksHint, {
-              count: data.kpis.openTasks,
-            })}
           />
         </section>
 
@@ -114,7 +108,9 @@ export default async function DashboardPage() {
         <section className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
           <Panel title={t.dashboard.recentActivity}>
             {data.activities.length === 0 ? (
-              <p className="text-sm text-zinc-500">{t.dashboard.emptyActivity}</p>
+              <p className="text-sm text-zinc-500">
+                {t.dashboard.emptyActivity}
+              </p>
             ) : (
               <ul className="space-y-3">
                 {data.activities.map((item) => (
@@ -228,7 +224,10 @@ function TaskList({
   return (
     <ul className="divide-y divide-zinc-800/80">
       {tasks.map((task) => (
-        <li key={task.id} className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0">
+        <li
+          key={task.id}
+          className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+        >
           <div className="min-w-0">
             <Link
               href={`/projects/${task.projectId}/tasks/${task.id}`}
