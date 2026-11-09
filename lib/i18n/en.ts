@@ -57,6 +57,8 @@ export const en: Dictionary = {
     signInSubtitle: "Continue with email or your connected provider.",
     email: "Email",
     password: "Password",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
     signIn: "Sign In",
     demo: "Demo",
     createAccount: "Create an account",

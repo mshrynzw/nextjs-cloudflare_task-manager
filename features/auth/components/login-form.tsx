@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { PasswordField } from "@/features/auth/components/password-field";
 import { POST_AUTH_REDIRECT } from "@/features/auth/constants";
 import { useI18n } from "@/components/providers/locale-provider";
 import {
@@ -11,7 +12,7 @@ import {
 } from "@/lib/db/demo-credentials";
 
 const inputClassName =
-  "h-10 rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 text-sm text-zinc-50 outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500/40";
+  "auth-field h-10 rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 text-sm text-zinc-50 outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500/40";
 
 interface LoginFormProps {
   emailEnabled: boolean;
@@ -178,14 +179,9 @@ export function LoginForm({
               <label htmlFor="password" className="text-sm text-zinc-300">
                 {t.auth.password}
               </label>
-              <input
+              <PasswordField
                 id="password"
-                name="password"
-                type="password"
                 autoComplete="current-password"
-                required
-                minLength={8}
-                maxLength={128}
                 className={inputClassName}
               />
             </div>
@@ -244,14 +240,9 @@ export function LoginForm({
                 >
                   {t.auth.password}
                 </label>
-                <input
+                <PasswordField
                   id="register-password"
-                  name="password"
-                  type="password"
                   autoComplete="new-password"
-                  required
-                  minLength={8}
-                  maxLength={128}
                   className={inputClassName}
                 />
               </div>

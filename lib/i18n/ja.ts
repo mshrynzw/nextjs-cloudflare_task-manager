@@ -55,6 +55,8 @@ export const ja = {
     signInSubtitle: "メールまたは連携アカウントで続行できます。",
     email: "メール",
     password: "パスワード",
+    showPassword: "パスワードを表示",
+    hidePassword: "パスワードを非表示",
     signIn: "サインイン",
     demo: "デモ",
     createAccount: "アカウントを作成",
