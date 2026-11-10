@@ -29,7 +29,7 @@ The API security model is defined in:
 
 ---
 
-# 1. Core Security Principles
+## 1. Core Security Principles
 
 Always assume external input is untrusted.
 
@@ -52,7 +52,7 @@ Validate and authorize data on the server.
 
 ---
 
-# 2. Authentication vs Authorization
+## 2. Authentication vs Authorization
 
 Authentication answers:
 
@@ -72,7 +72,7 @@ A logged-in user must not automatically have access to every resource.
 
 ---
 
-# 3. Authentication
+## 3. Authentication
 
 Use the project's established authentication architecture.
 
@@ -88,7 +88,7 @@ Do not expose authentication secrets to Client Components.
 
 ---
 
-# 4. Session Security
+## 4. Session Security
 
 Session information must be handled securely.
 
@@ -106,7 +106,7 @@ The server must identify the actual user.
 
 ---
 
-# 5. Authorization
+## 5. Authorization
 
 Authorization must be enforced on the server.
 
@@ -130,7 +130,7 @@ Do not assume that knowing a resource ID grants access to that resource.
 
 ---
 
-# 6. Resource Ownership
+## 6. Resource Ownership
 
 Never authorize access using only a resource ID.
 
@@ -156,7 +156,7 @@ Authorization should be enforced as close to the server-side data access boundar
 
 ---
 
-# 7. IDOR Prevention
+## 7. IDOR Prevention
 
 Prevent Insecure Direct Object Reference vulnerabilities.
 
@@ -175,7 +175,7 @@ Test unauthorized resource access explicitly.
 
 ---
 
-# 8. User ID Handling
+## 8. User ID Handling
 
 Never trust a user ID provided by the client.
 
@@ -193,7 +193,7 @@ Client-provided user IDs may be treated as data only when the operation explicit
 
 ---
 
-# 9. Workspace Isolation
+## 9. Workspace Isolation
 
 Workspace boundaries are security boundaries.
 
@@ -212,7 +212,7 @@ Every workspace-scoped query must consider the authenticated user's workspace me
 
 ---
 
-# 10. Project Isolation
+## 10. Project Isolation
 
 Project membership must be verified before accessing project-specific resources.
 
@@ -232,7 +232,7 @@ unless they have the appropriate permission.
 
 ---
 
-# 11. Task Authorization
+## 11. Task Authorization
 
 Tasks inherit authorization requirements from their project/workspace context.
 
@@ -254,7 +254,7 @@ Do not rely only on the Task Board UI to prevent unauthorized operations.
 
 ---
 
-# 12. Authorization on Mutations
+## 12. Authorization on Mutations
 
 All mutations must perform authorization checks.
 
@@ -280,7 +280,7 @@ A hidden or disabled button is not an authorization mechanism.
 
 ---
 
-# 13. Server-Side Authorization
+## 13. Server-Side Authorization
 
 Authorization checks must occur on the server.
 
@@ -298,7 +298,7 @@ Client-side checks may improve UX, but server-side authorization remains mandato
 
 ---
 
-# 14. API Security
+## 14. API Security
 
 All protected API endpoints must verify authentication and authorization.
 
@@ -324,7 +324,7 @@ Do not perform business operations before authorization is established.
 
 ---
 
-# 15. API Input Validation
+## 15. API Input Validation
 
 Validate all external API input.
 
@@ -342,7 +342,7 @@ Never assume that the client has already validated the data.
 
 ---
 
-# 16. Validation Before Business Logic
+## 16. Validation Before Business Logic
 
 Preferred flow:
 
@@ -367,7 +367,7 @@ Do not pass unvalidated external input directly to:
 
 ---
 
-# 17. Zod Validation
+## 17. Zod Validation
 
 Use Zod for externally supplied data.
 
@@ -387,7 +387,7 @@ Client-side validation may improve UX but does not replace server-side validatio
 
 ---
 
-# 18. Database Security
+## 18. Database Security
 
 Database access must remain server-side.
 
@@ -408,7 +408,7 @@ to the client.
 
 ---
 
-# 19. Database Query Authorization
+## 19. Database Query Authorization
 
 Database queries must respect authorization boundaries.
 
@@ -438,7 +438,7 @@ Authorization-sensitive filtering should happen server-side.
 
 ---
 
-# 20. SQL Injection
+## 20. SQL Injection
 
 Never construct SQL queries using raw string concatenation with untrusted input.
 
@@ -456,7 +456,7 @@ If raw SQL is genuinely required, use parameterized queries and document the rea
 
 ---
 
-# 21. Mass Assignment
+## 21. Mass Assignment
 
 Do not blindly pass client-provided objects into database updates.
 
@@ -480,7 +480,7 @@ Explicitly select fields that the user is allowed to modify.
 
 ---
 
-# 22. Protected Fields
+## 22. Protected Fields
 
 Never allow ordinary users to modify security-sensitive fields unless explicitly authorized.
 
@@ -500,7 +500,7 @@ The server must determine protected values.
 
 ---
 
-# 23. Role and Permission Security
+## 23. Role and Permission Security
 
 Never trust a role provided by the client.
 
@@ -527,7 +527,7 @@ must be determined by the server-side authorization model.
 
 ---
 
-# 24. Privilege Escalation
+## 24. Privilege Escalation
 
 Prevent users from escalating their own privileges.
 
@@ -545,7 +545,7 @@ Permission-changing operations must require appropriate authorization.
 
 ---
 
-# 25. Horizontal Privilege Escalation
+## 25. Horizontal Privilege Escalation
 
 Prevent users from accessing another user's resources.
 
@@ -561,7 +561,7 @@ must be rejected unless User A has explicit permission.
 
 ---
 
-# 26. Vertical Privilege Escalation
+## 26. Vertical Privilege Escalation
 
 Prevent lower-privileged users from performing administrative operations.
 
@@ -579,7 +579,7 @@ Administrative operations must check the required role or permission.
 
 ---
 
-# 27. Authentication Errors
+## 27. Authentication Errors
 
 Do not reveal unnecessary information through authentication errors.
 
@@ -594,7 +594,7 @@ Do not expose:
 
 ---
 
-# 28. Password Security
+## 28. Password Security
 
 If password-based authentication is used through the project's authentication provider:
 
@@ -607,7 +607,7 @@ Do not implement custom password hashing unless explicitly required by the archi
 
 ---
 
-# 29. Secrets
+## 29. Secrets
 
 Never commit secrets to Git.
 
@@ -627,7 +627,7 @@ Use environment variables for secrets.
 
 ---
 
-# 30. Environment Variables
+## 30. Environment Variables
 
 Separate public and server-only environment variables.
 
@@ -643,7 +643,7 @@ Before using an environment variable in Client Components, verify that it is int
 
 ---
 
-# 31. `.env` Files
+## 31. `.env` Files
 
 Never commit:
 
@@ -669,7 +669,7 @@ The example file must contain placeholders only.
 
 ---
 
-# 32. Logging
+## 32. Logging
 
 Never log sensitive information.
 
@@ -687,7 +687,7 @@ Logs should contain enough information to diagnose problems without exposing sec
 
 ---
 
-# 33. Error Messages
+## 33. Error Messages
 
 Do not expose internal implementation details to users.
 
@@ -708,7 +708,7 @@ Developer logs may contain more diagnostic information, but must still avoid sec
 
 ---
 
-# 34. XSS Prevention
+## 34. XSS Prevention
 
 Treat user-generated content as untrusted.
 
@@ -731,7 +731,7 @@ If HTML rendering is required:
 
 ---
 
-# 35. URL Security
+## 35. URL Security
 
 Treat URLs supplied by users as untrusted.
 
@@ -749,7 +749,7 @@ Validate redirect destinations against an appropriate allowlist when required.
 
 ---
 
-# 36. Open Redirect Prevention
+## 36. Open Redirect Prevention
 
 Do not blindly redirect to a user-provided URL.
 
@@ -765,7 +765,7 @@ Internal application paths should be preferred for post-login redirects.
 
 ---
 
-# 37. CSRF
+## 37. CSRF
 
 Protect state-changing operations against Cross-Site Request Forgery where applicable.
 
@@ -782,7 +782,7 @@ DELETE
 
 ---
 
-# 38. Cookies
+## 38. Cookies
 
 Authentication cookies should use secure attributes appropriate to the environment.
 
@@ -798,7 +798,7 @@ Do not expose authentication cookies to JavaScript unless there is an explicit a
 
 ---
 
-# 39. CORS
+## 39. CORS
 
 Do not allow unrestricted CORS by default.
 
@@ -814,7 +814,7 @@ Restrict origins where cross-origin access is required.
 
 ---
 
-# 40. Security Headers
+## 40. Security Headers
 
 Use appropriate security headers for the deployed application.
 
@@ -834,7 +834,7 @@ Verify compatibility with the application's functionality.
 
 ---
 
-# 41. Rate Limiting
+## 41. Rate Limiting
 
 Consider rate limiting for operations that may be abused.
 
@@ -856,7 +856,7 @@ Prioritize operations with meaningful abuse potential.
 
 ---
 
-# 42. Denial of Service Considerations
+## 42. Denial of Service Considerations
 
 Avoid unbounded operations.
 
@@ -881,7 +881,7 @@ Use appropriate:
 
 ---
 
-# 43. Pagination Security
+## 43. Pagination Security
 
 Never allow arbitrary client input to create unbounded queries.
 
@@ -903,7 +903,7 @@ Clamp or reject invalid values appropriately.
 
 ---
 
-# 44. Search Security
+## 44. Search Security
 
 Search input must be validated.
 
@@ -918,7 +918,7 @@ Use appropriate database query mechanisms.
 
 ---
 
-# 45. File Uploads
+## 45. File Uploads
 
 If file uploads are introduced:
 
@@ -935,7 +935,7 @@ Do not implement file uploads without updating the relevant architecture and sec
 
 ---
 
-# 46. External Services
+## 46. External Services
 
 Treat external services as untrusted boundaries.
 
@@ -953,7 +953,7 @@ Use server-side integration for secret-bearing APIs.
 
 ---
 
-# 47. Third-Party Dependencies
+## 47. Third-Party Dependencies
 
 Before adding a security-sensitive dependency:
 
@@ -967,7 +967,7 @@ Do not add a package simply because it is popular.
 
 ---
 
-# 48. Client-Side Security
+## 48. Client-Side Security
 
 Never treat Client Components as a trusted environment.
 
@@ -988,7 +988,7 @@ Security decisions belong on the server.
 
 ---
 
-# 49. Local Storage
+## 49. Local Storage
 
 Do not store sensitive authentication information in:
 
@@ -1010,7 +1010,7 @@ in browser storage.
 
 ---
 
-# 50. Sensitive Data Minimization
+## 50. Sensitive Data Minimization
 
 Do not retrieve or expose more data than necessary.
 
@@ -1029,7 +1029,7 @@ or other server-only fields.
 
 ---
 
-# 51. API Response Security
+## 51. API Response Security
 
 Before returning database records:
 
@@ -1042,7 +1042,7 @@ Do not blindly serialize database models.
 
 ---
 
-# 52. Cache Security
+## 52. Cache Security
 
 Caching must never leak user-specific data.
 
@@ -1062,7 +1062,7 @@ When in doubt, do not cache sensitive data.
 
 ---
 
-# 53. Authorization and Cache Keys
+## 53. Authorization and Cache Keys
 
 If user-specific data is cached, the cache key must account for the appropriate security boundary.
 
@@ -1086,7 +1086,7 @@ Do not expose authorization-sensitive cache keys to untrusted clients unnecessar
 
 ---
 
-# 54. Timing and Enumeration
+## 54. Timing and Enumeration
 
 Be aware of information leakage through:
 
@@ -1102,7 +1102,7 @@ For sensitive operations, consider whether the response reveals whether an accou
 
 ---
 
-# 55. Security Testing
+## 55. Security Testing
 
 Security-sensitive functionality must have tests.
 
@@ -1122,7 +1122,7 @@ Protected fields cannot be mass-assigned.
 
 ---
 
-# 56. Authentication Test Matrix
+## 56. Authentication Test Matrix
 
 For protected resources, consider:
 
@@ -1148,7 +1148,7 @@ Do not assume that testing only the happy path is sufficient.
 
 ---
 
-# 57. Authorization Test Matrix
+## 57. Authorization Test Matrix
 
 For each protected mutation, consider:
 
@@ -1168,7 +1168,7 @@ Do not invent roles merely for testing.
 
 ---
 
-# 58. Security Regression Tests
+## 58. Security Regression Tests
 
 When fixing a security vulnerability:
 
@@ -1182,7 +1182,7 @@ Do not rely solely on manual testing.
 
 ---
 
-# 59. Security Review for New Features
+## 59. Security Review for New Features
 
 Before completing a feature, ask:
 
@@ -1203,7 +1203,7 @@ If any answer is unclear, investigate before completing the feature.
 
 ---
 
-# 60. Security Documentation
+## 60. Security Documentation
 
 If a security-sensitive behavior changes, update the relevant documentation.
 
@@ -1223,7 +1223,7 @@ Do not leave security behavior undocumented.
 
 ---
 
-# 61. Security Checklist
+## 61. Security Checklist
 
 Before completing a security-sensitive feature:
 
@@ -1249,7 +1249,7 @@ Before completing a security-sensitive feature:
 
 ---
 
-# 62. Forbidden Security Practices
+## 62. Forbidden Security Practices
 
 Never:
 
@@ -1273,7 +1273,7 @@ Never:
 
 ---
 
-# 63. Security and Development Convenience
+## 63. Security and Development Convenience
 
 Development convenience must not weaken production security.
 
@@ -1296,7 +1296,7 @@ If a development-only shortcut is genuinely necessary:
 
 ---
 
-# 64. Security Priority
+## 64. Security Priority
 
 When security conflicts with convenience, prioritize:
 
@@ -1318,7 +1318,7 @@ Do not accept a known security vulnerability merely because the implementation i
 
 ---
 
-# 65. Final Security Principles
+## 65. Final Security Principles
 
 Always remember:
 

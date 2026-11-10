@@ -5,6 +5,7 @@ import {
   eq,
   gte,
   inArray,
+  isNotNull,
   isNull,
   lt,
   lte,
@@ -186,10 +187,23 @@ export async function listAccessibleUpcomingTasks(
     .all();
 }
 
+export type DashboardListScope = "mine" | "all";
+
+function projectListScopeWhere(scope: DashboardListScope) {
+  return scope === "mine" ? isNotNull(projectMembers.id) : canReadProjectSql();
+}
+
+function activityListScopeWhere(scope: DashboardListScope) {
+  return scope === "mine"
+    ? or(isNull(activities.projectId), isNotNull(projectMembers.id))
+    : or(isNull(activities.projectId), canReadProjectSql());
+}
+
 export async function listAccessibleProjectsForUser(
   db: AppDatabase,
   userId: string,
   limit = 6,
+  scope: DashboardListScope = "mine",
 ) {
   return db
     .select({
@@ -199,12 +213,13 @@ export async function listAccessibleProjectsForUser(
       status: projects.status,
       priority: projects.priority,
       color: projects.color,
+      progressWeights: projects.progressWeights,
       updatedAt: projects.updatedAt,
     })
     .from(projects)
     .innerJoin(workspaceMembers, workspaceMembershipJoin(userId))
     .leftJoin(projectMembers, projectMembershipJoin(userId))
-    .where(and(isNull(projects.archivedAt), canReadProjectSql()))
+    .where(and(isNull(projects.archivedAt), projectListScopeWhere(scope)))
     .orderBy(desc(projects.updatedAt))
     .limit(limit)
     .all();
@@ -223,6 +238,11 @@ export async function getTaskCountsByProjectIds(
       projectId: tasks.projectId,
       total: sql<number>`count(*)`,
       completed: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
+      backlog: sql<number>`sum(case when ${tasks.status} = 'backlog' then 1 else 0 end)`,
+      todo: sql<number>`sum(case when ${tasks.status} = 'todo' then 1 else 0 end)`,
+      inProgress: sql<number>`sum(case when ${tasks.status} = 'in_progress' then 1 else 0 end)`,
+      review: sql<number>`sum(case when ${tasks.status} = 'review' then 1 else 0 end)`,
+      done: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
     })
     .from(tasks)
     .where(and(inArray(tasks.projectId, projectIds), isNull(tasks.archivedAt)))
@@ -234,6 +254,7 @@ export async function listRecentActivitiesForUser(
   db: AppDatabase,
   userId: string,
   limit = 10,
+  scope: DashboardListScope = "mine",
 ) {
   return db
     .select({
@@ -264,7 +285,7 @@ export async function listRecentActivitiesForUser(
         eq(projectMembers.userId, userId),
       ),
     )
-    .where(or(isNull(activities.projectId), canReadProjectSql()))
+    .where(activityListScopeWhere(scope))
     .orderBy(desc(activities.createdAt))
     .limit(limit)
     .all();

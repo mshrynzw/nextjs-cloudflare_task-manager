@@ -140,11 +140,21 @@ export default async function ProjectDetailPage({
               >
                 {t.project.openBoard}
               </Link>
-              {project.canManage ? (
+              {project.canEdit || project.canManage ? (
                 <ProjectActionsMenu
-                  projectId={project.id}
-                  projectName={project.name}
-                  visibility={project.visibility}
+                  project={{
+                    id: project.id,
+                    name: project.name,
+                    description: project.description,
+                    status: project.status,
+                    priority: project.priority,
+                    color: project.color,
+                    deadline: project.deadline,
+                    progressWeights: project.progressWeights,
+                    visibility: project.visibility,
+                  }}
+                  canEdit={project.canEdit}
+                  canManage={project.canManage}
                 />
               ) : null}
             </div>

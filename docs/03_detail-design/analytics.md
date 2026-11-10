@@ -2,29 +2,29 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-008
 
-## 画面名
+### 画面名
 
 Analytics
 
-## URL
+### URL
 
 ```text id="m1p9va"
 /analytics
 ```
 
-## 目的
+### 目的
 
 Analytics画面は、プロジェクトやタスクの進捗状況、生産性、メンバーごとの作業量などをグラフや統計情報で可視化し、意思決定を支援することを目的とする。
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text id="ybkhb8"
 +------------------------------------------------------------------------+
@@ -44,7 +44,7 @@ Analytics画面は、プロジェクトやタスクの進捗状況、生産性�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -76,7 +76,7 @@ Task
 
 ---
 
-# 4. Toolbar
+## 4. Toolbar
 
 表示内容
 
@@ -96,13 +96,13 @@ Task
 
 ---
 
-# 5. KPI Cards
+## 5. KPI Cards
 
 表示枚数
 
 6枚
 
-### Total Tasks
+#### Total Tasks
 
 ```text id="4fjbkx"
 482
@@ -110,7 +110,7 @@ Task
 
 ---
 
-### Completed
+#### Completed
 
 ```text id="b2p1do"
 371
@@ -118,7 +118,7 @@ Task
 
 ---
 
-### Completion Rate
+#### Completion Rate
 
 ```text id="76um0q"
 77%
@@ -126,7 +126,7 @@ Task
 
 ---
 
-### Overdue Tasks
+#### Overdue Tasks
 
 ```text id="8r6zdy"
 12
@@ -134,7 +134,7 @@ Task
 
 ---
 
-### Active Members
+#### Active Members
 
 ```text id="gjnmja"
 14
@@ -142,7 +142,7 @@ Task
 
 ---
 
-### Average Completion Time
+#### Average Completion Time
 
 ```text id="gk7my2"
 3.8 days
@@ -150,7 +150,7 @@ Task
 
 ---
 
-# 6. Completion Trend
+## 6. Completion Trend
 
 種類
 
@@ -170,7 +170,7 @@ Y軸
 
 ---
 
-# 7. Task Distribution
+## 7. Task Distribution
 
 種類
 
@@ -188,7 +188,7 @@ Donut Chart
 
 ---
 
-# 8. Priority Breakdown
+## 8. Priority Breakdown
 
 種類
 
@@ -204,7 +204,7 @@ Bar Chart
 
 ---
 
-# 9. Member Workload
+## 9. Member Workload
 
 種類
 
@@ -218,7 +218,7 @@ Horizontal Bar Chart
 
 ---
 
-# 10. Productivity Heatmap
+## 10. Productivity Heatmap
 
 種類
 
@@ -230,7 +230,7 @@ Heatmap
 
 ---
 
-# 11. Recent Metrics
+## 11. Recent Metrics
 
 表形式
 
@@ -244,7 +244,7 @@ Heatmap
 
 ---
 
-# 12. Upcoming Deadlines
+## 12. Upcoming Deadlines
 
 表示件数
 
@@ -261,7 +261,7 @@ Heatmap
 
 ---
 
-# 13. Export
+## 13. Export
 
 対応形式
 
@@ -275,7 +275,7 @@ Heatmap
 
 ---
 
-# 14. Empty State
+## 14. Empty State
 
 分析データが存在しない場合
 
@@ -295,7 +295,7 @@ Create tasks to generate analytics.
 
 ---
 
-# 15. Loading
+## 15. Loading
 
 Skeleton表示
 
@@ -307,7 +307,7 @@ Skeleton表示
 
 ---
 
-# 16. Toast
+## 16. Toast
 
 成功
 
@@ -329,9 +329,9 @@ Failed to load analytics.
 
 ---
 
-# 17. アニメーション
+## 17. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -359,7 +359,7 @@ Fade + Stagger
 
 ---
 
-## KPI
+### KPI
 
 数値
 
@@ -367,7 +367,7 @@ Count Up Animation
 
 ---
 
-## Chart
+### Chart
 
 描画時
 
@@ -389,7 +389,7 @@ Heatmap
 
 ---
 
-## Hover
+### Hover
 
 Chart
 
@@ -402,13 +402,13 @@ Card
 
 ---
 
-## Refresh
+### Refresh
 
 ChartをCross Fadeで更新
 
 ---
 
-# 18. レスポンシブ
+## 18. レスポンシブ
 
 Desktop
 
@@ -434,7 +434,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. アクセシビリティ
+## 19. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -444,7 +444,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. 使用Hooks
+## 20. 使用Hooks
 
 ```text id="zzedib"
 useAnalytics()
@@ -460,7 +460,7 @@ useProductivityHeatmap()
 
 ---
 
-# 21. 使用Feature
+## 21. 使用Feature
 
 ```text id="n6jlwm"
 features/analytics
@@ -472,7 +472,7 @@ features/project
 
 ---
 
-# 22. 使用予定コンポーネント
+## 22. 使用予定コンポーネント
 
 ```text id="mvygkn"
 StatCard
@@ -506,7 +506,7 @@ EmptyState
 
 ---
 
-# 23. グラフライブラリ
+## 23. グラフライブラリ
 
 採用ライブラリ
 
@@ -524,7 +524,7 @@ Recharts
 
 ---
 
-# 24. 将来追加予定
+## 24. 将来追加予定
 
 - バーンダウンチャート
 - ベロシティチャート

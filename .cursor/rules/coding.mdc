@@ -11,7 +11,7 @@ Before implementing code, read the relevant documentation and existing implement
 
 ---
 
-# 1. Core Principles
+## 1. Core Principles
 
 - Write production-ready code.
 - Prioritize readability and maintainability.
@@ -26,7 +26,7 @@ Before implementing code, read the relevant documentation and existing implement
 
 ---
 
-# 2. TypeScript
+## 2. TypeScript
 
 Use TypeScript for application code.
 
@@ -48,7 +48,7 @@ Prefer type inference when the type is obvious.
 
 ---
 
-# 3. Interface vs Type
+## 3. Interface vs Type
 
 Use `interface` for object-shaped contracts that may benefit from extension or declaration merging.
 
@@ -83,7 +83,7 @@ Choose the construct that best expresses the intended type.
 
 ---
 
-# 4. Type Safety
+## 4. Type Safety
 
 Prefer type-safe implementations.
 
@@ -120,7 +120,7 @@ Prefer:
 
 ---
 
-# 5. Null and Undefined
+## 5. Null and Undefined
 
 Handle nullable values explicitly.
 
@@ -146,7 +146,7 @@ or appropriate fallback behavior.
 
 ---
 
-# 6. Async / Await
+## 6. Async / Await
 
 Prefer `async/await` for asynchronous code.
 
@@ -179,7 +179,7 @@ Do not use parallel execution when operations depend on each other.
 
 ---
 
-# 7. Error Handling
+## 7. Error Handling
 
 Do not silently ignore errors.
 
@@ -204,7 +204,7 @@ Do not expose internal implementation details to users.
 
 ---
 
-# 8. Functions
+## 8. Functions
 
 Keep functions small and focused.
 
@@ -224,7 +224,7 @@ Split responsibilities when a function becomes difficult to understand or test.
 
 ---
 
-# 9. File Size
+## 9. File Size
 
 Prefer keeping files under approximately 300 lines.
 
@@ -241,7 +241,7 @@ Split files when separation improves:
 
 ---
 
-# 10. Naming
+## 10. Naming
 
 Use descriptive names.
 
@@ -267,7 +267,7 @@ Avoid unnecessary abbreviations.
 
 ---
 
-# 11. Variables
+## 11. Variables
 
 Use `const` by default.
 
@@ -279,7 +279,7 @@ Prefer immutable data where practical.
 
 ---
 
-# 12. Boolean Naming
+## 12. Boolean Naming
 
 Boolean variables should clearly communicate their meaning.
 
@@ -306,7 +306,7 @@ when the boolean meaning is unclear.
 
 ---
 
-# 13. Constants
+## 13. Constants
 
 Use constants for values that have semantic meaning or are reused.
 
@@ -332,7 +332,7 @@ if (projects.length > MAX_PROJECTS_PER_PAGE) {
 
 ---
 
-# 14. Comments
+## 14. Comments
 
 Prefer self-explanatory code.
 
@@ -362,7 +362,7 @@ Example:
 
 ---
 
-# 15. React
+## 15. React
 
 Follow React best practices.
 
@@ -378,7 +378,7 @@ If a component becomes difficult to understand, split it by responsibility.
 
 ---
 
-# 16. React Props
+## 16. React Props
 
 Define explicit props.
 
@@ -401,7 +401,7 @@ Never use `any`.
 
 ---
 
-# 17. React State
+## 17. React State
 
 Do not create state when derived values can be calculated.
 
@@ -425,7 +425,7 @@ Keep local state local whenever possible.
 
 ---
 
-# 18. useEffect
+## 18. useEffect
 
 Do not use `useEffect` as a default mechanism for application logic.
 
@@ -441,7 +441,7 @@ Use `useEffect` when synchronization with an external system or browser API actu
 
 ---
 
-# 19. Server / Client Boundary
+## 19. Server / Client Boundary
 
 Follow `docs/04_architecture.md`.
 
@@ -461,7 +461,7 @@ Do not make an entire page a Client Component because one child component requir
 
 ---
 
-# 20. Data Fetching
+## 20. Data Fetching
 
 Do not fetch data unnecessarily.
 
@@ -475,7 +475,7 @@ Avoid fetching the same data independently in multiple components when it can be
 
 ---
 
-# 21. API Calls
+## 21. API Calls
 
 Do not put API request logic directly into many unrelated components.
 
@@ -494,7 +494,7 @@ states explicitly.
 
 ---
 
-# 22. Validation
+## 22. Validation
 
 All external input must be validated.
 
@@ -510,7 +510,7 @@ Client-side validation does not replace server-side validation.
 
 ---
 
-# 23. Business Logic
+## 23. Business Logic
 
 Do not put business logic inside UI components.
 
@@ -536,7 +536,7 @@ Use judgment.
 
 ---
 
-# 24. Database Access
+## 24. Database Access
 
 Do not access the database directly from UI components.
 
@@ -564,7 +564,7 @@ D1
 
 ---
 
-# 25. Security
+## 25. Security
 
 Treat all external input as untrusted.
 
@@ -584,7 +584,7 @@ Never commit secrets.
 
 ---
 
-# 26. Reusability
+## 26. Reusability
 
 Write reusable code when reuse provides real value.
 
@@ -600,7 +600,7 @@ Extract shared logic when:
 
 ---
 
-# 27. Duplication
+## 27. Duplication
 
 Avoid duplicated business logic.
 
@@ -618,7 +618,7 @@ Do not duplicate functionality simply because it is faster.
 
 ---
 
-# 28. Imports
+## 28. Imports
 
 Keep imports clean.
 
@@ -638,7 +638,7 @@ Do not leave commented-out imports.
 
 ---
 
-# 29. Dependency Management
+## 29. Dependency Management
 
 Do not install a dependency without a clear reason.
 
@@ -655,7 +655,7 @@ Do not add a dependency for a trivial piece of functionality.
 
 ---
 
-# 30. ESLint
+## 30. ESLint
 
 Code must pass ESLint.
 
@@ -675,7 +675,7 @@ Avoid broad ESLint disable comments.
 
 ---
 
-# 31. Prettier
+## 31. Prettier
 
 Follow the project's Prettier configuration.
 
@@ -687,7 +687,7 @@ Format changed files before completing the task.
 
 ---
 
-# 32. Type Checking
+## 32. Type Checking
 
 Before completing a task, run the project's TypeScript type check.
 
@@ -705,7 +705,7 @@ Do not use `any` to resolve them.
 
 ---
 
-# 33. Testing
+## 33. Testing
 
 New functionality must include appropriate tests.
 
@@ -730,7 +730,7 @@ Test behavior.
 
 ---
 
-# 34. Testability
+## 34. Testability
 
 Write code that can be tested independently.
 
@@ -756,7 +756,7 @@ Avoid tightly coupling business logic to React components.
 
 ---
 
-# 35. Git
+## 35. Git
 
 Do not modify unrelated files.
 
@@ -778,7 +778,7 @@ Follow `.gitignore`.
 
 ---
 
-# 36. Refactoring
+## 36. Refactoring
 
 Do not perform large unrelated refactors while implementing a feature.
 
@@ -793,7 +793,7 @@ Do not rewrite working code merely because another style is preferred.
 
 ---
 
-# 37. Existing Code
+## 37. Existing Code
 
 Before creating new code, inspect the existing implementation.
 
@@ -805,7 +805,7 @@ Respect established conventions unless there is a clear reason to change them.
 
 ---
 
-# 38. Documentation
+## 38. Documentation
 
 When code changes the documented behavior, update the relevant documentation.
 
@@ -830,7 +830,7 @@ Do not leave documentation inconsistent with implementation.
 
 ---
 
-# 39. Implementation Checklist
+## 39. Implementation Checklist
 
 Before completing implementation, verify:
 
@@ -853,7 +853,7 @@ Before completing implementation, verify:
 
 ---
 
-# 40. Final Coding Principles
+## 40. Final Coding Principles
 
 Always prefer:
 

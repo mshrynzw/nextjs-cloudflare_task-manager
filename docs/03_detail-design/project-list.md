@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-003
 
-## 画面名
+### 画面名
 
 Project List
 
-## URL
+### URL
 
 ```text
 /projects
 ```
 
-## 目的
+### 目的
 
 Project List画面は、登録されているプロジェクトを一覧表示し、検索・フィルター・ソートを行いながら目的のプロジェクトへ素早くアクセスできることを目的とする。
 
@@ -26,7 +26,7 @@ Project List画面は、登録されているプロジェクトを一覧表示�
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +---------------------------------------------------------------+
@@ -47,7 +47,7 @@ Project List画面は、登録されているプロジェクトを一覧表示�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -75,7 +75,7 @@ Project List画面は、登録されているプロジェクトを一覧表示�
 
 ---
 
-# 4. Header
+## 4. Header
 
 表示項目
 
@@ -87,29 +87,38 @@ Project List画面は、登録されているプロジェクトを一覧表示�
 
 ---
 
-# 5. Toolbar
+## 5. Toolbar
 
 表示内容
 
 - Search
-- Filter
+- Scope（参加中 / すべて）
+- Filter（Status / Priority）
 - Sort
-- View切替
 - New Project Button
+
+### Scope
+
+| 値 | 意味 | 既定 |
+| --- | --- | --- |
+| `mine` | `project_members` に自分がいるプロジェクトのみ | ○ |
+| `all` | ワークスペース内で閲覧可能なプロジェクト全体（公開 + 参加中） |  |
+
+URL パラメータ: `scope`（省略時は `mine`）。`mine` のときは URL から省略する。
 
 ---
 
-# 6. Project Card
+## 6. Project Card
 
 表示内容
 
-### 基本情報
+#### 基本情報
 
 - プロジェクト名
 - 説明
 - プロジェクトカラー
 
-### ステータス
+#### ステータス
 
 - Active
 - Planning
@@ -119,7 +128,7 @@ Project List画面は、登録されているプロジェクトを一覧表示�
 
 Badgeで表示する。
 
-### Progress
+#### Progress
 
 Progress Bar
 
@@ -131,7 +140,7 @@ Progress Bar
 
 ---
 
-### Deadline
+#### Deadline
 
 例
 
@@ -143,7 +152,7 @@ Progress Bar
 
 ---
 
-### Members
+#### Members
 
 Avatar Stackで表示。
 
@@ -159,7 +168,7 @@ Avatar Stackで表示。
 
 ---
 
-### Tags
+#### Tags
 
 複数表示可能。
 
@@ -172,7 +181,7 @@ Avatar Stackで表示。
 
 ---
 
-### Footer
+#### Footer
 
 表示内容
 
@@ -182,7 +191,7 @@ Avatar Stackで表示。
 
 ---
 
-# 7. 検索
+## 7. 検索
 
 対象
 
@@ -194,7 +203,7 @@ Avatar Stackで表示。
 
 ---
 
-# 8. Filter
+## 8. Filter
 
 対応項目
 
@@ -221,7 +230,7 @@ Deadline
 
 ---
 
-# 9. Sort
+## 9. Sort
 
 並び順
 
@@ -233,7 +242,7 @@ Deadline
 
 ---
 
-# 10. View Switch
+## 10. View Switch
 
 切替
 
@@ -248,7 +257,7 @@ Deadline
 
 ---
 
-# 11. Pagination
+## 11. Pagination
 
 Desktop
 
@@ -262,7 +271,7 @@ Mobile
 
 ---
 
-# 12. New Project
+## 12. New Project
 
 クリックすると
 
@@ -285,7 +294,7 @@ Toast表示。
 
 ---
 
-# 13. Empty State
+## 13. Empty State
 
 プロジェクトが存在しない場合
 
@@ -306,7 +315,7 @@ Create your first project and start organizing your work.
 
 ---
 
-# 14. Loading
+## 14. Loading
 
 Skeleton表示
 
@@ -319,7 +328,7 @@ Skeleton表示
 
 ---
 
-# 15. Toast
+## 15. Toast
 
 成功
 
@@ -347,7 +356,7 @@ Failed to load projects.
 
 ---
 
-# 16. Context Menu
+## 16. Context Menu
 
 Project Card右上
 
@@ -363,9 +372,9 @@ Deleteのみ危険操作として表示する。
 
 ---
 
-# 17. アニメーション
+## 17. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -389,7 +398,7 @@ Stagger Animation
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -407,7 +416,7 @@ HoverでTooltip表示。
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -415,7 +424,7 @@ Scale
 
 ---
 
-## Filter
+### Filter
 
 Dropdown
 
@@ -423,13 +432,13 @@ Fade
 
 ---
 
-## View切替
+### View切替
 
 Cross Fade
 
 ---
 
-# 18. レスポンシブ
+## 18. レスポンシブ
 
 Desktop
 
@@ -459,7 +468,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. アクセシビリティ
+## 19. アクセシビリティ
 
 - キーボード操作対応
 - aria-label設定
@@ -468,7 +477,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. 使用Hooks
+## 20. 使用Hooks
 
 ```text
 useProjects()
@@ -484,7 +493,7 @@ usePagination()
 
 ---
 
-# 21. 使用Feature
+## 21. 使用Feature
 
 ```text
 features/project
@@ -492,7 +501,7 @@ features/project
 
 ---
 
-# 22. 使用予定コンポーネント
+## 22. 使用予定コンポーネント
 
 ```text
 ProjectCard
@@ -522,7 +531,7 @@ Skeleton
 
 ---
 
-# 23. 将来追加予定
+## 23. 将来追加予定
 
 - Favorite Projects
 - Recently Viewed

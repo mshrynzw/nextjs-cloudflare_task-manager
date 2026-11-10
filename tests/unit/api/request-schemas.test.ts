@@ -4,6 +4,7 @@ import {
   createProjectBodySchema,
   createTaskBodySchema,
   listProjectsQuerySchema,
+  updateProjectBodySchema,
   updateSettingsBodySchema,
   updateTaskPositionBodySchema,
   updateUserBodySchema,
@@ -40,6 +41,35 @@ describe("createProjectBodySchema", () => {
   });
 });
 
+describe("updateProjectBodySchema progressWeights", () => {
+  it("accepts valid non-decreasing weights", () => {
+    const parsed = updateProjectBodySchema.parse({
+      progressWeights: {
+        backlog: 0,
+        todo: 0.25,
+        in_progress: 0.5,
+        review: 0.75,
+        done: 1,
+      },
+    });
+    expect(parsed.progressWeights?.todo).toBe(0.25);
+  });
+
+  it("rejects decreasing weights", () => {
+    expect(() =>
+      updateProjectBodySchema.parse({
+        progressWeights: {
+          backlog: 0,
+          todo: 0.9,
+          in_progress: 0.1,
+          review: 0.8,
+          done: 1,
+        },
+      }),
+    ).toThrow();
+  });
+});
+
 describe("createTaskBodySchema", () => {
   it("accepts a valid task title", () => {
     const parsed = createTaskBodySchema.parse({ title: " Ship it " });
@@ -63,6 +93,16 @@ describe("listProjectsQuerySchema", () => {
     });
     expect(parsed.page).toBe(2);
     expect(parsed.limit).toBe(10);
+  });
+
+  it("defaults scope to mine", () => {
+    const parsed = listProjectsQuerySchema.parse({});
+    expect(parsed.scope).toBe("mine");
+  });
+
+  it("accepts scope all", () => {
+    const parsed = listProjectsQuerySchema.parse({ scope: "all" });
+    expect(parsed.scope).toBe("all");
   });
 
   it("rejects oversized page sizes", () => {

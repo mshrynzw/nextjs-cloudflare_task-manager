@@ -15,7 +15,7 @@ Always read and follow that document when making architectural decisions.
 
 ---
 
-# 1. Core Architecture Principles
+## 1. Core Architecture Principles
 
 - Follow Feature First Architecture.
 - Prefer simple and maintainable architecture.
@@ -31,7 +31,7 @@ The implementation must remain consistent with `docs/04_architecture.md`.
 
 ---
 
-# 2. Feature First Architecture
+## 2. Feature First Architecture
 
 Organize application code by feature rather than by page.
 
@@ -56,7 +56,7 @@ Do not create empty directories solely to match the example structure.
 
 ---
 
-# 3. Feature Structure
+## 3. Feature Structure
 
 A feature may use:
 
@@ -76,7 +76,7 @@ Do not create unnecessary layers.
 
 ---
 
-# 4. Layered Architecture
+## 4. Layered Architecture
 
 The preferred application flow is:
 
@@ -102,7 +102,7 @@ Each layer must have a clear responsibility.
 
 ---
 
-# 5. UI Layer
+## 5. UI Layer
 
 UI components are responsible for:
 
@@ -124,7 +124,7 @@ directly inside UI components.
 
 ---
 
-# 6. Page Components
+## 6. Page Components
 
 `page.tsx` should primarily compose the page.
 
@@ -152,7 +152,7 @@ not:
 
 ---
 
-# 7. Next.js App Router
+## 7. Next.js App Router
 
 Use Next.js App Router.
 
@@ -182,7 +182,7 @@ Do not create duplicate routing systems.
 
 ---
 
-# 8. Server Components
+## 8. Server Components
 
 Server Components are the default.
 
@@ -204,7 +204,7 @@ unless client-side behavior actually requires it.
 
 ---
 
-# 9. Client Components
+## 9. Client Components
 
 Use Client Components only when necessary.
 
@@ -228,7 +228,7 @@ Prefer the smallest possible Client Component boundary.
 
 ---
 
-# 10. Database Access
+## 10. Database Access
 
 UI components must never access the database directly.
 
@@ -266,7 +266,7 @@ D1
 
 ---
 
-# 11. Repository Layer
+## 11. Repository Layer
 
 Repositories are responsible for database access.
 
@@ -296,7 +296,7 @@ Repositories should not contain presentation concerns.
 
 ---
 
-# 12. Service Layer
+## 12. Service Layer
 
 Services are responsible for business logic.
 
@@ -324,7 +324,7 @@ Do not move database-specific query logic into Services when it belongs in a Rep
 
 ---
 
-# 13. Route Handlers
+## 13. Route Handlers
 
 Route Handlers are responsible for HTTP/API concerns.
 
@@ -356,7 +356,7 @@ Repository
 
 ---
 
-# 14. Server Actions
+## 14. Server Actions
 
 Server Actions may be used for appropriate server-side mutations.
 
@@ -375,7 +375,7 @@ A Server Action must not directly contain a large amount of business logic.
 
 ---
 
-# 15. Authentication
+## 15. Authentication
 
 Authentication is handled by Auth.js.
 
@@ -391,7 +391,7 @@ Do not store sensitive authentication information in Client Components.
 
 ---
 
-# 16. Authorization
+## 16. Authorization
 
 Authentication and Authorization are separate concerns.
 
@@ -425,7 +425,7 @@ through a manipulated request.
 
 ---
 
-# 17. Workspace and Project Boundaries
+## 17. Workspace and Project Boundaries
 
 Treat Workspace and Project membership as security boundaries.
 
@@ -453,11 +453,11 @@ without verifying authorization on the server.
 
 ---
 
-# 18. State Management
+## 18. State Management
 
 Classify state before choosing a state management solution.
 
-## Server State
+### Server State
 
 Use TanStack Query where client-side server-state management is required.
 
@@ -474,7 +474,7 @@ Do not duplicate server state unnecessarily in local React state.
 
 ---
 
-## Local UI State
+### Local UI State
 
 Use:
 
@@ -498,7 +498,7 @@ Do not introduce global state for simple local UI state.
 
 ---
 
-## Form State
+### Form State
 
 Use React Hook Form for complex forms.
 
@@ -506,7 +506,7 @@ Use Zod for validation.
 
 ---
 
-## URL State
+### URL State
 
 Use URL Search Parameters for state that should be:
 
@@ -525,7 +525,7 @@ Do not store URL-worthy filter state only in React state.
 
 ---
 
-# 19. API Architecture
+## 19. API Architecture
 
 API endpoints are implemented using Next.js Route Handlers.
 
@@ -552,7 +552,7 @@ Before modifying an API:
 
 ---
 
-# 20. Validation Boundary
+## 20. Validation Boundary
 
 External input is untrusted.
 
@@ -582,7 +582,7 @@ Do not rely solely on client-side validation.
 
 ---
 
-# 21. Shared Components
+## 21. Shared Components
 
 Shared components belong in:
 
@@ -616,7 +616,7 @@ Tooltip
 
 ---
 
-# 22. Feature Components
+## 22. Feature Components
 
 Feature-specific components belong inside their feature.
 
@@ -640,11 +640,11 @@ Do not promote a feature component to shared code prematurely.
 
 ---
 
-# 23. Component Boundaries
+## 23. Component Boundaries
 
 Use the following rules.
 
-## Shared Component
+### Shared Component
 
 Use when:
 
@@ -652,7 +652,7 @@ Use when:
 - It has no feature-specific business logic.
 - Its API can remain generic.
 
-## Feature Component
+### Feature Component
 
 Use when:
 
@@ -660,7 +660,7 @@ Use when:
 - It contains feature-specific UI behavior.
 - It should not be reused elsewhere.
 
-## Page Component
+### Page Component
 
 Use when:
 
@@ -670,7 +670,7 @@ Use when:
 
 ---
 
-# 24. Cross-Feature Dependencies
+## 24. Cross-Feature Dependencies
 
 Avoid unnecessary dependencies between features.
 
@@ -694,7 +694,7 @@ Do not create circular dependencies.
 
 ---
 
-# 25. Database Technology
+## 25. Database Technology
 
 The target database architecture is:
 
@@ -719,7 +719,7 @@ and recording the architectural decision.
 
 ---
 
-# 26. Database Abstraction
+## 26. Database Abstraction
 
 Do not couple UI code to Drizzle or D1.
 
@@ -734,7 +734,7 @@ Database-specific implementation must remain in the data-access layer.
 
 ---
 
-# 27. Performance Architecture
+## 27. Performance Architecture
 
 Performance is a first-class architectural requirement.
 
@@ -752,7 +752,7 @@ Do not move server-side work to the client without a clear reason.
 
 ---
 
-# 28. Initial Load
+## 28. Initial Load
 
 The Login page must not access the database merely to render the login UI.
 
@@ -782,7 +782,7 @@ Do not load unnecessary application data during the initial Dashboard request.
 
 ---
 
-# 29. Database Connection Strategy
+## 29. Database Connection Strategy
 
 Database access must occur only when required.
 
@@ -800,7 +800,7 @@ Client Components must never connect directly to D1.
 
 ---
 
-# 30. Caching
+## 30. Caching
 
 Use caching where appropriate.
 
@@ -825,7 +825,7 @@ When introducing caching, explicitly consider:
 
 ---
 
-# 31. Error Architecture
+## 31. Error Architecture
 
 Errors should be handled according to layer responsibility.
 
@@ -849,7 +849,7 @@ Do not use generic error handling that hides the actual failure during developme
 
 ---
 
-# 32. Error Boundaries
+## 32. Error Boundaries
 
 Use Next.js Error Boundaries where appropriate.
 
@@ -859,7 +859,7 @@ Do not allow an isolated feature failure to unnecessarily crash the entire appli
 
 ---
 
-# 33. Loading Architecture
+## 33. Loading Architecture
 
 Use Next.js loading UI where appropriate:
 
@@ -873,7 +873,7 @@ Loading UI should preserve the expected page structure and avoid unnecessary lay
 
 ---
 
-# 34. Empty States
+## 34. Empty States
 
 Every major data-driven screen must define an appropriate Empty State.
 
@@ -890,7 +890,7 @@ An Empty State should tell the user what happened and, when appropriate, what to
 
 ---
 
-# 35. Responsive Architecture
+## 35. Responsive Architecture
 
 All application screens must support:
 
@@ -919,7 +919,7 @@ for breakpoint definitions.
 
 ---
 
-# 36. Animation Architecture
+## 36. Animation Architecture
 
 GSAP may be used for appropriate UI animation.
 
@@ -940,7 +940,7 @@ Forbidden:
 
 ---
 
-# 37. Testing Architecture
+## 37. Testing Architecture
 
 Tests are part of the architecture.
 
@@ -955,7 +955,7 @@ tests/
 
 Use:
 
-## Unit Tests
+### Unit Tests
 
 For:
 
@@ -965,7 +965,7 @@ For:
 - Repositories
 - Business logic
 
-## Integration Tests
+### Integration Tests
 
 For:
 
@@ -975,7 +975,7 @@ For:
 - Authorization
 - Feature workflows
 
-## E2E Tests
+### E2E Tests
 
 For important user journeys.
 
@@ -999,7 +999,7 @@ Logout
 
 ---
 
-# 38. Architecture and Testing
+## 38. Architecture and Testing
 
 Architectural layers must remain testable.
 
@@ -1014,7 +1014,7 @@ Do not tightly couple business logic to React components.
 
 ---
 
-# 39. Dependency Policy
+## 39. Dependency Policy
 
 Before adding a dependency:
 
@@ -1031,7 +1031,7 @@ Do not add a dependency for a trivial utility that can be implemented safely wit
 
 ---
 
-# 40. Architecture Changes
+## 40. Architecture Changes
 
 Do not silently change:
 
@@ -1056,7 +1056,7 @@ If such a change is required:
 
 ---
 
-# 41. Forbidden Architecture
+## 41. Forbidden Architecture
 
 The following are prohibited:
 
@@ -1077,7 +1077,7 @@ The following are prohibited:
 
 ---
 
-# 42. Documentation Synchronization
+## 42. Documentation Synchronization
 
 When architecture changes, update:
 
@@ -1105,7 +1105,7 @@ Documentation and implementation must remain consistent.
 
 ---
 
-# 43. Implementation Workflow
+## 43. Implementation Workflow
 
 Before implementing a major feature:
 
@@ -1139,7 +1139,7 @@ Do not skip directly from a feature request to implementation without checking t
 
 ---
 
-# 44. Architecture Decision Priority
+## 44. Architecture Decision Priority
 
 When multiple technically valid solutions exist, prioritize:
 
@@ -1158,7 +1158,7 @@ Do not choose a technically inferior architecture merely because it is faster to
 
 ---
 
-# 45. Current Target Architecture
+## 45. Current Target Architecture
 
 The target architecture is:
 
@@ -1206,7 +1206,7 @@ Do not assume planned technologies are already installed or configured.
 
 ---
 
-# 46. Important Distinction: Planned vs Implemented
+## 46. Important Distinction: Planned vs Implemented
 
 The architecture document may define technologies that are planned but not yet implemented.
 
@@ -1221,7 +1221,7 @@ Do not claim that a planned technology is already implemented.
 
 ---
 
-# 47. Final Architecture Principles
+## 47. Final Architecture Principles
 
 Always keep the following principles in mind:
 

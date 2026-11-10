@@ -9,6 +9,7 @@ import {
   addMemberBodySchema,
 } from "@/lib/api/request-schemas";
 import { getDb } from "@/lib/db/server";
+import { getI18n } from "@/lib/i18n/get-i18n";
 import {
   addProjectMemberForUser,
   createProjectForUser,
@@ -17,6 +18,7 @@ import {
   resolveDefaultWorkspaceId,
   updateProjectForUser,
 } from "@/lib/services/project-service";
+import { parseProjectEditForm } from "@/features/project/utils/parse-project-edit-form";
 
 export type ProjectActionState = {
   status: "idle" | "error" | "success";
@@ -115,34 +117,19 @@ export async function updateProjectAction(
   _prev: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> {
+  const { t } = await getI18n();
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
-    return unauthorizedState();
+    return { status: "error", message: t.errors.authRequired };
   }
 
-  const parsed = createProjectBodySchema
-    .pick({
-      name: true,
-      description: true,
-      status: true,
-      priority: true,
-      color: true,
-      deadline: true,
-    })
-    .safeParse({
-      name: formData.get("name"),
-      description: formData.get("description") || null,
-      status: formData.get("status") || undefined,
-      priority: formData.get("priority") || undefined,
-      color: formData.get("color") || undefined,
-      deadline: formData.get("deadline") || null,
-    });
+  const parsed = parseProjectEditForm(formData);
 
   if (!parsed.success) {
     return {
       status: "error",
-      message: "Check the project fields and try again.",
+      message: t.errors.projectFields,
     };
   }
 
@@ -150,7 +137,7 @@ export async function updateProjectAction(
     await updateProjectForUser(getDb(), userId, projectId, parsed.data);
     revalidatePath("/projects");
     revalidatePath(`/projects/${projectId}`);
-    return { status: "success", message: "Project updated." };
+    return { status: "success", message: t.toasts.projectUpdated };
   } catch (error) {
     if (error instanceof ApiError) {
       return { status: "error", message: error.message };

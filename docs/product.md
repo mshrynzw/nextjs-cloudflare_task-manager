@@ -4,23 +4,23 @@ Version: 1.0
 
 ---
 
-# 1. Product Overview
+## 1. Product Overview
 
-## Product Name
+### Product Name
 
 Task Manager
 
-## Product Category
+### Product Category
 
 Productivity / Project Management SaaS
 
-## Product Type
+### Product Type
 
 Web Application
 
 ---
 
-# 2. Product Vision
+## 2. Product Vision
 
 Task Managerは、個人開発者、フリーランス、小規模チームが、プロジェクトとタスクをシンプルかつ直感的に管理するためのProject Management SaaSである。
 
@@ -39,7 +39,7 @@ Task Managerは、個人開発者、フリーランス、小規模チームが�
 
 ---
 
-# 3. Product Mission
+## 3. Product Mission
 
 > Make complex work feel simple.
 
@@ -47,37 +47,37 @@ Task Managerは、個人開発者、フリーランス、小規模チームが�
 
 ---
 
-# 4. Product Philosophy
+## 4. Product Philosophy
 
 Task Managerでは以下の思想を重視する。
 
-## Simple
+### Simple
 
 必要な情報を必要なときだけ表示する。
 
-## Fast
+### Fast
 
 操作に対して即座に反応する。
 
-## Focused
+### Focused
 
 ユーザーがタスクそのものに集中できるUIを提供する。
 
-## Elegant
+### Elegant
 
 業務ツールであっても、美しく心地よく使えるデザインを目指す。
 
-## Predictable
+### Predictable
 
 どの画面でも同じルールで操作できる。
 
 ---
 
-# 5. Target Users
+## 5. Target Users
 
-## Primary Users
+### Primary Users
 
-### Freelancer
+#### Freelancer
 
 案件を複数抱えるフリーランサー。
 
@@ -90,7 +90,7 @@ Task Managerでは以下の思想を重視する。
 
 ---
 
-### Small Team
+#### Small Team
 
 2〜20人程度の小規模チーム。
 
@@ -102,7 +102,7 @@ Task Managerでは以下の思想を重視する。
 
 ---
 
-### Developer
+#### Developer
 
 ソフトウェア開発者。
 
@@ -115,7 +115,7 @@ Task Managerでは以下の思想を重視する。
 
 ---
 
-### Web Production Team
+#### Web Production Team
 
 Web制作会社・デザイン会社。
 
@@ -128,7 +128,7 @@ Web制作会社・デザイン会社。
 
 ---
 
-# 6. Secondary Users
+## 6. Secondary Users
 
 将来的には以下のユーザーも想定する。
 
@@ -141,11 +141,11 @@ Web制作会社・デザイン会社。
 
 ---
 
-# 7. User Problems
+## 7. User Problems
 
 Task Managerが解決する主な問題。
 
-## Problem 1
+### Problem 1
 
 タスクが複数の場所に分散している。
 
@@ -161,7 +161,7 @@ Calendar
 
 ---
 
-## Problem 2
+### Problem 2
 
 プロジェクト全体の進捗が分からない。
 
@@ -181,7 +181,7 @@ Activity
 
 ---
 
-## Problem 3
+### Problem 3
 
 今日やるべきことが分からない。
 
@@ -196,7 +196,7 @@ Dashboardで、
 
 ---
 
-## Problem 4
+### Problem 4
 
 タスクの状態を管理しづらい。
 
@@ -214,7 +214,7 @@ Done
 
 ---
 
-## Problem 5
+### Problem 5
 
 プロジェクトの問題点に気づきにくい。
 
@@ -229,25 +229,25 @@ Analyticsによって、
 
 ---
 
-# 8. Product Value Proposition
+## 8. Product Value Proposition
 
 Task Managerの価値は以下の3点。
 
-### 1. Clarity
+#### 1. Clarity
 
 「何をすべきか」が明確になる。
 
-### 2. Control
+#### 2. Control
 
 「プロジェクトがどこまで進んでいるか」を把握できる。
 
-### 3. Momentum
+#### 3. Momentum
 
 「次に何をするか」をすぐに決められる。
 
 ---
 
-# 9. Core User Journey
+## 9. Core User Journey
 
 基本的なユーザーフロー。
 
@@ -269,7 +269,7 @@ Dashboard / Analytics
 
 ---
 
-# 10. First-Time User Experience
+## 10. First-Time User Experience
 
 初めてログインしたユーザーが、
 
@@ -291,7 +291,7 @@ Create Task
 
 ---
 
-# 11. Dashboard Experience
+## 11. Dashboard Experience
 
 Dashboardは単なる統計画面ではない。
 
@@ -311,7 +311,7 @@ Dashboardは単なる統計画面ではない。
 
 ---
 
-# 12. Project Experience
+## 12. Project Experience
 
 ProjectはTaskの単なる入れ物ではない。
 
@@ -327,7 +327,7 @@ ProjectはTaskの単なる入れ物ではない。
 
 ---
 
-# 13. Task Experience
+## 13. Task Experience
 
 Taskはアプリケーションの中心Entityとする。
 
@@ -346,7 +346,7 @@ Taskから、
 
 ---
 
-# 14. Kanban Experience
+## 14. Kanban Experience
 
 Task BoardではDrag & Dropを中心とした操作を提供する。
 
@@ -368,7 +368,7 @@ Done
 
 ---
 
-# 15. Calendar Experience
+## 15. Calendar Experience
 
 CalendarはTaskの期限を時間軸で把握するために使用する。
 
@@ -381,7 +381,7 @@ CalendarはTaskの期限を時間軸で把握するために使用する。
 
 ---
 
-# 16. Analytics Experience
+## 16. Analytics Experience
 
 Analyticsは「数字を見るためだけの画面」にしない。
 
@@ -401,7 +401,7 @@ Analyticsは「数字を見るためだけの画面」にしない。
 
 ---
 
-# 17. Profile Experience
+## 17. Profile Experience
 
 Profileではユーザー自身の活動を確認できる。
 
@@ -416,7 +416,7 @@ Profileではユーザー自身の活動を確認できる。
 
 ---
 
-# 18. Settings Experience
+## 18. Settings Experience
 
 Settingsではアプリケーションの個人設定を管理する。
 
@@ -429,7 +429,7 @@ Settingsではアプリケーションの個人設定を管理する。
 
 ---
 
-# 19. Information Architecture
+## 19. Information Architecture
 
 ```text
 Task Manager
@@ -452,7 +452,7 @@ Task Manager
 
 ---
 
-# 20. Navigation Philosophy
+## 20. Navigation Philosophy
 
 Navigationはユーザーの作業を邪魔しない。
 
@@ -484,7 +484,7 @@ Project
 
 ---
 
-# 21. Command Palette
+## 21. Command Palette
 
 Command Paletteを主要な操作方法の一つとして提供する。
 
@@ -513,7 +513,7 @@ Toggle Sidebar
 
 ---
 
-# 22. Search
+## 22. Search
 
 検索はProjectおよびTaskを対象とする。
 
@@ -531,7 +531,7 @@ Tags
 
 ---
 
-# 23. Notification Philosophy
+## 23. Notification Philosophy
 
 通知は必要最小限とする。
 
@@ -549,7 +549,7 @@ Tags
 
 ---
 
-# 24. Empty State Philosophy
+## 24. Empty State Philosophy
 
 Empty Stateは「何もない状態」ではなく、
 
@@ -570,7 +570,7 @@ to get started.
 
 ---
 
-# 25. Loading Philosophy
+## 25. Loading Philosophy
 
 Loading中に画面構造が大きく変化しないようにする。
 
@@ -590,7 +590,7 @@ Content
 
 ---
 
-# 26. Error Philosophy
+## 26. Error Philosophy
 
 エラーが発生しても、ユーザーが次の行動を判断できるようにする。
 
@@ -612,7 +612,7 @@ We couldn't load your projects.
 
 ---
 
-# 27. Optimistic UI
+## 27. Optimistic UI
 
 操作結果が予測可能な場合はOptimistic Updateを使用する。
 
@@ -627,7 +627,7 @@ We couldn't load your projects.
 
 ---
 
-# 28. Product Performance
+## 28. Product Performance
 
 PerformanceをProduct Qualityの一部として扱う。
 
@@ -641,7 +641,7 @@ PerformanceをProduct Qualityの一部として扱う。
 
 ---
 
-# 29. Initial Access Experience
+## 29. Initial Access Experience
 
 ポートフォリオとして、最初のアクセス体験を特に重視する。
 
@@ -655,25 +655,25 @@ Login Page表示時には、認証後にしか必要ないDatabase処理を実�
 
 ---
 
-# 30. Product Quality Bar
+## 30. Product Quality Bar
 
 最低限以下を満たす。
 
-### Visual
+#### Visual
 
 - Premium
 - Modern
 - Consistent
 - Responsive
 
-### UX
+#### UX
 
 - Predictable
 - Fast
 - Accessible
 - Keyboard Friendly
 
-### Engineering
+#### Engineering
 
 - Type Safe
 - Tested
@@ -682,7 +682,7 @@ Login Page表示時には、認証後にしか必要ないDatabase処理を実�
 
 ---
 
-# 31. Design Direction
+## 31. Design Direction
 
 デザインの参考として以下を利用する。
 
@@ -721,7 +721,7 @@ GitHub Projects
 
 ---
 
-# 32. Visual Identity
+## 32. Visual Identity
 
 基本テーマ
 
@@ -742,7 +742,7 @@ Technical
 
 ---
 
-# 33. Motion Philosophy
+## 33. Motion Philosophy
 
 アニメーションは「見せるため」ではなく「理解を助けるため」に使用する。
 
@@ -759,7 +759,7 @@ Technical
 
 ---
 
-# 34. Accessibility
+## 34. Accessibility
 
 AccessibilityをProduct Qualityの一部として扱う。
 
@@ -776,7 +776,7 @@ AccessibilityをProduct Qualityの一部として扱う。
 
 ---
 
-# 35. Responsive Product Strategy
+## 35. Responsive Product Strategy
 
 Desktop Firstではなく、すべての画面で適切なUXを提供する。
 
@@ -805,7 +805,7 @@ Bottom / Drawer Navigation
 
 ---
 
-# 36. Mobile Philosophy
+## 36. Mobile Philosophy
 
 MobileではDesktop UIを単純に縮小しない。
 
@@ -817,9 +817,9 @@ MobileではDesktop UIを単純に縮小しない。
 
 ---
 
-# 37. Product Scope
+## 37. Product Scope
 
-## MVP
+### MVP
 
 以下をMVPとする。
 
@@ -838,7 +838,7 @@ Settings
 
 ---
 
-# 38. Out of Scope
+## 38. Out of Scope
 
 初期Versionでは以下を対象外とする。
 
@@ -855,7 +855,7 @@ Enterprise SSO
 
 ---
 
-# 39. Future Product Extensions
+## 39. Future Product Extensions
 
 将来的に以下を検討する。
 
@@ -877,7 +877,7 @@ Advanced Search
 
 ---
 
-# 40. Competitive Positioning
+## 40. Competitive Positioning
 
 Task Managerは既存のProject Management SaaSと直接競争することを目的としない。
 
@@ -889,45 +889,45 @@ Task Managerは既存のProject Management SaaSと直接競争することを目
 
 ---
 
-# 41. Product Differentiation
+## 41. Product Differentiation
 
 主な差別化ポイント。
 
-## 1. Premium UX
+### 1. Premium UX
 
 一般的な業務システムよりも洗練されたUIを目指す。
 
-## 2. Speed
+### 2. Speed
 
 初回アクセスおよび操作レスポンスを重視する。
 
-## 3. Focus
+### 3. Focus
 
 不要な機能を増やさず、Task Managementに集中する。
 
-## 4. Keyboard Friendly
+### 4. Keyboard Friendly
 
 Command Paletteなどを利用して高速操作を可能にする。
 
 ---
 
-# 42. Success Criteria
+## 42. Success Criteria
 
 Productとして以下を満たした場合、成功と判断する。
 
-### User Experience
+#### User Experience
 
 - 初めて見ても操作方法が理解できる
 - 主要操作が迷わず行える
 - Desktop / Mobile双方で利用できる
 
-### Visual
+#### Visual
 
 - SaaS Productとして違和感がない
 - デザインルールが全画面で統一されている
 - アニメーションが自然
 
-### Engineering
+#### Engineering
 
 - TypeScript Errorがない
 - Lint Errorがない
@@ -936,7 +936,7 @@ Productとして以下を満たした場合、成功と判断する。
 
 ---
 
-# 43. Portfolio Success Criteria
+## 43. Portfolio Success Criteria
 
 このプロジェクトは通常のプロダクトとは異なり、ポートフォリオとしての評価も重要とする。
 
@@ -961,7 +961,7 @@ Documentation
 
 ---
 
-# 44. Demo Experience
+## 44. Demo Experience
 
 Portfolio訪問者は必ずしも時間をかけてアプリを操作するとは限らない。
 
@@ -983,7 +983,7 @@ Analytics
 
 ---
 
-# 45. Demo Data
+## 45. Demo Data
 
 Demo環境では、空のDatabaseを表示しない。
 
@@ -1009,27 +1009,27 @@ Activities
 
 ---
 
-# 46. Product Metrics
+## 46. Product Metrics
 
 将来的に以下を計測可能とする。
 
-## Activation
+### Activation
 
 初回Project作成率。
 
-## Engagement
+### Engagement
 
 週次アクティブユーザー。
 
-## Task Completion
+### Task Completion
 
 Task完了率。
 
-## Project Completion
+### Project Completion
 
 Project完了率。
 
-## Retention
+### Retention
 
 一定期間後の再訪率。
 
@@ -1037,7 +1037,7 @@ Portfolio用途では実際のKPI運用を目的とせず、Product Analytics設
 
 ---
 
-# 47. Product Decisions
+## 47. Product Decisions
 
 重要なProduct Decisionは`development-log.md`へ記録する。
 
@@ -1052,7 +1052,7 @@ Portfolio用途では実際のKPI運用を目的とせず、Product Analytics設
 
 ---
 
-# 48. Relationship With Other Documents
+## 48. Relationship With Other Documents
 
 Product Designは他の設計書の上位概念として扱う。
 
@@ -1090,7 +1090,7 @@ Implementation
 
 ---
 
-# 49. Documentation Rules
+## 49. Documentation Rules
 
 Productに関する重要な変更が発生した場合は、本ドキュメントを更新する。
 
@@ -1114,7 +1114,7 @@ How
 
 ---
 
-# 50. Final Product Principles
+## 50. Final Product Principles
 
 Task Managerでは以下をProductの原則とする。
 

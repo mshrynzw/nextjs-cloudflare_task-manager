@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-007
 
-## 画面名
+### 画面名
 
 Calendar
 
-## URL
+### URL
 
 ```text
 /calendar
 ```
 
-## 目的
+### 目的
 
 Calendar画面は、タスクおよびプロジェクトの期限や予定をカレンダー形式で表示し、日・週・月単位でスケジュールを把握できることを目的とする。
 
@@ -26,7 +26,7 @@ Task Boardの補助画面として機能し、期限管理を視覚的に支援�
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ Task Boardの補助画面として機能し、期限管理を視覚的に支援�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -79,7 +79,7 @@ Task
 
 ---
 
-# 4. Toolbar
+## 4. Toolbar
 
 表示内容
 
@@ -95,7 +95,7 @@ Task
 
 ---
 
-# 5. Calendar Header
+## 5. Calendar Header
 
 表示内容
 
@@ -112,7 +112,7 @@ August 2026
 
 ---
 
-# 6. Month View
+## 6. Month View
 
 表示内容
 
@@ -133,7 +133,7 @@ August 2026
 
 ---
 
-# 7. Week View
+## 7. Week View
 
 表示内容
 
@@ -157,7 +157,7 @@ August 2026
 
 ---
 
-# 8. Day View
+## 8. Day View
 
 表示内容
 
@@ -169,7 +169,7 @@ August 2026
 
 ---
 
-# 9. Agenda Panel
+## 9. Agenda Panel
 
 右側に表示
 
@@ -190,7 +190,7 @@ August 2026
 
 ---
 
-# 10. Event Card
+## 10. Event Card
 
 表示内容
 
@@ -206,7 +206,7 @@ Task Detailへ遷移する。
 
 ---
 
-# 11. Search
+## 11. Search
 
 対象
 
@@ -218,7 +218,7 @@ Task Detailへ遷移する。
 
 ---
 
-# 12. Filter
+## 12. Filter
 
 対象
 
@@ -234,7 +234,7 @@ Tag
 
 ---
 
-# 13. Dialog
+## 13. Dialog
 
 New Task
 
@@ -253,7 +253,7 @@ Toast表示。
 
 ---
 
-# 14. Empty State
+## 14. Empty State
 
 予定が存在しない場合
 
@@ -273,7 +273,7 @@ Enjoy your free day.
 
 ---
 
-# 15. Loading
+## 15. Loading
 
 Skeleton表示
 
@@ -285,7 +285,7 @@ Skeleton表示
 
 ---
 
-# 16. Toast
+## 16. Toast
 
 成功
 
@@ -313,9 +313,9 @@ Failed to load calendar.
 
 ---
 
-# 17. アニメーション
+## 17. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -339,7 +339,7 @@ Fade + Stagger
 
 ---
 
-## 月切り替え
+### 月切り替え
 
 Cross Fade
 
@@ -349,7 +349,7 @@ Slide Animation
 
 ---
 
-## Hover
+### Hover
 
 Calendar Cell
 
@@ -362,7 +362,7 @@ Event Card
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -370,7 +370,7 @@ Scale
 
 ---
 
-## Today
+### Today
 
 今日の日付
 
@@ -378,7 +378,7 @@ Pulse Animation（控えめ）
 
 ---
 
-# 18. レスポンシブ
+## 18. レスポンシブ
 
 Desktop
 
@@ -410,7 +410,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. アクセシビリティ
+## 19. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -420,7 +420,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. 使用Hooks
+## 20. 使用Hooks
 
 ```text
 useCalendar()
@@ -434,7 +434,7 @@ useCalendarFilter()
 
 ---
 
-# 21. 使用Feature
+## 21. 使用Feature
 
 ```text
 features/calendar
@@ -446,7 +446,7 @@ features/project
 
 ---
 
-# 22. 使用予定コンポーネント
+## 22. 使用予定コンポーネント
 
 ```text
 CalendarHeader
@@ -482,7 +482,7 @@ EmptyState
 
 ---
 
-# 23. 将来追加予定
+## 23. 将来追加予定
 
 - ドラッグ&ドロップによる日程変更
 - 繰り返しタスク

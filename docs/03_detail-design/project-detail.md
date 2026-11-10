@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-004
 
-## 画面名
+### 画面名
 
 Project Detail
 
-## URL
+### URL
 
 ```text
 /projects/:projectId
 ```
 
-## 目的
+### 目的
 
 Project Detail画面は、プロジェクト全体の状況を確認するためのダッシュボードとして機能する。
 
@@ -26,7 +26,7 @@ Project Detail画面は、プロジェクト全体の状況を確認するため
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +------------------------------------------------------------------+
@@ -48,7 +48,7 @@ Project Detail画面は、プロジェクト全体の状況を確認するため
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -89,7 +89,7 @@ Activity
 
 ---
 
-# 4. Breadcrumb
+## 4. Breadcrumb
 
 表示例
 
@@ -101,7 +101,7 @@ Dashboard / Projects / Website Renewal
 
 ---
 
-# 5. Project Header
+## 5. Project Header
 
 表示内容
 
@@ -126,7 +126,7 @@ Dashboard / Projects / Website Renewal
 
 ---
 
-# 6. KPI Cards
+## 6. KPI Cards
 
 表示枚数
 
@@ -134,7 +134,7 @@ Dashboard / Projects / Website Renewal
 
 表示内容
 
-### Progress
+#### Progress
 
 ```text
 72%
@@ -144,7 +144,7 @@ Progress Bar付き。
 
 ---
 
-### Total Tasks
+#### Total Tasks
 
 ```text
 48
@@ -152,7 +152,7 @@ Progress Bar付き。
 
 ---
 
-### Completed
+#### Completed
 
 ```text
 31
@@ -160,7 +160,7 @@ Progress Bar付き。
 
 ---
 
-### Members
+#### Members
 
 ```text
 8
@@ -168,7 +168,7 @@ Progress Bar付き。
 
 ---
 
-# 7. Project Information
+## 7. Project Information
 
 表示内容
 
@@ -184,7 +184,7 @@ Repository はGitHubアイコン付きリンクで表示する。
 
 ---
 
-# 8. Recent Tasks
+## 8. Recent Tasks
 
 表示件数
 
@@ -202,7 +202,7 @@ Repository はGitHubアイコン付きリンクで表示する。
 
 ---
 
-# 9. Members
+## 9. Members
 
 表示内容
 
@@ -221,7 +221,7 @@ Owner はメンバーの追加・削除ができる。
 
 ---
 
-# 10. Activity Timeline
+## 10. Activity Timeline
 
 表示件数
 
@@ -244,7 +244,7 @@ Emily completed "Landing Page Design"
 
 ---
 
-# 11. Deadline
+## 11. Deadline
 
 表示内容
 
@@ -258,7 +258,7 @@ Emily completed "Landing Page Design"
 
 ---
 
-# 12. Quick Actions
+## 12. Quick Actions
 
 表示内容
 
@@ -270,7 +270,7 @@ Emily completed "Landing Page Design"
 
 ---
 
-# 13. Context Menu
+## 13. Context Menu
 
 Project Header右上
 
@@ -285,7 +285,7 @@ DeleteはDanger表示。
 
 ---
 
-# 14. Dialog
+## 14. Dialog
 
 Edit Project
 
@@ -297,6 +297,7 @@ Edit Project
 - Status
 - Priority
 - Deadline
+- Progress weights（各 Task Status の寄与率。0–100%、ステータス進行に対して非減少）
 
 保存後
 
@@ -304,7 +305,7 @@ Toast表示。
 
 ---
 
-# 15. Empty State
+## 15. Empty State
 
 Taskが存在しない場合
 
@@ -324,7 +325,7 @@ Create your first task to get started.
 
 ---
 
-# 16. Loading
+## 16. Loading
 
 Skeleton表示
 
@@ -338,7 +339,7 @@ Skeleton表示
 
 ---
 
-# 17. Toast
+## 17. Toast
 
 成功
 
@@ -360,9 +361,9 @@ Failed to update project.
 
 ---
 
-# 18. アニメーション
+## 18. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -402,7 +403,7 @@ Quick Actions
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -419,13 +420,13 @@ Avatar
 
 ---
 
-## Progress
+### Progress
 
 左から伸びるアニメーション。
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -433,13 +434,13 @@ Scale
 
 ---
 
-## Timeline
+### Timeline
 
 下からフェードイン。
 
 ---
 
-# 19. レスポンシブ
+## 19. レスポンシブ
 
 Desktop
 
@@ -463,7 +464,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. アクセシビリティ
+## 20. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -473,7 +474,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 21. 使用Hooks
+## 21. 使用Hooks
 
 ```text
 useProject()
@@ -487,7 +488,7 @@ useProjectActivity()
 
 ---
 
-# 22. 使用Feature
+## 22. 使用Feature
 
 ```text
 features/project
@@ -501,7 +502,7 @@ features/activity
 
 ---
 
-# 23. 使用予定コンポーネント
+## 23. 使用予定コンポーネント
 
 ```text
 ProjectHero
@@ -539,7 +540,7 @@ EmptyState
 
 ---
 
-# 24. 今後追加予定
+## 24. 今後追加予定
 
 - Project Cover Image
 - Project Notes

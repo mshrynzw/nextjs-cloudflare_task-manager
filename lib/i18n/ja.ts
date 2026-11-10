@@ -86,11 +86,17 @@ export const ja = {
     upcoming: "今後の予定",
     recentActivity: "最近のアクティビティ",
     quickActions: "クイックアクション",
+    progressScopeLabel: "プロジェクト進捗の表示範囲",
+    activityScopeLabel: "最近のアクティビティの表示範囲",
+    scopeMine: "参加中",
+    scopeAll: "すべて",
     emptyToday: "今日が期限のタスクはありません。",
     emptyOverdue: "期限切れはありません。",
     emptyUpcoming: "今後の期限はありません。",
     emptyActivity: "最近のアクティビティはありません。",
+    emptyActivityMine: "参加中のプロジェクトにアクティビティはありません。",
     emptyProjects: "プロジェクトはまだありません。",
+    emptyProjectsMine: "参加中のプロジェクトはまだありません。",
     createOne: "作成する",
     browseProjects: "プロジェクトを見る",
     openCalendar: "カレンダーを開く",
@@ -102,6 +108,9 @@ export const ja = {
     description: "プロジェクトの検索、絞り込み、管理ができます。",
     search: "プロジェクトを検索",
     searchPlaceholder: "プロジェクトを検索…",
+    filterScope: "参加スコープ",
+    scopeMine: "参加中",
+    scopeAll: "すべて",
     filterStatus: "ステータスで絞り込み",
     filterPriority: "優先度で絞り込み",
     sort: "並び替え",
@@ -118,6 +127,15 @@ export const ja = {
     newProject: "新規プロジェクト",
     createTitle: "プロジェクトを作成",
     createDescription: "ワークスペースにプロジェクトを追加します。",
+    edit: "プロジェクトを編集",
+    editTitle: "プロジェクトを編集",
+    editDescription: "プロジェクトの詳細を更新します。",
+    progressWeights: "進捗の重み",
+    progressWeightsHelp:
+      "各タスクステータスが、プロジェクト進捗にどれだけ寄与するかを割合で設定します。",
+    progressWeightsRule:
+      "0〜100 で入力してください。ステータスが進むほど値が下がらないようにします（Backlog → Done）。",
+    progressWeightsReset: "既定値に戻す",
     name: "名前",
     namePlaceholder: "ウェブサイト刷新",
     descriptionLabel: "説明",
@@ -421,6 +439,8 @@ export const ja = {
     invalidNotifications: "通知設定が正しくありません。",
     profileFields:
       "プロフィール項目を確認してください（ウェブサイト / 画像は有効な URL である必要があります）。",
+    projectFields:
+      "プロジェクトの入力内容を確認してください。進捗の重みは 0〜100 で、ステータスが進むほど下がらない値にしてください。",
     passwordLength: "パスワードは 8 文字以上にしてください。",
     tooManyAttempts:
       "試行回数が多すぎます。{seconds} 秒後に再試行してください。",
@@ -488,6 +508,7 @@ export const ja = {
     workspaceMemberAdded: "メンバーを追加しました。",
     workspaceMemberRemoved: "メンバーを削除しました。",
     workspaceRoleUpdated: "ロールを更新しました。",
+    projectUpdated: "プロジェクトを更新しました。",
   },
 } as const;
 

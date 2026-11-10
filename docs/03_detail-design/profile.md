@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-010
 
-## 画面名
+### 画面名
 
 Profile
 
-## URL
+### URL
 
 ```text
 /profile/:userId
 ```
 
-## 目的
+### 目的
 
 Profile画面は、ユーザーのプロフィール情報、担当タスク、参加プロジェクト、活動履歴などを確認するための画面である。
 
@@ -26,7 +26,7 @@ Profile画面は、ユーザーのプロフィール情報、担当タスク、�
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ Profile画面は、ユーザーのプロフィール情報、担当タスク、�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -88,7 +88,7 @@ Activity
 
 ---
 
-# 4. Breadcrumb
+## 4. Breadcrumb
 
 表示例
 
@@ -98,7 +98,7 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-# 5. Profile Header
+## 5. Profile Header
 
 表示内容
 
@@ -117,13 +117,13 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-# 6. Overview Cards
+## 6. Overview Cards
 
 表示枚数
 
 4枚
 
-### Assigned Tasks
+#### Assigned Tasks
 
 ```text
 24
@@ -131,7 +131,7 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-### Completed Tasks
+#### Completed Tasks
 
 ```text
 186
@@ -139,7 +139,7 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-### Active Projects
+#### Active Projects
 
 ```text
 6
@@ -147,7 +147,7 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-### Completion Rate
+#### Completion Rate
 
 ```text
 92%
@@ -155,7 +155,7 @@ Dashboard / Members / Emily Johnson
 
 ---
 
-# 7. User Information
+## 7. User Information
 
 表示内容
 
@@ -173,7 +173,7 @@ Role例
 
 ---
 
-# 8. Assigned Tasks
+## 8. Assigned Tasks
 
 表示件数
 
@@ -191,7 +191,7 @@ Role例
 
 ---
 
-# 9. Recent Activity
+## 9. Recent Activity
 
 表示件数
 
@@ -213,7 +213,7 @@ Completed "Landing Page Design"
 
 ---
 
-# 10. Projects
+## 10. Projects
 
 参加プロジェクト一覧
 
@@ -228,7 +228,7 @@ Completed "Landing Page Design"
 
 ---
 
-# 11. Skills & Tags
+## 11. Skills & Tags
 
 表示内容
 
@@ -245,7 +245,7 @@ Completed "Landing Page Design"
 
 ---
 
-# 12. Social Links
+## 12. Social Links
 
 表示項目
 
@@ -258,7 +258,7 @@ Completed "Landing Page Design"
 
 ---
 
-# 13. Dialog
+## 13. Dialog
 
 Edit Profile
 
@@ -277,7 +277,7 @@ Toast表示。
 
 ---
 
-# 14. Empty State
+## 14. Empty State
 
 Assigned Tasks
 
@@ -299,7 +299,7 @@ No recent activity.
 
 ---
 
-# 15. Loading
+## 15. Loading
 
 Skeleton表示
 
@@ -313,7 +313,7 @@ Skeleton表示
 
 ---
 
-# 16. Toast
+## 16. Toast
 
 成功
 
@@ -329,9 +329,9 @@ Failed to update profile.
 
 ---
 
-# 17. アニメーション
+## 17. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -363,7 +363,7 @@ Fade + Stagger
 
 ---
 
-## Hover
+### Hover
 
 Project Card
 
@@ -380,7 +380,7 @@ Scale 1.05
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -388,7 +388,7 @@ Scale
 
 ---
 
-## Count Up
+### Count Up
 
 Overview Cards
 
@@ -396,7 +396,7 @@ Overview Cards
 
 ---
 
-# 18. レスポンシブ
+## 18. レスポンシブ
 
 Desktop
 
@@ -432,7 +432,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. アクセシビリティ
+## 19. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -442,7 +442,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. 権限制御
+## 20. 権限制御
 
 本人のプロフィール
 
@@ -463,7 +463,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 21. 使用Hooks
+## 21. 使用Hooks
 
 ```text
 useProfile()
@@ -477,7 +477,7 @@ useUserActivity()
 
 ---
 
-# 22. 使用Feature
+## 22. 使用Feature
 
 ```text
 features/profile
@@ -493,7 +493,7 @@ features/activity
 
 ---
 
-# 23. 使用予定コンポーネント
+## 23. 使用予定コンポーネント
 
 ```text
 ProfileHeader
@@ -531,7 +531,7 @@ EmptyState
 
 ---
 
-# 24. 将来追加予定
+## 24. 将来追加予定
 
 - フォロー機能
 - プロフィールカバー画像

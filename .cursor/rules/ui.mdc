@@ -29,7 +29,7 @@ The canonical UI design system is defined in:
 
 ---
 
-# 1. Design Direction
+## 1. Design Direction
 
 The visual direction should be inspired by products such as:
 
@@ -66,7 +66,7 @@ Avoid generic dashboard aesthetics.
 
 ---
 
-# 2. Design Reference
+## 2. Design Reference
 
 Visual references created during the design phase are stored under:
 
@@ -108,7 +108,7 @@ The prototype is a visual reference, not the production architecture.
 
 ---
 
-# 3. Design System
+## 3. Design System
 
 Use the design tokens defined in:
 
@@ -136,7 +136,7 @@ Do not introduce screen-specific versions of global design tokens without a clea
 
 ---
 
-# 4. shadcn/ui
+## 4. shadcn/ui
 
 Use shadcn/ui for common UI primitives where appropriate.
 
@@ -166,7 +166,7 @@ Do not allow the default shadcn/ui appearance to determine the entire visual ide
 
 ---
 
-# 5. Tailwind CSS
+## 5. Tailwind CSS
 
 Use Tailwind CSS according to the project's established configuration.
 
@@ -186,7 +186,7 @@ When a style pattern is reused frequently, consider an appropriate reusable comp
 
 ---
 
-# 6. Responsive Design
+## 6. Responsive Design
 
 Every screen must support:
 
@@ -214,7 +214,7 @@ Consider:
 
 ---
 
-# 7. Mobile First Consideration
+## 7. Mobile First Consideration
 
 When implementing responsive behavior, consider mobile constraints from the beginning.
 
@@ -233,7 +233,7 @@ Important mobile considerations include:
 
 ---
 
-# 8. Touch Targets
+## 8. Touch Targets
 
 Interactive elements must be large enough to use comfortably on touch devices.
 
@@ -247,7 +247,7 @@ When an icon-only control is necessary:
 
 ---
 
-# 9. Dark Theme
+## 9. Dark Theme
 
 The primary design is a dark theme.
 
@@ -277,7 +277,7 @@ Use borders, shadows, and contrast carefully.
 
 ---
 
-# 10. Typography
+## 10. Typography
 
 Typography must establish a clear visual hierarchy.
 
@@ -295,7 +295,7 @@ Do not use excessive font sizes merely to make a screen look impressive.
 
 ---
 
-# 11. Spacing
+## 11. Spacing
 
 Use the spacing system defined by the design guidelines.
 
@@ -320,7 +320,7 @@ should have visually meaningful spacing between levels.
 
 ---
 
-# 12. Cards
+## 12. Cards
 
 Cards should be used intentionally.
 
@@ -345,7 +345,7 @@ according to `docs/08_ui-guideline.md`.
 
 ---
 
-# 13. Borders and Shadows
+## 13. Borders and Shadows
 
 Use subtle borders and shadows.
 
@@ -367,7 +367,7 @@ over heavy drop shadows.
 
 ---
 
-# 14. Glassmorphism
+## 14. Glassmorphism
 
 Glassmorphism may be used sparingly.
 
@@ -384,7 +384,7 @@ Avoid:
 
 ---
 
-# 15. Icons
+## 15. Icons
 
 Use Lucide icons or the project's established icon system.
 
@@ -398,7 +398,7 @@ Icon-only controls must have accessible names.
 
 ---
 
-# 16. Buttons
+## 16. Buttons
 
 Buttons must clearly communicate their hierarchy.
 
@@ -421,7 +421,7 @@ Destructive actions should be visually distinguishable.
 
 ---
 
-# 17. Forms
+## 17. Forms
 
 Forms must provide:
 
@@ -439,7 +439,7 @@ Use accessible form controls.
 
 ---
 
-# 18. Loading States
+## 18. Loading States
 
 Major asynchronous UI must provide an appropriate loading state.
 
@@ -458,7 +458,7 @@ Avoid blocking the entire screen unnecessarily.
 
 ---
 
-# 19. Skeleton
+## 19. Skeleton
 
 Skeleton UI should resemble the final content layout.
 
@@ -480,7 +480,7 @@ Respect reduced-motion preferences.
 
 ---
 
-# 20. Empty States
+## 20. Empty States
 
 Every major data-driven screen must have an intentional Empty State.
 
@@ -503,7 +503,7 @@ When appropriate, provide a primary action.
 
 ---
 
-# 21. Error States
+## 21. Error States
 
 Errors must be visible and understandable.
 
@@ -520,7 +520,7 @@ Do not expose stack traces or internal errors to users.
 
 ---
 
-# 22. Toast Notifications
+## 22. Toast Notifications
 
 Use Toast notifications for short-lived feedback.
 
@@ -539,7 +539,7 @@ Do not show excessive Toast notifications.
 
 ---
 
-# 23. Dialogs
+## 23. Dialogs
 
 Use dialogs for focused tasks that require temporary attention.
 
@@ -561,7 +561,7 @@ Dialogs must:
 
 ---
 
-# 24. Dropdowns and Popovers
+## 24. Dropdowns and Popovers
 
 Dropdowns and Popovers should be used for contextual actions and compact controls.
 
@@ -579,7 +579,7 @@ Do not hide important navigation or critical information inside ambiguous menus.
 
 ---
 
-# 25. Command Palette
+## 25. Command Palette
 
 The application may provide a Command Palette for power users.
 
@@ -613,7 +613,7 @@ may be used depending on platform.
 
 ---
 
-# 26. Tooltips
+## 26. Tooltips
 
 Use Tooltips for icon-only controls or unfamiliar controls.
 
@@ -625,7 +625,7 @@ Tooltips must not replace accessible names.
 
 ---
 
-# 27. Context Menus
+## 27. Context Menus
 
 Context menus may be used for advanced interactions.
 
@@ -646,7 +646,7 @@ Do not make essential functionality available only through context menus.
 
 ---
 
-# 28. Animation
+## 28. Animation
 
 Animations should feel polished and restrained.
 
@@ -665,7 +665,7 @@ Avoid animation that delays usability.
 
 ---
 
-# 29. GSAP
+## 29. GSAP
 
 GSAP may be used for sophisticated animations.
 
@@ -684,7 +684,7 @@ Do not use GSAP for animations that CSS can handle more simply.
 
 ---
 
-# 30. Animation Timing
+## 30. Animation Timing
 
 Animations should be short and natural.
 
@@ -701,7 +701,7 @@ The UI should feel fast even when animated.
 
 ---
 
-# 31. Reduced Motion
+## 31. Reduced Motion
 
 Respect:
 
@@ -715,7 +715,7 @@ Do not make essential functionality dependent on animation.
 
 ---
 
-# 32. Page Transitions
+## 32. Page Transitions
 
 Page transitions may use subtle fade or movement.
 
@@ -725,7 +725,7 @@ Avoid long transitions that make the application feel slow.
 
 ---
 
-# 33. Hover States
+## 33. Hover States
 
 Interactive elements should provide clear hover feedback on devices that support hover.
 
@@ -741,7 +741,7 @@ Do not rely on hover as the only indication of an action.
 
 ---
 
-# 34. Focus States
+## 34. Focus States
 
 Keyboard focus must always remain visible.
 
@@ -751,7 +751,7 @@ Focus styles must be visually consistent with the design system.
 
 ---
 
-# 35. Accessibility
+## 35. Accessibility
 
 Accessibility is mandatory.
 
@@ -791,7 +791,7 @@ where appropriate.
 
 ---
 
-# 36. Accessible Names
+## 36. Accessible Names
 
 Interactive elements must have accessible names.
 
@@ -809,7 +809,7 @@ Do not rely on visual icons alone.
 
 ---
 
-# 37. Keyboard Navigation
+## 37. Keyboard Navigation
 
 Interactive components must be keyboard accessible.
 
@@ -828,7 +828,7 @@ Do not create custom interactions that work only with mouse events.
 
 ---
 
-# 38. Color Contrast
+## 38. Color Contrast
 
 Do not use color as the only way to communicate information.
 
@@ -854,7 +854,7 @@ Ensure sufficient contrast between:
 
 ---
 
-# 39. Responsive Navigation
+## 39. Responsive Navigation
 
 Desktop navigation and mobile navigation may use different interaction patterns.
 
@@ -872,7 +872,7 @@ Do not force a desktop sidebar onto a narrow mobile viewport.
 
 ---
 
-# 40. Tables
+## 40. Tables
 
 Tables must remain usable on small screens.
 
@@ -887,7 +887,7 @@ Do not allow tables to silently overflow the entire page.
 
 ---
 
-# 41. Kanban Board
+## 41. Kanban Board
 
 The Task Board must support desktop and mobile intentionally.
 
@@ -917,7 +917,7 @@ Provide an accessible alternative when practical.
 
 ---
 
-# 42. Calendar
+## 42. Calendar
 
 Calendar interactions must remain usable on mobile.
 
@@ -935,7 +935,7 @@ Follow the screen design and UI guideline.
 
 ---
 
-# 43. Charts and Analytics
+## 43. Charts and Analytics
 
 Charts must be:
 
@@ -952,7 +952,7 @@ Provide textual context for important information when practical.
 
 ---
 
-# 44. Responsive Breakpoints
+## 44. Responsive Breakpoints
 
 Use the project's established Tailwind breakpoints.
 
@@ -966,7 +966,7 @@ If a new breakpoint is genuinely required:
 
 ---
 
-# 45. Mobile Layout
+## 45. Mobile Layout
 
 Mobile is a first-class experience.
 
@@ -982,7 +982,7 @@ Use it when implementing responsive behavior.
 
 ---
 
-# 46. Visual Consistency
+## 46. Visual Consistency
 
 All screens should feel like the same product.
 
@@ -1005,7 +1005,7 @@ Do not create screen-specific visual styles without a clear reason.
 
 ---
 
-# 47. Component Reuse
+## 47. Component Reuse
 
 Before creating a new UI component:
 
@@ -1019,7 +1019,7 @@ Do not duplicate Button, Dialog, Card, Input, Badge, Tooltip, or similar primiti
 
 ---
 
-# 48. shadcn/ui Customization
+## 48. shadcn/ui Customization
 
 Use shadcn/ui as a foundation, not as a restriction.
 
@@ -1039,7 +1039,7 @@ Do not allow default component styling to make the application look like an unmo
 
 ---
 
-# 49. Responsive Testing
+## 49. Responsive Testing
 
 When implementing a screen, consider at least:
 
@@ -1064,7 +1064,7 @@ Check:
 
 ---
 
-# 50. Performance
+## 50. Performance
 
 UI quality must not come at the expense of performance.
 
@@ -1083,7 +1083,7 @@ Use GSAP when its capabilities provide meaningful value.
 
 ---
 
-# 51. Images and Visual Assets
+## 51. Images and Visual Assets
 
 Do not introduce unnecessary external images into application UI.
 
@@ -1098,7 +1098,7 @@ For the current design references, SVG and CSS-based visuals are preferred when 
 
 ---
 
-# 52. Prototype vs Production
+## 52. Prototype vs Production
 
 The files under:
 
@@ -1138,7 +1138,7 @@ Test Responsive / Accessible Behavior
 
 ---
 
-# 53. UI Implementation Workflow
+## 53. UI Implementation Workflow
 
 Before implementing a screen:
 
@@ -1170,7 +1170,7 @@ Before implementing a screen:
 
 ---
 
-# 54. UI Checklist
+## 54. UI Checklist
 
 Before completing a screen:
 
@@ -1199,7 +1199,7 @@ Before completing a screen:
 
 ---
 
-# 55. Final UI Principles
+## 55. Final UI Principles
 
 Always prefer:
 
@@ -1243,7 +1243,7 @@ The application should feel like a real premium SaaS product, not a portfolio mo
 
 ````
 
-## 今回は特に `ui-reference` との連携が重要です
+### 今回は特に `ui-reference` との連携が重要です
 
 あなたのプロジェクトでは、Claudeに作ってもらったデザインを、
 

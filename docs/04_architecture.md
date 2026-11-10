@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Overview
+## 1. Overview
 
 本ドキュメントは、Task Managerのシステムアーキテクチャを定義する。
 
@@ -23,11 +23,11 @@ Version: 1.0
 
 ---
 
-# 2. Architecture Goals
+## 2. Architecture Goals
 
 以下をアーキテクチャ上の重要な目標とする。
 
-## 2.1 Performance
+### 2.1 Performance
 
 初回アクセス時に「接続できない」「非常に遅い」と感じさせないことを最優先する。
 
@@ -35,7 +35,7 @@ Version: 1.0
 
 ---
 
-## 2.2 Cost
+### 2.2 Cost
 
 個人ポートフォリオとして運用できるよう、可能な限り無料枠を利用する。
 
@@ -43,7 +43,7 @@ Version: 1.0
 
 ---
 
-## 2.3 Scalability
+### 2.3 Scalability
 
 将来的に以下の機能を追加できる構造とする。
 
@@ -58,7 +58,7 @@ Version: 1.0
 
 ---
 
-## 2.4 Maintainability
+### 2.4 Maintainability
 
 UI、ビジネスロジック、データアクセスを分離する。
 
@@ -66,7 +66,7 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-# 3. High-Level Architecture
+## 3. High-Level Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -108,9 +108,9 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-# 4. Technology Stack
+## 4. Technology Stack
 
-## Frontend
+### Frontend
 
 | Technology          | Purpose                  |
 | ------------------- | ------------------------ |
@@ -127,7 +127,7 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-## Backend
+### Backend
 
 | Technology                | Purpose                   |
 | ------------------------- | ------------------------- |
@@ -139,7 +139,7 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-## Database
+### Database
 
 | Technology    | Purpose         |
 | ------------- | --------------- |
@@ -149,7 +149,7 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-## Infrastructure
+### Infrastructure
 
 | Technology           | Purpose                |
 | -------------------- | ---------------------- |
@@ -159,7 +159,7 @@ UI、ビジネスロジック、データアクセスを分離する。
 
 ---
 
-# 5. Hosting Strategy
+## 5. Hosting Strategy
 
 本プロジェクトではCloudflareを中心とした構成を採用する。
 
@@ -189,7 +189,7 @@ Vercel
 
 ---
 
-# 6. Frontend Architecture
+## 6. Frontend Architecture
 
 Next.js App Routerを採用する。
 
@@ -218,7 +218,7 @@ app/
 
 ---
 
-# 7. Server Components
+## 7. Server Components
 
 Server Componentsをデフォルトとする。
 
@@ -233,7 +233,7 @@ Client Componentは必要な場合のみ使用する。
 
 ---
 
-# 8. Client Components
+## 8. Client Components
 
 以下のようなUIはClient Componentとする。
 
@@ -251,11 +251,11 @@ Client Componentをページ全体へ適用することは禁止する。
 
 ---
 
-# 9. State Management
+## 9. State Management
 
 状態を以下の4種類に分類する。
 
-## Server State
+### Server State
 
 TanStack Query
 
@@ -268,7 +268,7 @@ TanStack Query
 
 ---
 
-## Local UI State
+### Local UI State
 
 React useState / useReducer
 
@@ -281,13 +281,13 @@ React useState / useReducer
 
 ---
 
-## Form State
+### Form State
 
 React Hook Form
 
 ---
 
-## URL State
+### URL State
 
 URL Search Parameters
 
@@ -299,7 +299,7 @@ URL Search Parameters
 
 ---
 
-## Locale
+### Locale
 
 UI 言語は Cookie `vantage_locale`（`ja` | `en`）で解決する。未設定時は日本語。
 
@@ -309,7 +309,7 @@ UI 言語は Cookie `vantage_locale`（`ja` | `en`）で解決する。未設定
 
 ---
 
-# 10. Data Flow
+## 10. Data Flow
 
 基本的なデータフロー
 
@@ -333,7 +333,7 @@ UIから直接D1へアクセスしてはいけない。
 
 ---
 
-# 11. API Layer
+## 11. API Layer
 
 APIはNext.js Route Handlersで実装する。
 
@@ -351,7 +351,7 @@ docs/api.md
 
 ---
 
-# 12. Service Layer
+## 12. Service Layer
 
 Service Layerはビジネスロジックを担当する。
 
@@ -375,7 +375,7 @@ Service Layerでは以下を行う。
 
 ---
 
-# 13. Repository Layer
+## 13. Repository Layer
 
 Repository Layerはデータベースアクセスを担当する。
 
@@ -392,7 +392,7 @@ Repository Layer以外から直接DB操作を行わない。
 
 ---
 
-# 14. Database Architecture
+## 14. Database Architecture
 
 DatabaseにはCloudflare D1を使用する。
 
@@ -419,7 +419,7 @@ docs/database.md
 
 ---
 
-# 15. Authentication Architecture
+## 15. Authentication Architecture
 
 認証にはAuth.jsを採用する。
 
@@ -438,7 +438,7 @@ User
 
 認証情報をClient Componentに直接保存しない。
 
-## 15.1 Login / Sign-in flow（Cloudflare Workers）
+### 15.1 Login / Sign-in flow（Cloudflare Workers）
 
 Credentials / OAuth の `signIn` と `signOut` はクライアントの `next-auth/react` 経由のみで行う。
 
@@ -478,7 +478,7 @@ Auth.js は OpenNext 上で `getCloudflareContext({ async: true })` 経由の D1
 
 ---
 
-# 16. Authorization
+## 16. Authorization
 
 AuthenticationとAuthorizationを分離する。
 
@@ -518,7 +518,7 @@ Permission
 
 ---
 
-# 17. Role
+## 17. Role
 
 基本Role
 
@@ -538,7 +538,7 @@ docs/api.md
 
 ---
 
-# 18. Feature First Architecture
+## 18. Feature First Architecture
 
 Feature Firstを採用する。
 
@@ -561,7 +561,7 @@ features/
 
 ---
 
-# 19. Feature Structure
+## 19. Feature Structure
 
 Featureは原則として以下の構造を採用する。
 
@@ -581,7 +581,7 @@ features/task/
 
 ---
 
-# 20. Shared Components
+## 20. Shared Components
 
 共通UIは
 
@@ -605,11 +605,11 @@ Feature固有のコンポーネントはFeature内に配置する。
 
 ---
 
-# 21. Component Boundary
+## 21. Component Boundary
 
 以下の判断基準を使用する。
 
-## Shared Component
+### Shared Component
 
 複数Featureで利用される。
 
@@ -625,7 +625,7 @@ Badge
 
 ---
 
-## Feature Component
+### Feature Component
 
 特定Featureに依存する。
 
@@ -639,7 +639,7 @@ CalendarEvent
 
 ---
 
-## Page Component
+### Page Component
 
 特定ページのレイアウトを組み立てる。
 
@@ -647,7 +647,7 @@ CalendarEvent
 
 ---
 
-# 22. UI Architecture
+## 22. UI Architecture
 
 UIデザインは
 
@@ -667,7 +667,7 @@ docs/ui-guideline.md
 
 ---
 
-# 23. Design Reference
+## 23. Design Reference
 
 UIのリファレンスは
 
@@ -685,7 +685,7 @@ Referenceはデザイン仕様として利用する。
 
 ---
 
-# 24. Responsive Architecture
+## 24. Responsive Architecture
 
 Responsive Designを必須とする。
 
@@ -701,7 +701,7 @@ BreakpointはUI Guidelineに従う。
 
 ---
 
-# 25. Animation Architecture
+## 25. Animation Architecture
 
 GSAPを使用する。
 
@@ -718,7 +718,7 @@ GSAPを使用する。
 
 ---
 
-# 26. Performance Architecture
+## 26. Performance Architecture
 
 Performanceを重要な設計要件とする。
 
@@ -733,7 +733,7 @@ Performanceを重要な設計要件とする。
 
 ---
 
-# 27. Initial Load Strategy
+## 27. Initial Load Strategy
 
 ログインしていないユーザーがアクセスした場合でも、不要な外部サービスへの接続を発生させない。
 
@@ -764,7 +764,7 @@ Login Page
 
 ---
 
-# 28. Authenticated Data Loading
+## 28. Authenticated Data Loading
 
 認証後に必要なデータのみ取得する。
 
@@ -782,7 +782,7 @@ Dashboardに不要なデータを初回ロード時に取得してはいけな�
 
 ---
 
-# 29. Database Connection Strategy
+## 29. Database Connection Strategy
 
 Databaseへのアクセスは必要な処理に限定する。
 
@@ -799,7 +799,7 @@ Repository
 
 ---
 
-# 30. Caching Strategy
+## 30. Caching Strategy
 
 キャッシュ可能なデータには適切なCache Strategyを適用する。
 
@@ -815,7 +815,7 @@ Public Profile
 
 ---
 
-# 31. Error Handling Architecture
+## 31. Error Handling Architecture
 
 エラーは以下のレイヤーで処理する。
 
@@ -837,7 +837,7 @@ Database
 
 ---
 
-# 32. Error Boundary
+## 32. Error Boundary
 
 Next.jsのError Boundaryを使用する。
 
@@ -845,7 +845,7 @@ Next.jsのError Boundaryを使用する。
 
 ---
 
-# 33. Loading Architecture
+## 33. Loading Architecture
 
 Next.jsのLoading UIを利用する。
 
@@ -857,7 +857,7 @@ loading.tsx
 
 ---
 
-# 34. Empty State
+## 34. Empty State
 
 データが存在しない場合はEmpty Stateを表示する。
 
@@ -871,7 +871,7 @@ No projects yet.
 
 ---
 
-# 35. Testing Architecture
+## 35. Testing Architecture
 
 テストコードはプロジェクト直下に配置する。
 
@@ -884,7 +884,7 @@ tests/
 
 ---
 
-# 36. Unit Test
+## 36. Unit Test
 
 対象
 
@@ -896,7 +896,7 @@ tests/
 
 ---
 
-# 37. Integration Test
+## 37. Integration Test
 
 対象
 
@@ -907,7 +907,7 @@ tests/
 
 ---
 
-# 38. E2E Test
+## 38. E2E Test
 
 主要ユーザーフローをテストする。
 
@@ -931,7 +931,7 @@ Logout
 
 ---
 
-# 39. Test Rule
+## 39. Test Rule
 
 新しいFeatureを追加する場合、テストも同時に追加する。
 
@@ -939,7 +939,7 @@ Logout
 
 ---
 
-# 40. Security Architecture
+## 40. Security Architecture
 
 以下を基本的なセキュリティ要件とする。
 
@@ -954,7 +954,7 @@ Logout
 
 ---
 
-# 41. Secrets
+## 41. Secrets
 
 秘密情報をGitへCommitしてはいけない。
 
@@ -973,7 +973,7 @@ OAuth Secret
 
 ---
 
-# 42. Environment
+## 42. Environment
 
 環境を分離する。
 
@@ -987,11 +987,11 @@ Production
 
 ---
 
-# 43. Environment Variables
+## 43. Environment Variables
 
 環境変数の定義方針は以下とする。
 
-## 43.1 Source of Truth
+### 43.1 Source of Truth
 
 - ローカル開発: `.env.local`（Git管理対象外）
 - テンプレート: `.env.example`（プレースホルダのみをCommit）
@@ -1003,7 +1003,7 @@ Production
 cp .env.example .env.local
 ```
 
-## 43.2 Variable Categories
+### 43.2 Variable Categories
 
 ```text
 NEXT_PUBLIC_*     Clientに公開してよい値のみ
@@ -1013,7 +1013,7 @@ Cloudflare / D1   Phase 2 以降で wrangler binding と合わせて定義
 
 秘密情報には `NEXT_PUBLIC_` プレフィックスを付けない。
 
-## 43.3 Auth Provider Rollout
+### 43.3 Auth Provider Rollout
 
 Phase 3 の認証実装順は次とする。
 
@@ -1043,7 +1043,7 @@ AUTH_EMAIL_ENABLED
 
 実際の環境変数はプロジェクトのDeployment環境に合わせて定義する。
 
-## 43.4 Cloudflare D1
+### 43.4 Cloudflare D1
 
 開発用 Database:
 
@@ -1072,7 +1072,7 @@ config: wrangler.jsonc → env.production
 
 `SQLITE_DB_PATH` 優先は、`initOpenNextCloudflareForDev` が空のローカル D1 を露出しても、seed 済み E2E DB を誤って上書き参照しないため。
 
-## 43.5 Validation
+### 43.5 Validation
 
 外部入力と同様に、環境変数も Schema で検証する。
 
@@ -1080,7 +1080,7 @@ Auth.js を有効化するタイミングで `parseAuthEnv()` を Server 側か�
 
 ---
 
-# 44. Observability
+## 44. Observability
 
 将来的に以下を導入する。
 
@@ -1093,7 +1093,7 @@ Production Errorを追跡可能にする。
 
 ---
 
-# 45. Deployment Architecture
+## 45. Deployment Architecture
 
 基本フロー
 
@@ -1120,7 +1120,7 @@ Cloudflare Workers
     └── Secrets (AUTH_*)
 ```
 
-## 45.1 Runtime
+### 45.1 Runtime
 
 | 環境 | App runtime | Database |
 | --- | --- | --- |
@@ -1131,7 +1131,7 @@ Cloudflare Workers
 Hosting: `@opennextjs/cloudflare` → Worker `task-manager`  
 Default URL: `https://task-manager.<account>.workers.dev`（カスタムドメインは任意）
 
-## 45.2 Secrets
+### 45.2 Secrets
 
 Production secrets are set with Wrangler（never committed）:
 
@@ -1146,7 +1146,7 @@ Optional OAuth secrets: `AUTH_GITHUB_*` / `AUTH_GOOGLE_*`
 
 ---
 
-# 46. CI/CD
+## 46. CI/CD
 
 GitHub Actions を利用する。
 
@@ -1183,7 +1183,7 @@ GitHub Environment `production` に以下を設定する:
 
 ---
 
-# 47. Git Strategy
+## 47. Git Strategy
 
 基本Branch
 
@@ -1209,7 +1209,7 @@ feature/task-board
 
 ---
 
-# 48. Commit Convention
+## 48. Commit Convention
 
 Commit Messageは意味が明確になるようにする。
 
@@ -1226,7 +1226,7 @@ style: improve dashboard layout
 
 ---
 
-# 49. Dependency Policy
+## 49. Dependency Policy
 
 依存パッケージを追加する前に、既存パッケージで代替できないか確認する。
 
@@ -1241,7 +1241,7 @@ style: improve dashboard layout
 
 ---
 
-# 50. Current Technology Status
+## 50. Current Technology Status
 
 現在のリポジトリで導入済みの主な技術は以下。
 
@@ -1264,7 +1264,7 @@ dnd-kit
 
 ---
 
-# 51. Planned Technology
+## 51. Planned Technology
 
 以下は設計上の採用予定であり、未導入の場合は実装済みとして扱わない。
 
@@ -1280,7 +1280,7 @@ GSAP
 
 ---
 
-# 52. Architecture Decision Rules
+## 52. Architecture Decision Rules
 
 技術選定や実装方法に迷った場合は以下の優先順位で判断する。
 
@@ -1296,7 +1296,7 @@ GSAP
 
 ---
 
-# 53. Forbidden Architecture
+## 53. Forbidden Architecture
 
 以下は禁止する。
 
@@ -1313,7 +1313,7 @@ GSAP
 
 ---
 
-# 54. Architecture Documentation
+## 54. Architecture Documentation
 
 アーキテクチャに変更を加えた場合は、本ドキュメントも更新する。
 
@@ -1333,7 +1333,7 @@ docs/
 
 ---
 
-# 55. Cursor Implementation Rules
+## 55. Cursor Implementation Rules
 
 CursorはFeature実装前に以下を確認すること。
 
@@ -1368,7 +1368,7 @@ Implementation
 
 ---
 
-# 56. Architecture Change Rule
+## 56. Architecture Change Rule
 
 以下を変更する場合は、Architecture Documentationを更新する。
 
@@ -1386,7 +1386,7 @@ Implementation
 
 ---
 
-# 57. Target Architecture
+## 57. Target Architecture
 
 最終的な目標構成
 
@@ -1430,7 +1430,7 @@ Implementation
 
 ---
 
-# 58. Final Principles
+## 58. Final Principles
 
 本プロジェクトでは以下を最重要原則とする。
 

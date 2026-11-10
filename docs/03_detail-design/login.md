@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-001
 
-## 画面名
+### 画面名
 
 Login
 
-## URL
+### URL
 
 ```
 /login
 ```
 
-## 目的
+### 目的
 
 ユーザー認証を行い、Task Managerへログインする。
 
@@ -26,7 +26,7 @@ Login
 
 ---
 
-# 2. 画面レイアウト
+## 2. 画面レイアウト
 
 ```
 +-----------------------------------------------------------+
@@ -55,7 +55,7 @@ Login
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 | コンポーネント  | 用途            |
 | --------------- | --------------- |
@@ -76,9 +76,9 @@ Login
 
 ---
 
-# 4. 入力項目
+## 4. 入力項目
 
-## Email
+### Email
 
 | 項目       | 内容  |
 | ---------- | ----- |
@@ -88,7 +88,7 @@ Login
 
 ---
 
-## Password
+### Password
 
 | 項目       | 内容     |
 | ---------- | -------- |
@@ -98,7 +98,7 @@ Login
 
 ---
 
-## Remember Me
+### Remember Me
 
 | 項目   | 内容     |
 | ------ | -------- |
@@ -107,7 +107,7 @@ Login
 
 ---
 
-# 5. ボタン一覧
+## 5. ボタン一覧
 
 | ボタン          | 動作                   |
 | --------------- | ---------------------- |
@@ -118,9 +118,9 @@ Login
 
 ---
 
-# 6. バリデーション
+## 6. バリデーション
 
-## Email
+### Email
 
 - 必須
 - Email形式
@@ -137,7 +137,7 @@ Login
 
 ---
 
-## Password
+### Password
 
 - 必須
 - 8文字以上
@@ -154,7 +154,7 @@ Login
 
 ---
 
-# 7. ログイン成功時
+## 7. ログイン成功時
 
 ```
 Login
@@ -172,7 +172,7 @@ Dashboardへ遷移する。
 
 ---
 
-# 8. ログイン失敗時
+## 8. ログイン失敗時
 
 Toastを表示する。
 
@@ -186,7 +186,7 @@ Toastを表示する。
 
 ---
 
-# 9. ローディング
+## 9. ローディング
 
 認証中は
 
@@ -196,9 +196,9 @@ Toastを表示する。
 
 ---
 
-# 10. アニメーション
+## 10. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -211,7 +211,7 @@ GSAP
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -227,7 +227,7 @@ Input
 
 ---
 
-## Focus
+### Focus
 
 Input
 
@@ -236,7 +236,7 @@ Input
 
 ---
 
-## Page Transition
+### Page Transition
 
 Login
 
@@ -250,27 +250,27 @@ Fade In
 
 ---
 
-# 11. デザイン仕様
+## 11. デザイン仕様
 
-## Theme
+### Theme
 
 Dark
 
 ---
 
-## Radius
+### Radius
 
 16px
 
 ---
 
-## Shadow
+### Shadow
 
 Soft Shadow
 
 ---
 
-## Background
+### Background
 
 Gradient
 
@@ -280,7 +280,7 @@ Noise
 
 ---
 
-## Typography
+### Typography
 
 Primary Font
 
@@ -288,7 +288,7 @@ Geist
 
 ---
 
-## Accent Color
+### Accent Color
 
 Blue
 
@@ -296,7 +296,7 @@ Purple
 
 ---
 
-# 12. レスポンシブ
+## 12. レスポンシブ
 
 Desktop
 
@@ -320,7 +320,7 @@ Padding 24px
 
 ---
 
-# 13. アクセシビリティ
+## 13. アクセシビリティ
 
 - labelを設定
 - Tab移動対応
@@ -331,7 +331,7 @@ Padding 24px
 
 ---
 
-# 14. 使用予定ライブラリ
+## 14. 使用予定ライブラリ
 
 - Auth.js
 - React Hook Form
@@ -342,9 +342,9 @@ Padding 24px
 
 ---
 
-# 15. 実装メモ
+## 15. 実装メモ
 
-## Route
+### Route
 
 ```
 /login
@@ -352,7 +352,7 @@ Padding 24px
 
 ---
 
-## Feature
+### Feature
 
 ```
 features/auth
@@ -360,7 +360,7 @@ features/auth
 
 ---
 
-## Components
+### Components
 
 ```
 LoginCard
@@ -378,7 +378,7 @@ Logo
 
 ---
 
-## Hooks
+### Hooks
 
 ```
 useLogin
@@ -388,7 +388,7 @@ useSocialLogin
 
 ---
 
-## 将来対応
+### 将来対応
 
 - MFA（多要素認証）
 - パスワード表示切替

@@ -11,7 +11,7 @@ Follow the project-wide rules defined in `AGENTS.md`.
 
 ---
 
-# 1. Core Principles
+## 1. Core Principles
 
 - Keep commits focused and logically cohesive.
 - Do not mix unrelated changes in a single commit.
@@ -25,7 +25,7 @@ Follow the project-wide rules defined in `AGENTS.md`.
 
 ---
 
-# 2. Conventional Commits
+## 2. Conventional Commits
 
 Use the following commit types:
 
@@ -61,7 +61,7 @@ chore: update development tooling
 
 ---
 
-# 3. Commit Message Format
+## 3. Commit Message Format
 
 Use:
 
@@ -100,7 +100,7 @@ Do not use vague messages.
 
 ---
 
-# 4. Scope
+## 4. Scope
 
 A commit should represent one logical change.
 
@@ -132,7 +132,7 @@ feat: add project page, fix login, update calendar, change colors
 
 ---
 
-# 5. Commit Size
+## 5. Commit Size
 
 Prefer small, reviewable commits.
 
@@ -154,7 +154,7 @@ Good Commit
 
 ---
 
-# 6. Before Committing
+## 6. Before Committing
 
 Before creating a commit:
 
@@ -179,7 +179,7 @@ Then run the project's validation commands defined in `package.json`.
 
 ---
 
-# 7. Never Commit Secrets
+## 7. Never Commit Secrets
 
 Never commit:
 
@@ -208,7 +208,7 @@ Do not assume `.gitignore` alone is sufficient.
 
 ---
 
-# 8. Environment Files
+## 8. Environment Files
 
 Environment configuration should use example files when appropriate.
 
@@ -231,7 +231,7 @@ Never commit actual secret values.
 
 ---
 
-# 9. Generated Files
+## 9. Generated Files
 
 Do not commit unnecessary generated files.
 
@@ -253,7 +253,7 @@ Follow `.gitignore`.
 
 ---
 
-# 10. Documentation Changes
+## 10. Documentation Changes
 
 When implementation changes documented behavior, include the appropriate documentation update.
 
@@ -270,7 +270,7 @@ Do not leave documentation intentionally outdated.
 
 ---
 
-# 11. Database Changes
+## 11. Database Changes
 
 Database schema changes should include the appropriate migration and documentation.
 
@@ -301,7 +301,7 @@ when the database design changes.
 
 ---
 
-# 12. API Changes
+## 12. API Changes
 
 API contract changes must be reflected in:
 
@@ -319,7 +319,7 @@ feat: add project creation endpoint
 
 ---
 
-# 13. Architecture Changes
+## 13. Architecture Changes
 
 Architecture changes require additional care.
 
@@ -347,7 +347,7 @@ docs/development-log.md
 
 ---
 
-# 14. UI Changes
+## 14. UI Changes
 
 For UI changes, check:
 
@@ -366,7 +366,7 @@ Do not introduce arbitrary design values when existing design tokens or componen
 
 ---
 
-# 15. Tests
+## 15. Tests
 
 New functionality should include appropriate tests before committing.
 
@@ -385,7 +385,7 @@ Do not modify tests solely to make them pass without investigating the underlyin
 
 ---
 
-# 16. Staging
+## 16. Staging
 
 Do not blindly stage every file.
 
@@ -415,7 +415,7 @@ must contain only the intended changes.
 
 ---
 
-# 17. Existing User Changes
+## 17. Existing User Changes
 
 Never overwrite or discard user changes without explicit permission.
 
@@ -430,7 +430,7 @@ If the user's changes conflict with the requested task, explain the conflict.
 
 ---
 
-# 18. Branches
+## 18. Branches
 
 Use feature-oriented branches when working with multiple changes.
 
@@ -456,7 +456,7 @@ tmp
 
 ---
 
-# 19. Pull Requests
+## 19. Pull Requests
 
 When creating a Pull Request, include:
 
@@ -473,7 +473,7 @@ Do not combine unrelated features into one Pull Request.
 
 ---
 
-# 20. Breaking Changes
+## 20. Breaking Changes
 
 Clearly identify breaking changes.
 
@@ -489,7 +489,7 @@ Do not hide breaking changes inside generic commits.
 
 ---
 
-# 21. Rewriting History
+## 21. Rewriting History
 
 Do not use destructive Git commands without explicit permission.
 
@@ -508,7 +508,7 @@ Never discard user work to solve a Git problem.
 
 ---
 
-# 22. Merge and Rebase
+## 22. Merge and Rebase
 
 Prefer the repository's established workflow.
 
@@ -525,7 +525,7 @@ Never resolve conflicts by blindly choosing one side.
 
 ---
 
-# 23. Commit History
+## 23. Commit History
 
 Commit history should communicate development intent.
 
@@ -554,7 +554,7 @@ final2
 
 ---
 
-# 24. Automated Commit Generation
+## 24. Automated Commit Generation
 
 When asked to generate a commit message:
 
@@ -568,63 +568,63 @@ Never generate a commit message based only on the user's description when the ac
 
 ---
 
-# 25. Commit Message Examples
+## 25. Commit Message Examples
 
-## Feature
+### Feature
 
 ```text
 feat: add project list
 ```
 
-## Bug Fix
+### Bug Fix
 
 ```text
 fix: prevent duplicate task creation
 ```
 
-## Refactoring
+### Refactoring
 
 ```text
 refactor: extract task validation
 ```
 
-## Tests
+### Tests
 
 ```text
 test: add project service tests
 ```
 
-## Documentation
+### Documentation
 
 ```text
 docs: update task board design
 ```
 
-## Performance
+### Performance
 
 ```text
 perf: reduce dashboard database queries
 ```
 
-## Styling
+### Styling
 
 ```text
 style: refine task card spacing
 ```
 
-## Build
+### Build
 
 ```text
 build: update Next.js dependencies
 ```
 
-## CI
+### CI
 
 ```text
 ci: add automated test workflow
 ```
 
-## Maintenance
+### Maintenance
 
 ```text
 chore: update development tooling
@@ -632,7 +632,7 @@ chore: update development tooling
 
 ---
 
-# 26. Commit Checklist
+## 26. Commit Checklist
 
 Before committing:
 
@@ -650,7 +650,7 @@ Before committing:
 
 ---
 
-# 27. Final Git Principles
+## 27. Final Git Principles
 
 Always prefer:
 
@@ -680,7 +680,7 @@ Working commits
 Broken commits
 ```
 
-# 28. Commit Permission
+## 28. Commit Permission
 
 Do not create a Git commit unless the user explicitly asks you to commit.
 

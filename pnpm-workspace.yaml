@@ -1,5 +1,9 @@
+packages:
+  - "."
+
+# better-sqlite3 ships prebuilds and sets gypfile to false.
+# Node 24 still asks node-gyp for ClangCL, which this Windows toolchain does not have.
 onlyBuiltDependencies:
-  - better-sqlite3
   - esbuild
   - workerd
   - sharp

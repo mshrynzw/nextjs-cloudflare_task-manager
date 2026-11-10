@@ -42,6 +42,7 @@ export default async function ProjectsPage({
     priority: firstValue(raw.priority),
     sort: firstValue(raw.sort) ?? "updatedAt",
     order: firstValue(raw.order) ?? "desc",
+    scope: firstValue(raw.scope),
   });
 
   const result = await getProjects(getDb(), session!.user!.id!, query);
@@ -56,6 +57,7 @@ export default async function ProjectsPage({
     priority: query.priority,
     sort: query.sort,
     order: query.order,
+    scope: query.scope === "all" ? "all" : undefined,
     limit: String(query.limit),
   };
 

@@ -25,6 +25,8 @@ export const taskStatusSchema = z.enum([
   "done",
 ]);
 
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
+
 export const taskPrioritySchema = z.enum(["low", "medium", "high"]);
 
 export const membershipRoleSchema = z.enum(["owner", "member", "viewer"]);

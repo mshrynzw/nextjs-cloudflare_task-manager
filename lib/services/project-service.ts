@@ -18,6 +18,14 @@ import { hasMinimumRole, type MembershipRole } from "@/lib/auth/roles";
 import type { AppDatabase } from "@/lib/db/client";
 import { workspaceMembers, workspaces } from "@/lib/db/schema";
 import {
+  calculateProjectProgress,
+  emptyTaskStatusCounts,
+  resolveProgressWeights,
+  serializeProgressWeights,
+  type ProgressWeights,
+  type TaskStatusCounts,
+} from "@/lib/project/progress";
+import {
   addProjectMember,
   archiveProject,
   countProjectMembersWithRole,
@@ -37,11 +45,21 @@ function asRole(role: string): MembershipRole {
   return role as MembershipRole;
 }
 
-function calcProgress(total: number, completed: number): number {
-  if (total === 0) {
-    return 0;
-  }
-  return Math.round((completed / total) * 100);
+function toStatusCounts(stats: {
+  backlog?: number;
+  todo?: number;
+  inProgress?: number;
+  review?: number;
+  done?: number;
+  completed?: number;
+}): TaskStatusCounts {
+  const counts = emptyTaskStatusCounts();
+  counts.backlog = Number(stats.backlog ?? 0);
+  counts.todo = Number(stats.todo ?? 0);
+  counts.in_progress = Number(stats.inProgress ?? 0);
+  counts.review = Number(stats.review ?? 0);
+  counts.done = Number(stats.done ?? stats.completed ?? 0);
+  return counts;
 }
 
 export async function getProjects(
@@ -61,6 +79,7 @@ export async function getProjects(
       {
         total: Number(item.total),
         completed: Number(item.completed),
+        statuses: toStatusCounts(item),
       },
     ]),
   );
@@ -87,7 +106,12 @@ export async function getProjects(
 
   return {
     data: rows.map(({ project, role }) => {
-      const stats = countMap.get(project.id) ?? { total: 0, completed: 0 };
+      const stats = countMap.get(project.id) ?? {
+        total: 0,
+        completed: 0,
+        statuses: emptyTaskStatusCounts(),
+      };
+      const progressWeights = resolveProgressWeights(project.progressWeights);
       const projectRole = role ? asRole(role) : null;
       return {
         id: project.id,
@@ -97,7 +121,8 @@ export async function getProjects(
         priority: project.priority,
         visibility: project.visibility,
         color: project.color,
-        progress: calcProgress(stats.total, stats.completed),
+        progress: calculateProjectProgress(stats.statuses, progressWeights),
+        progressWeights,
         deadline: fromUnixDate(project.deadline),
         taskCount: stats.total,
         completedTaskCount: stats.completed,
@@ -132,6 +157,8 @@ export async function getProject(
   const [counts] = countsRows;
   const total = Number(counts?.total ?? 0);
   const completed = Number(counts?.completed ?? 0);
+  const statuses = toStatusCounts(counts ?? {});
+  const progressWeights = resolveProgressWeights(project.progressWeights);
 
   return {
     id: project.id,
@@ -141,7 +168,8 @@ export async function getProject(
     priority: project.priority,
     visibility: project.visibility,
     color: project.color,
-    progress: calcProgress(total, completed),
+    progress: calculateProjectProgress(statuses, progressWeights),
+    progressWeights,
     deadline: fromUnixDate(project.deadline),
     workspaceId: project.workspaceId,
     createdAt: project.createdAt,
@@ -169,6 +197,7 @@ export async function createProjectForUser(
     color: string;
     deadline?: string | null;
     visibility?: string;
+    progressWeights?: ProgressWeights;
     memberIds?: string[];
   },
 ) {
@@ -210,6 +239,9 @@ export async function createProjectForUser(
     deadline: toUnixDate(input.deadline ?? undefined),
     createdBy: userId,
     visibility: input.visibility ?? "workspace",
+    progressWeights: input.progressWeights
+      ? serializeProgressWeights(input.progressWeights)
+      : null,
   });
 
   if (project?.id) {
@@ -242,6 +274,7 @@ export async function updateProjectForUser(
     color: string;
     deadline: string | null;
     visibility: string;
+    progressWeights: ProgressWeights;
   }>,
 ) {
   const membership = await findProjectMembership(db, userId, projectId);
@@ -266,6 +299,10 @@ export async function updateProjectForUser(
         ? undefined
         : toUnixDate(input.deadline ?? undefined),
     visibility: input.visibility,
+    progressWeights:
+      input.progressWeights === undefined
+        ? undefined
+        : serializeProgressWeights(input.progressWeights),
   });
 
   if (!updated) {

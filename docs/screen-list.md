@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Overview
+## 1. Overview
 
 本ドキュメントは、Task Managerにおける画面一覧と各画面の責務を定義する。
 
@@ -25,7 +25,7 @@ Version: 1.0
 
 ---
 
-# 2. Screen Architecture
+## 2. Screen Architecture
 
 Task Managerの画面構成は以下とする。
 
@@ -58,7 +58,7 @@ Task Manager
 
 ---
 
-# 3. Screen Summary
+## 3. Screen Summary
 
 | ID      | Screen         | Route                         | Auth | Priority | Status  |
 | ------- | -------------- | ----------------------------- | ---- | -------- | ------- |
@@ -76,7 +76,7 @@ Task Manager
 
 ---
 
-# 4. Screen ID Convention
+## 4. Screen ID Convention
 
 Screen IDは以下の形式とする。
 
@@ -96,25 +96,25 @@ SCR-003
 
 ---
 
-# 5. Authentication
+## 5. Authentication
 
-## SCR-001 — Login
+### SCR-001 — Login
 
-### Route
+#### Route
 
 ```text
 /login
 ```
 
-### Authentication
+#### Authentication
 
 不要。
 
-### Purpose
+#### Purpose
 
 ユーザーがTask Managerへログインするための画面。
 
-### Main Features
+#### Main Features
 
 - Email Login
 - Password Login
@@ -124,7 +124,7 @@ SCR-003
 - Sign Up
 - Demo Account
 
-### Primary UI
+#### Primary UI
 
 - Logo
 - Login Form
@@ -135,7 +135,7 @@ SCR-003
 - Password Reset Link
 - Sign Up Link
 
-### States
+#### States
 
 ```text
 Default
@@ -145,7 +145,7 @@ Authentication Error
 Success
 ```
 
-### UX Requirements
+#### UX Requirements
 
 - 初回表示を高速にする
 - Login UI表示だけのためにDatabaseへ不要な接続を行わない
@@ -153,11 +153,11 @@ Success
 - Authentication Errorを分かりやすく表示する
 - Keyboard操作に対応する
 
-### Responsive
+#### Responsive
 
 Desktop / Tablet / Mobileに対応する。
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/login.md
@@ -165,21 +165,21 @@ docs/03_detail-design/login.md
 
 ---
 
-# 6. Dashboard
+## 6. Dashboard
 
-## SCR-002 — Dashboard
+### SCR-002 — Dashboard
 
-### Route
+#### Route
 
 ```text
 /dashboard
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 ユーザーがログイン後に最初に確認するOverview画面。
 
@@ -189,7 +189,7 @@ Required.
 
 を短時間で把握できることを目的とする。
 
-### Main Features
+#### Main Features
 
 - Today's Tasks
 - Upcoming Tasks
@@ -200,7 +200,7 @@ Required.
 - Quick Actions
 - Mini Calendar
 
-### Primary UI
+#### Primary UI
 
 ```text
 Header
@@ -213,7 +213,7 @@ Recent Activity
 Quick Actions
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -222,7 +222,7 @@ Empty
 Error
 ```
 
-### Empty State
+#### Empty State
 
 ProjectやTaskが存在しない場合、
 
@@ -232,13 +232,13 @@ Create your first project
 
 などのCTAを表示する。
 
-### Responsive
+#### Responsive
 
 Desktopでは複数Column。
 
 MobileではSingle Columnへ変更する。
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/dashboard.md
@@ -246,25 +246,25 @@ docs/03_detail-design/dashboard.md
 
 ---
 
-# 7. Project List
+## 7. Project List
 
-## SCR-003 — Project List
+### SCR-003 — Project List
 
-### Route
+#### Route
 
 ```text
 /projects
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 ユーザーが所属するProjectを一覧表示する。
 
-### Main Features
+#### Main Features
 
 - Project List
 - Project Card
@@ -278,7 +278,7 @@ Required.
 - Create Project
 - Archive Project
 
-### Primary UI
+#### Primary UI
 
 ```text
 Page Header
@@ -290,7 +290,7 @@ Project Card
 Create Project Button
 ```
 
-### Project Card
+#### Project Card
 
 最低限以下を表示する。
 
@@ -305,7 +305,7 @@ Members
 Tags
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -315,7 +315,7 @@ Search Empty
 Error
 ```
 
-### Empty State
+#### Empty State
 
 Projectが存在しない場合、
 
@@ -327,7 +327,7 @@ Create your first project.
 
 を表示する。
 
-### Responsive
+#### Responsive
 
 Desktop:
 
@@ -347,7 +347,7 @@ Mobile:
 1 Column
 ```
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/project-list.md
@@ -355,25 +355,25 @@ docs/03_detail-design/project-list.md
 
 ---
 
-# 8. Project Detail
+## 8. Project Detail
 
-## SCR-004 — Project Detail
+### SCR-004 — Project Detail
 
-### Route
+#### Route
 
 ```text
 /projects/[projectId]
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 特定Projectの概要・進捗・Task・Member・Activityを確認する。
 
-### Main Features
+#### Main Features
 
 - Project Information
 - Project Progress
@@ -383,7 +383,7 @@ Required.
 - Project Settings
 - Navigation to Task Board
 
-### Primary UI
+#### Primary UI
 
 ```text
 Project Header
@@ -395,7 +395,7 @@ Activity
 Project Navigation
 ```
 
-### Project Navigation
+#### Project Navigation
 
 ```text
 Overview
@@ -404,7 +404,7 @@ Calendar
 Analytics
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -414,7 +414,7 @@ Permission Denied
 Error
 ```
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/project-detail.md
@@ -422,25 +422,25 @@ docs/03_detail-design/project-detail.md
 
 ---
 
-# 9. Task Board
+## 9. Task Board
 
-## SCR-005 — Task Board
+### SCR-005 — Task Board
 
-### Route
+#### Route
 
 ```text
 /projects/[projectId]/board
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 Project内のTaskをKanban形式で管理する。
 
-### Main Features
+#### Main Features
 
 - Kanban Board
 - Drag & Drop
@@ -454,7 +454,7 @@ Project内のTaskをKanban形式で管理する。
 - Filter
 - Sort
 
-### Columns
+#### Columns
 
 ```text
 Backlog
@@ -464,7 +464,7 @@ Review
 Done
 ```
 
-### Primary UI
+#### Primary UI
 
 ```text
 Project Header
@@ -476,13 +476,13 @@ Task Cards
 Create Task
 ```
 
-### Interaction
+#### Interaction
 
 TaskはDrag & DropによってColumn間を移動できる。
 
 Position変更はOptimistic UIを利用する。
 
-### States
+#### States
 
 ```text
 Loading
@@ -492,7 +492,7 @@ Error
 Drag Error
 ```
 
-### Empty State
+#### Empty State
 
 ColumnにTaskがない場合、
 
@@ -502,7 +502,7 @@ No tasks
 
 を表示する。
 
-### Responsive
+#### Responsive
 
 Desktopでは横方向のKanban Board。
 
@@ -514,7 +514,7 @@ Mobileでは、
 
 などを利用する。
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/task-board.md
@@ -522,25 +522,25 @@ docs/03_detail-design/task-board.md
 
 ---
 
-# 10. Task Detail
+## 10. Task Detail
 
-## SCR-006 — Task Detail
+### SCR-006 — Task Detail
 
-### Route
+#### Route
 
 ```text
 /tasks/[taskId]
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 Taskの詳細情報と関連情報を管理する。
 
-### Main Features
+#### Main Features
 
 - Title
 - Description
@@ -554,7 +554,7 @@ Taskの詳細情報と関連情報を管理する。
 - Attachments
 - Activity
 
-### Primary UI
+#### Primary UI
 
 ```text
 Task Header
@@ -565,7 +565,7 @@ Comments
 Activity
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -575,7 +575,7 @@ Permission Denied
 Error
 ```
 
-### Interactions
+#### Interactions
 
 - Status Change
 - Priority Change
@@ -586,7 +586,7 @@ Error
 - Edit
 - Archive
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/task-detail.md
@@ -594,25 +594,25 @@ docs/03_detail-design/task-detail.md
 
 ---
 
-# 11. Calendar
+## 11. Calendar
 
-## SCR-007 — Calendar
+### SCR-007 — Calendar
 
-### Route
+#### Route
 
 ```text
 /calendar
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 TaskのDue DateをCalendar形式で確認する。
 
-### Main Features
+#### Main Features
 
 - Monthly View
 - Weekly View
@@ -622,7 +622,7 @@ TaskのDue DateをCalendar形式で確認する。
 - Date Navigation
 - Filter
 
-### Primary UI
+#### Primary UI
 
 ```text
 Calendar Header
@@ -632,7 +632,7 @@ Calendar Grid
 Task Events
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -641,7 +641,7 @@ Empty
 Error
 ```
 
-### Responsive
+#### Responsive
 
 Desktop:
 
@@ -656,7 +656,7 @@ Compact Calendar
 Agenda / List
 ```
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/calendar.md
@@ -664,25 +664,25 @@ docs/03_detail-design/calendar.md
 
 ---
 
-# 12. Analytics
+## 12. Analytics
 
-## SCR-008 — Analytics
+### SCR-008 — Analytics
 
-### Route
+#### Route
 
 ```text
 /analytics
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 ProjectおよびTaskの進捗状況を可視化する。
 
-### Main Features
+#### Main Features
 
 - Completion Rate
 - Completed Tasks
@@ -692,7 +692,7 @@ ProjectおよびTaskの進捗状況を可視化する。
 - Workload
 - Time Tracking（将来）
 
-### Primary UI
+#### Primary UI
 
 ```text
 Analytics Header
@@ -704,7 +704,7 @@ Project Performance
 Task Performance
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -713,7 +713,7 @@ Empty
 Error
 ```
 
-### UX Requirement
+#### UX Requirement
 
 単にグラフを表示するのではなく、
 
@@ -721,7 +721,7 @@ Error
 
 を判断できるUIとする。
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/analytics.md
@@ -729,25 +729,25 @@ docs/03_detail-design/analytics.md
 
 ---
 
-# 13. Settings
+## 13. Settings
 
-## SCR-009 — Settings
+### SCR-009 — Settings
 
-### Route
+#### Route
 
 ```text
 /settings
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 ユーザーおよびWorkspaceの設定を管理する。
 
-### Sections
+#### Sections
 
 ```text
 Account
@@ -756,20 +756,20 @@ Notifications
 Workspace
 ```
 
-### Account
+#### Account
 
 - Profile
 - Email
 - Authentication
 
-### Appearance
+#### Appearance
 
 - Theme
 - Accent Color
 - UI Density
 - Animation
 
-### Notifications
+#### Notifications
 
 - Email Notifications
 - In-App Notifications
@@ -777,14 +777,14 @@ Workspace
 - Mention Notifications
 - Due Date Notifications
 
-### Workspace
+#### Workspace
 
 - Workspace Name
 - Workspace Members
 - Roles
 - Permissions
 
-### States
+#### States
 
 ```text
 Loading
@@ -795,7 +795,7 @@ Validation Error
 Error
 ```
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/settings.md
@@ -803,25 +803,25 @@ docs/03_detail-design/settings.md
 
 ---
 
-# 14. Profile
+## 14. Profile
 
-## SCR-010 — Profile
+### SCR-010 — Profile
 
-### Route
+#### Route
 
 ```text
 /profile
 ```
 
-### Authentication
+#### Authentication
 
 Required.
 
-### Purpose
+#### Purpose
 
 ユーザー自身のプロフィールおよびActivityを表示する。
 
-### Main Features
+#### Main Features
 
 - Avatar
 - Name
@@ -834,7 +834,7 @@ Required.
 - Activity
 - Statistics
 
-### Primary UI
+#### Primary UI
 
 ```text
 Profile Header
@@ -845,7 +845,7 @@ Projects
 Activity
 ```
 
-### States
+#### States
 
 ```text
 Loading
@@ -853,7 +853,7 @@ Loaded
 Error
 ```
 
-### Related Design
+#### Related Design
 
 ```text
 docs/03_detail-design/profile.md
@@ -861,23 +861,23 @@ docs/03_detail-design/profile.md
 
 ---
 
-# 15. Mobile Layout
+## 15. Mobile Layout
 
-## SCR-011 — Mobile Layout
+### SCR-011 — Mobile Layout
 
-### Type
+#### Type
 
 Responsive Layout
 
-### Route
+#### Route
 
 すべてのApplication Screenに適用する。
 
-### Purpose
+#### Purpose
 
 Desktop UIを単純に縮小するのではなく、Mobileに適した操作体系を提供する。
 
-### Main Features
+#### Main Features
 
 - Mobile Navigation
 - Bottom Navigation
@@ -888,7 +888,7 @@ Desktop UIを単純に縮小するのではなく、Mobileに適した操作体�
 - Horizontal Scroll
 - Mobile Kanban
 
-### Primary Navigation
+#### Primary Navigation
 
 Mobileでは必要に応じて、
 
@@ -902,7 +902,7 @@ Profile
 
 をNavigationへ配置する。
 
-### Sidebar
+#### Sidebar
 
 Desktop SidebarをMobileでは、
 
@@ -912,7 +912,7 @@ Drawer
 
 へ変更する。
 
-### Responsive Rule
+#### Responsive Rule
 
 ```text
 Desktop
@@ -926,7 +926,7 @@ Mobile
 
 ---
 
-# 16. Global Layout
+## 16. Global Layout
 
 認証後のApplication Screenでは共通Layoutを使用する。
 
@@ -943,7 +943,7 @@ Mobile
 
 ---
 
-# 17. Global Header
+## 17. Global Header
 
 Headerには以下を配置する。
 
@@ -955,7 +955,7 @@ Headerには以下を配置する。
 
 ---
 
-# 18. Global Sidebar
+## 18. Global Sidebar
 
 SidebarにはPrimary Navigationを配置する。
 
@@ -975,7 +975,7 @@ Profile
 
 ---
 
-# 19. Command Palette
+## 19. Command Palette
 
 Global Command Paletteを提供する。
 
@@ -1003,7 +1003,7 @@ Toggle Sidebar
 
 ---
 
-# 20. Global UI States
+## 20. Global UI States
 
 すべての主要画面で以下の状態を考慮する。
 
@@ -1020,11 +1020,11 @@ Success
 
 ---
 
-# 21. Global Feedback
+## 21. Global Feedback
 
 操作結果をユーザーへ適切に通知する。
 
-### Toast
+#### Toast
 
 以下に使用する。
 
@@ -1036,7 +1036,7 @@ Success
 
 ---
 
-### Dialog
+#### Dialog
 
 以下に使用する。
 
@@ -1048,17 +1048,17 @@ Success
 
 ---
 
-### Tooltip
+#### Tooltip
 
 アイコンのみのButtonなどに使用する。
 
 ---
 
-# 22. Navigation Rules
+## 22. Navigation Rules
 
 画面遷移は以下のルールに従う。
 
-## Dashboard
+### Dashboard
 
 ```text
 Dashboard
@@ -1066,7 +1066,7 @@ Dashboard
 
 ---
 
-## Project
+### Project
 
 ```text
 Projects
@@ -1076,7 +1076,7 @@ Project Detail
 
 ---
 
-## Task
+### Task
 
 ```text
 Project
@@ -1088,7 +1088,7 @@ Task Detail
 
 ---
 
-## Calendar
+### Calendar
 
 ```text
 Calendar
@@ -1098,7 +1098,7 @@ Task Detail
 
 ---
 
-## Analytics
+### Analytics
 
 ```text
 Analytics
@@ -1108,7 +1108,7 @@ Project Detail
 
 ---
 
-# 23. Breadcrumb
+## 23. Breadcrumb
 
 必要な画面ではBreadcrumbを表示する。
 
@@ -1126,7 +1126,7 @@ Mobileではスペースを考慮して簡略化する。
 
 ---
 
-# 24. Modal Policy
+## 24. Modal Policy
 
 Modalは以下のような短時間の操作に限定する。
 
@@ -1139,7 +1139,7 @@ Modalは以下のような短時間の操作に限定する。
 
 ---
 
-# 25. Drawer Policy
+## 25. Drawer Policy
 
 Mobileおよび補助情報の表示にDrawerを使用する。
 
@@ -1152,7 +1152,7 @@ Mobileおよび補助情報の表示にDrawerを使用する。
 
 ---
 
-# 26. Search / Filter / Sort
+## 26. Search / Filter / Sort
 
 一覧系画面では以下を共通パターンとして使用する。
 
@@ -1173,7 +1173,7 @@ UIパターンを画面ごとに独自実装しない。
 
 ---
 
-# 27. Responsive Breakpoints
+## 27. Responsive Breakpoints
 
 Breakpointsは`docs/08_ui-guideline.md`で定義されたDesign Tokenを使用する。
 
@@ -1181,7 +1181,7 @@ Breakpointsは`docs/08_ui-guideline.md`で定義されたDesign Tokenを使用�
 
 ---
 
-# 28. Accessibility
+## 28. Accessibility
 
 全画面で以下を考慮する。
 
@@ -1196,7 +1196,7 @@ Breakpointsは`docs/08_ui-guideline.md`で定義されたDesign Tokenを使用�
 
 ---
 
-# 29. Performance Requirements
+## 29. Performance Requirements
 
 各画面では不要なデータを初期ロードしない。
 
@@ -1214,7 +1214,7 @@ Breakpointsは`docs/08_ui-guideline.md`で定義されたDesign Tokenを使用�
 
 ---
 
-# 30. Authentication Requirements
+## 30. Authentication Requirements
 
 Login以外のApplication Screenは認証必須。
 
@@ -1234,7 +1234,7 @@ Not Authenticated
 
 ---
 
-# 31. Authorization Requirements
+## 31. Authorization Requirements
 
 認証済みであっても、対象Resourceへの権限がない場合はアクセスできない。
 
@@ -1252,7 +1252,7 @@ Resource
 
 ---
 
-# 32. Error Routes
+## 32. Error Routes
 
 以下のError UIを用意する。
 
@@ -1265,7 +1265,7 @@ Network Error
 
 ---
 
-# 33. Screen-to-Data Mapping
+## 33. Screen-to-Data Mapping
 
 | Screen         | Main Data                                              |
 | -------------- | ------------------------------------------------------ |
@@ -1282,7 +1282,7 @@ Network Error
 
 ---
 
-# 34. Screen-to-API Mapping
+## 34. Screen-to-API Mapping
 
 | Screen         | Main API                         |
 | -------------- | -------------------------------- |
@@ -1299,7 +1299,7 @@ Network Error
 
 ---
 
-# 35. Screen-to-Test Mapping
+## 35. Screen-to-Test Mapping
 
 | Screen         | Unit | Integration |         E2E |
 | -------------- | ---: | ----------: | ----------: |
@@ -1316,7 +1316,7 @@ Network Error
 
 ---
 
-# 36. Screen Implementation Order
+## 36. Screen Implementation Order
 
 実装順序は以下を基本とする。
 
@@ -1348,7 +1348,7 @@ Network Error
 
 ---
 
-# 37. Design Reference Mapping
+## 37. Design Reference Mapping
 
 各画面のUI Referenceは以下のルールで管理する。
 
@@ -1371,7 +1371,7 @@ UI ReferenceはProduction実装の直接コピー元ではなく、Design Refere
 
 ---
 
-# 38. Detail Design Mapping
+## 38. Detail Design Mapping
 
 各画面の詳細仕様は以下で管理する。
 
@@ -1391,7 +1391,7 @@ docs/03_detail-design/
 
 ---
 
-# 39. Screen Addition Rule
+## 39. Screen Addition Rule
 
 新しいScreenを追加する場合は、以下を更新する。
 
@@ -1409,7 +1409,7 @@ docs/03_detail-design/
 
 ---
 
-# 40. Screen Removal Rule
+## 40. Screen Removal Rule
 
 Screenを削除する場合も、関連する設計書とRoadmapを更新する。
 
@@ -1423,7 +1423,7 @@ Status: Deprecated
 
 ---
 
-# 41. Definition of Done
+## 41. Definition of Done
 
 Screenを完成とする条件。
 
@@ -1443,11 +1443,11 @@ Screenを完成とする条件。
 
 ---
 
-# 42. Portfolio Priority
+## 42. Portfolio Priority
 
 案件獲得用ポートフォリオとして、以下の画面を特に高い完成度で実装する。
 
-## Priority 1
+### Priority 1
 
 ```text
 Login
@@ -1457,7 +1457,7 @@ Task Board
 Analytics
 ```
 
-## Priority 2
+### Priority 2
 
 ```text
 Project Detail
@@ -1465,7 +1465,7 @@ Task Detail
 Calendar
 ```
 
-## Priority 3
+### Priority 3
 
 ```text
 Settings
@@ -1474,7 +1474,7 @@ Profile
 
 ---
 
-# 43. Five Second Experience
+## 43. Five Second Experience
 
 初めてアクセスしたユーザーが最初の5秒でプロダクトの品質を理解できるようにする。
 
@@ -1492,7 +1492,7 @@ Task Board
 
 ---
 
-# 44. Final Screen Principle
+## 44. Final Screen Principle
 
 すべての画面は単独で美しくするだけではなく、Application全体として一貫した体験を提供する。
 

@@ -17,7 +17,7 @@ Follow the project-wide rules defined in:
 
 ---
 
-# 1. Core Principles
+## 1. Core Principles
 
 - New functionality must have appropriate tests.
 - Bug fixes must include regression tests when practical.
@@ -33,7 +33,7 @@ Follow the project-wide rules defined in:
 
 ---
 
-# 2. Test Directory
+## 2. Test Directory
 
 All project tests must be placed under the project root:
 
@@ -54,7 +54,7 @@ tests/
 
 ---
 
-# 3. Automatically Create tests/
+## 3. Automatically Create tests/
 
 If `tests/` does not exist and tests are required:
 
@@ -87,11 +87,11 @@ The complete structure may be created when the project reaches the stage where a
 
 ---
 
-# 4. Testing Tools
+## 4. Testing Tools
 
 Use the following tools according to test type.
 
-## Unit Tests
+### Unit Tests
 
 Use:
 
@@ -111,7 +111,7 @@ for:
 
 ---
 
-## Component Tests
+### Component Tests
 
 Use:
 
@@ -134,7 +134,7 @@ Do not test implementation details such as internal React state.
 
 ---
 
-## Integration Tests
+### Integration Tests
 
 Use:
 
@@ -166,7 +166,7 @@ Integration tests should verify that the layers work correctly together.
 
 ---
 
-## E2E Tests
+### E2E Tests
 
 Use:
 
@@ -196,7 +196,7 @@ Do not use E2E tests for every small function.
 
 ---
 
-# 5. Test Type Selection
+## 5. Test Type Selection
 
 Choose the smallest test level that provides sufficient confidence.
 
@@ -254,7 +254,7 @@ when E2E testing provides no additional meaningful confidence.
 
 ---
 
-# 6. Test Pyramid
+## 6. Test Pyramid
 
 Prefer the following balance:
 
@@ -278,7 +278,7 @@ Do not build an application where every behavior is tested exclusively through E
 
 ---
 
-# 7. Unit Test Rules
+## 7. Unit Test Rules
 
 Unit tests should be:
 
@@ -307,7 +307,7 @@ Test important cases such as:
 
 ---
 
-# 8. Business Logic Tests
+## 8. Business Logic Tests
 
 Business logic must be tested independently from UI whenever practical.
 
@@ -330,7 +330,7 @@ This keeps business logic:
 
 ---
 
-# 9. Service Tests
+## 9. Service Tests
 
 Services should be tested for business behavior.
 
@@ -356,7 +356,7 @@ Test:
 
 ---
 
-# 10. Repository Tests
+## 10. Repository Tests
 
 Repository tests should verify database interaction where appropriate.
 
@@ -382,7 +382,7 @@ Do not duplicate every repository test as an E2E test.
 
 ---
 
-# 11. API Tests
+## 11. API Tests
 
 API endpoints must be tested when they contain meaningful application behavior.
 
@@ -417,7 +417,7 @@ when applicable.
 
 ---
 
-# 12. Authentication Tests
+## 12. Authentication Tests
 
 Authentication behavior must be tested.
 
@@ -436,7 +436,7 @@ Do not assume authentication works simply because the login form renders.
 
 ---
 
-# 13. Authorization Tests
+## 13. Authorization Tests
 
 Authorization is security-critical.
 
@@ -464,7 +464,7 @@ Do not rely only on UI tests.
 
 ---
 
-# 14. Database Tests
+## 14. Database Tests
 
 Database-related behavior must be tested appropriately.
 
@@ -485,7 +485,7 @@ Never run destructive tests against production data.
 
 ---
 
-# 15. React Component Tests
+## 15. React Component Tests
 
 Use Testing Library for user-facing behavior.
 
@@ -527,7 +527,7 @@ unless there is a compelling reason.
 
 ---
 
-# 16. Accessibility Testing
+## 16. Accessibility Testing
 
 When testing UI components, prefer accessible queries.
 
@@ -551,7 +551,7 @@ Tests should encourage accessible UI implementation.
 
 ---
 
-# 17. E2E Test Rules
+## 17. E2E Test Rules
 
 Playwright E2E tests should focus on critical user journeys.
 
@@ -573,7 +573,7 @@ Do not create E2E tests for every button or small UI interaction.
 
 ---
 
-# 18. Test Naming
+## 18. Test Naming
 
 Test names should describe behavior.
 
@@ -607,7 +607,7 @@ it("button test");
 
 ---
 
-# 19. Test Organization
+## 19. Test Organization
 
 Keep tests organized by domain or feature.
 
@@ -638,7 +638,7 @@ Do not create excessively deep directory structures.
 
 ---
 
-# 20. Naming Test Files
+## 20. Naming Test Files
 
 Use descriptive test file names.
 
@@ -671,7 +671,7 @@ for Playwright E2E tests when consistent with the project configuration.
 
 ---
 
-# 21. Mocking
+## 21. Mocking
 
 Mock external dependencies only when appropriate.
 
@@ -691,7 +691,7 @@ Prefer realistic integration tests when the actual dependency is safe and practi
 
 ---
 
-# 22. Database Mocking
+## 22. Database Mocking
 
 Do not blindly mock the database for every test.
 
@@ -719,7 +719,7 @@ Choose based on the purpose of the test.
 
 ---
 
-# 23. Time and Date
+## 23. Time and Date
 
 Tests involving dates must be deterministic.
 
@@ -739,7 +739,7 @@ Timezone boundaries
 
 ---
 
-# 24. Async Tests
+## 24. Async Tests
 
 Always properly await asynchronous operations.
 
@@ -764,7 +764,7 @@ Prefer explicit synchronization.
 
 ---
 
-# 25. Error Tests
+## 25. Error Tests
 
 Test expected errors explicitly.
 
@@ -778,7 +778,7 @@ Do not simply catch an error and ignore it.
 
 ---
 
-# 26. Loading / Empty / Error UI
+## 26. Loading / Empty / Error UI
 
 Major data-driven components should have tests for relevant states:
 
@@ -805,7 +805,7 @@ Test that the correct state and user-facing behavior are displayed.
 
 ---
 
-# 27. Responsive Behavior
+## 27. Responsive Behavior
 
 Responsive behavior should be tested where it affects functionality.
 
@@ -823,7 +823,7 @@ Visual regression testing may be introduced later if necessary.
 
 ---
 
-# 28. Animation
+## 28. Animation
 
 Do not make tests depend on animation timing.
 
@@ -850,7 +850,7 @@ GSAP animation completed after 0.4 seconds
 
 ---
 
-# 29. Test Data
+## 29. Test Data
 
 Use predictable test data.
 
@@ -869,7 +869,7 @@ Do not create huge global fixtures that make tests difficult to understand.
 
 ---
 
-# 30. Test Isolation
+## 30. Test Isolation
 
 Tests must not depend on execution order.
 
@@ -893,7 +893,7 @@ Tests should be safe to run individually.
 
 ---
 
-# 31. Flaky Tests
+## 31. Flaky Tests
 
 Do not ignore flaky tests.
 
@@ -908,7 +908,7 @@ Retries may be used only when appropriate and should not hide real defects.
 
 ---
 
-# 32. Test Coverage
+## 32. Test Coverage
 
 Coverage is useful but is not the primary goal.
 
@@ -927,7 +927,7 @@ Prioritize coverage of:
 
 ---
 
-# 33. Never Skip Tests Without Reason
+## 33. Never Skip Tests Without Reason
 
 Do not use:
 
@@ -953,7 +953,7 @@ If a test must temporarily be skipped:
 
 ---
 
-# 34. Never Disable Test Failures
+## 34. Never Disable Test Failures
 
 Do not modify application code merely to satisfy an incorrect test.
 
@@ -971,7 +971,7 @@ before changing either.
 
 ---
 
-# 35. Test-First for Business Logic
+## 35. Test-First for Business Logic
 
 For complex business logic, prefer writing tests before or alongside implementation.
 
@@ -997,7 +997,7 @@ This is especially useful for:
 
 ---
 
-# 36. Regression Tests
+## 36. Regression Tests
 
 Every meaningful bug fix should consider a regression test.
 
@@ -1018,7 +1018,7 @@ Do not rely only on manually verifying the fix.
 
 ---
 
-# 37. Required Validation Before Completion
+## 37. Required Validation Before Completion
 
 Before considering a feature complete, run the appropriate checks.
 
@@ -1042,7 +1042,7 @@ Do not invent commands if the project uses different script names.
 
 ---
 
-# 38. Test Checklist
+## 38. Test Checklist
 
 Before completing a feature:
 
@@ -1063,7 +1063,7 @@ Before completing a feature:
 
 ---
 
-# 39. Final Testing Principles
+## 39. Final Testing Principles
 
 Always prefer:
 

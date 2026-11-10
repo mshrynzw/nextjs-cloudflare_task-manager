@@ -1,10 +1,12 @@
+# Agent Guidelines
+
 You are the lead engineer of this project.
 
 Your responsibility is to produce production-ready, maintainable, secure, tested, and well-documented code.
 
 ---
 
-# 1. Core Principles
+## 1. Core Principles
 
 - Produce production-ready code.
 - Prioritize readability and maintainability.
@@ -23,7 +25,7 @@ Your responsibility is to produce production-ready, maintainable, secure, tested
 
 ---
 
-# 2. Documentation First
+## 2. Documentation First
 
 Documentation is part of the implementation.
 
@@ -41,7 +43,7 @@ Never implement a major feature first and document it afterwards.
 
 ---
 
-# 3. Documentation Structure
+## 3. Documentation Structure
 
 The canonical documentation structure is:
 
@@ -65,11 +67,11 @@ Do not create duplicate documentation files with alternative names.
 
 ---
 
-# 4. Documentation Responsibilities
+## 4. Documentation Responsibilities
 
 Use the documents for the following purposes:
 
-## Product
+### Product
 
 `docs/product.md`
 
@@ -86,7 +88,7 @@ Do not put implementation details here.
 
 ---
 
-## Requirements
+### Requirements
 
 `docs/01_requirements.md`
 
@@ -100,7 +102,7 @@ Defines:
 
 ---
 
-## Basic Design
+### Basic Design
 
 `docs/02_basic-design.md`
 
@@ -113,7 +115,7 @@ Defines:
 
 ---
 
-## Detail Design
+### Detail Design
 
 `docs/03_detail-design/`
 
@@ -123,7 +125,7 @@ Before implementing a screen, read its corresponding detail design.
 
 ---
 
-## Architecture
+### Architecture
 
 `docs/04_architecture.md`
 
@@ -139,7 +141,7 @@ Do not bypass architectural layers without a documented reason.
 
 ---
 
-## Database
+### Database
 
 `docs/05_database.md`
 
@@ -155,7 +157,7 @@ Do not modify the database schema without updating this document.
 
 ---
 
-## API
+### API
 
 `docs/06_api.md`
 
@@ -172,7 +174,7 @@ Do not introduce undocumented API endpoints.
 
 ---
 
-## Component Design
+### Component Design
 
 `docs/07_component_design.md`
 
@@ -187,7 +189,7 @@ Reuse existing components before creating new ones.
 
 ---
 
-## UI Guideline
+### UI Guideline
 
 `docs/08_ui-guideline.md`
 
@@ -206,7 +208,7 @@ Do not introduce arbitrary UI values when an existing design token applies.
 
 ---
 
-## Roadmap
+### Roadmap
 
 `docs/roadmap.md`
 
@@ -221,7 +223,7 @@ Do not implement future roadmap items unless explicitly requested.
 
 ---
 
-## Screen List
+### Screen List
 
 `docs/screen-list.md`
 
@@ -235,7 +237,7 @@ Defines:
 
 ---
 
-## Development Log
+### Development Log
 
 `docs/development-log.md`
 
@@ -253,7 +255,7 @@ Do not record trivial changes such as typo fixes.
 
 ---
 
-# 5. Architecture Rules
+## 5. Architecture Rules
 
 Follow `docs/04_architecture.md`.
 
@@ -285,7 +287,7 @@ Keep responsibilities separated.
 
 ---
 
-# 6. Next.js Rules
+## 6. Next.js Rules
 
 Use the App Router.
 
@@ -313,7 +315,7 @@ Minimize client-side JavaScript.
 
 ---
 
-# 7. TypeScript Rules
+## 7. TypeScript Rules
 
 TypeScript strictness must be preserved.
 
@@ -338,7 +340,7 @@ Avoid unsafe type assertions unless there is a clear reason.
 
 ---
 
-# 8. Validation Rules
+## 8. Validation Rules
 
 All external input must be validated.
 
@@ -358,7 +360,7 @@ Use the project's established validation approach.
 
 ---
 
-# 9. Authentication and Authorization
+## 9. Authentication and Authorization
 
 Never trust client-provided identity or permission information.
 
@@ -382,7 +384,7 @@ Users must not be able to access Projects, Tasks, or Workspaces they do not have
 
 ---
 
-# 10. Database Rules
+## 10. Database Rules
 
 Follow `docs/05_database.md`.
 
@@ -404,7 +406,7 @@ Never modify the production database manually when a migration should be used.
 
 ---
 
-# 11. API Rules
+## 11. API Rules
 
 Follow `docs/06_api.md`.
 
@@ -421,7 +423,7 @@ Do not create undocumented API endpoints.
 
 ---
 
-# 12. Component Rules
+## 12. Component Rules
 
 Before creating a new component:
 
@@ -438,7 +440,7 @@ Keep reusable components generic enough to be reused, but do not over-generalize
 
 ---
 
-# 13. UI Rules
+## 13. UI Rules
 
 Follow `docs/08_ui-guideline.md`.
 
@@ -466,7 +468,7 @@ Do not copy prototype code directly into production.
 
 ---
 
-# 14. Responsive Design
+## 14. Responsive Design
 
 All screens must support:
 
@@ -482,7 +484,7 @@ Follow `docs/08_ui-guideline.md`.
 
 ---
 
-# 15. Accessibility
+## 15. Accessibility
 
 Accessibility is required.
 
@@ -501,7 +503,7 @@ Interactive elements must be usable without a mouse where practical.
 
 ---
 
-# 16. Loading / Empty / Error States
+## 16. Loading / Empty / Error States
 
 Major screens and asynchronous operations must handle:
 
@@ -519,7 +521,7 @@ Do not leave blank screens for empty or error states.
 
 ---
 
-# 17. Testing
+## 17. Testing
 
 Tests are required for new functionality.
 
@@ -534,7 +536,7 @@ tests/
 
 Use the appropriate test level.
 
-## Unit Tests
+### Unit Tests
 
 Use for:
 
@@ -544,7 +546,7 @@ Use for:
 - Services
 - Repositories
 
-## Integration Tests
+### Integration Tests
 
 Use for:
 
@@ -554,7 +556,7 @@ Use for:
 - Authorization
 - Feature workflows
 
-## E2E Tests
+### E2E Tests
 
 Use for important user flows such as:
 
@@ -571,7 +573,7 @@ Tests should verify behavior.
 
 ---
 
-# 18. Test Requirements
+## 18. Test Requirements
 
 When adding a feature:
 
@@ -585,7 +587,7 @@ If a feature does not require a particular test level, explain why.
 
 ---
 
-# 19. Error Handling
+## 19. Error Handling
 
 Errors must be handled explicitly.
 
@@ -599,7 +601,7 @@ Developer-facing logs should contain enough information to diagnose the problem 
 
 ---
 
-# 20. Performance
+## 20. Performance
 
 Performance is a product requirement.
 
@@ -619,7 +621,7 @@ Measure first when possible.
 
 ---
 
-# 21. Dependencies
+## 21. Dependencies
 
 Do not install a new dependency without a clear reason.
 
@@ -634,7 +636,7 @@ Avoid unnecessary libraries.
 
 ---
 
-# 22. Security
+## 22. Security
 
 Treat all external input as untrusted.
 
@@ -657,7 +659,7 @@ Never expose environment variables containing secrets to the client.
 
 ---
 
-# 23. File Organization
+## 23. File Organization
 
 Keep files focused and reasonably small.
 
@@ -677,7 +679,7 @@ Split files when doing so improves maintainability.
 
 ---
 
-# 24. Scope Control
+## 24. Scope Control
 
 Do not expand the scope of a task without permission.
 
@@ -693,7 +695,7 @@ Do not implement future roadmap features automatically.
 
 ---
 
-# 25. Architectural Decisions
+## 25. Architectural Decisions
 
 When making an architectural decision:
 
@@ -707,7 +709,7 @@ Do not make major architectural changes silently.
 
 ---
 
-# 26. Documentation Consistency
+## 26. Documentation Consistency
 
 Code and documentation must remain consistent.
 
@@ -726,7 +728,7 @@ Do not leave outdated documentation behind.
 
 ---
 
-# 27. Git
+## 27. Git
 
 Keep commits focused.
 
@@ -756,7 +758,7 @@ Do not commit:
 
 ---
 
-# 28. Implementation Workflow
+## 28. Implementation Workflow
 
 For a new feature, follow this workflow:
 
@@ -792,7 +794,7 @@ Do not skip directly from requirements to implementation for major features.
 
 ---
 
-# 29. Before Finishing a Task
+## 29. Before Finishing a Task
 
 Before considering a task complete, verify:
 
@@ -811,7 +813,7 @@ Before considering a task complete, verify:
 
 ---
 
-# 30. Final Rule
+## 30. Final Rule
 
 When instructions conflict:
 

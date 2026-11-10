@@ -9,6 +9,7 @@ import {
 import {
   createProjectForUser,
   deleteProjectForUser,
+  getProject,
   getProjects,
 } from "@/lib/services/project-service";
 import {
@@ -71,7 +72,45 @@ describe("project and task services", () => {
     expect(listed.data).toHaveLength(1);
     expect(listed.data[0]?.name).toBe("API Project");
     expect(listed.data[0]?.progress).toBe(0);
+    expect(listed.data[0]?.progressWeights.done).toBe(1);
     expect(listed.data[0]?.members).toHaveLength(1);
+  });
+
+  it("calculates project progress with default status weights", async () => {
+    const { db, userId, workspaceId } = await seedActor();
+    const project = await createProjectForUser(db, userId, {
+      workspaceId,
+      name: "Weighted Board",
+      status: "active",
+      priority: "medium",
+      color: "#4f7cff",
+    });
+
+    const statuses = [
+      "backlog",
+      "todo",
+      "in_progress",
+      "review",
+      "done",
+    ] as const;
+    for (const [index, status] of statuses.entries()) {
+      await createTaskForProject(db, userId, project.id!, {
+        title: `Task ${index}`,
+        status,
+        priority: "medium",
+      });
+    }
+
+    const detail = await getProject(db, userId, project.id!);
+    expect(detail.progress).toBe(50);
+    expect(detail.taskSummary.completed).toBe(1);
+    expect(detail.progressWeights).toEqual({
+      backlog: 0,
+      todo: 0.2,
+      in_progress: 0.5,
+      review: 0.8,
+      done: 1,
+    });
   });
 
   it("hides archived projects from the default list", async () => {

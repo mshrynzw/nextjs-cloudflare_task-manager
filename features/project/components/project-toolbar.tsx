@@ -84,6 +84,19 @@ export function ProjectToolbar() {
 
       <div className="flex flex-wrap items-center gap-2">
         <select
+          aria-label={t.projects.filterScope}
+          className={selectClassName}
+          defaultValue={searchParams.get("scope") ?? "mine"}
+          onChange={(event) => {
+            const next = event.target.value === "all" ? "all" : "";
+            updateParams({ scope: next });
+          }}
+        >
+          <option value="mine">{t.projects.scopeMine}</option>
+          <option value="all">{t.projects.scopeAll}</option>
+        </select>
+
+        <select
           aria-label={t.projects.filterStatus}
           className={selectClassName}
           defaultValue={searchParams.get("status") ?? ""}

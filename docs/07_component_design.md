@@ -4,7 +4,7 @@ Version 1.0
 
 ---
 
-# 1. Purpose
+## 1. Purpose
 
 本ドキュメントはTask Managerで利用する共通コンポーネントを定義する。
 
@@ -25,7 +25,7 @@ docs/component-design/
 
 ---
 
-# 2. Design Policy
+## 2. Design Policy
 
 全コンポーネントは以下を満たすこと。
 
@@ -38,9 +38,9 @@ docs/component-design/
 
 ---
 
-# 3. Component Categories
+## 3. Component Categories
 
-## Layout
+### Layout
 
 - Sidebar
 - Header
@@ -50,7 +50,7 @@ docs/component-design/
 
 ---
 
-## Navigation
+### Navigation
 
 - Breadcrumb
 - Pagination
@@ -60,7 +60,7 @@ docs/component-design/
 
 ---
 
-## Form
+### Form
 
 - Button
 - Input
@@ -74,7 +74,7 @@ docs/component-design/
 
 ---
 
-## Feedback
+### Feedback
 
 - Dialog
 - Toast
@@ -85,7 +85,7 @@ docs/component-design/
 
 ---
 
-## Data Display
+### Data Display
 
 - Badge
 - Avatar
@@ -96,7 +96,7 @@ docs/component-design/
 
 ---
 
-## Project
+### Project
 
 - ProjectCard
 - ProjectHeader
@@ -104,7 +104,7 @@ docs/component-design/
 
 ---
 
-## Task
+### Task
 
 - TaskCard
 - TaskRow
@@ -114,7 +114,7 @@ docs/component-design/
 
 ---
 
-## Dashboard
+### Dashboard
 
 - KPI Card
 - RecentActivity
@@ -122,7 +122,7 @@ docs/component-design/
 
 ---
 
-## Analytics
+### Analytics
 
 - LineChartCard
 - BarChartCard
@@ -131,7 +131,7 @@ docs/component-design/
 
 ---
 
-## Calendar
+### Calendar
 
 - CalendarGrid
 - CalendarCell
@@ -140,7 +140,7 @@ docs/component-design/
 
 ---
 
-## Profile
+### Profile
 
 - UserCard
 - SkillsCard
@@ -148,7 +148,7 @@ docs/component-design/
 
 ---
 
-# 4. Component Rules
+## 4. Component Rules
 
 すべてのコンポーネントは
 
@@ -165,7 +165,7 @@ docs/component-design/
 
 ---
 
-# 5. Component States
+## 5. Component States
 
 全コンポーネントで共通。
 
@@ -204,7 +204,7 @@ Dropdown
 
 ---
 
-# 6. Naming Rules
+## 6. Naming Rules
 
 Component
 
@@ -234,7 +234,7 @@ PascalCase
 
 ---
 
-# 7. Folder Structure
+## 7. Folder Structure
 
 ```text
 components/
@@ -264,7 +264,7 @@ features/**/components
 
 ---
 
-# 8. Reuse Policy
+## 8. Reuse Policy
 
 新しいコンポーネントを作る前に
 
@@ -278,7 +278,7 @@ features/**/components
 
 ---
 
-# 9. Cursor Rules
+## 9. Cursor Rules
 
 Cursorは
 
@@ -304,7 +304,7 @@ features/**/components
 
 ---
 
-# 10. Component List
+## 10. Component List
 
 共通
 
@@ -335,7 +335,7 @@ features/**/components
 
 ---
 
-# 11. Future Documents
+## 11. Future Documents
 
 以下に詳細仕様を定義する。
 

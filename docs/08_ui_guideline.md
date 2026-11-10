@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Purpose
+## 1. Purpose
 
 本ドキュメントは Task Manager のデザインシステムを定義する。
 
@@ -17,7 +17,7 @@ Version: 1.0
 
 ---
 
-# 2. Design Philosophy
+## 2. Design Philosophy
 
 本アプリは以下の世界観を目指す。
 
@@ -39,7 +39,7 @@ Version: 1.0
 
 ---
 
-# 3. Color Tokens
+## 3. Color Tokens
 
 すべての色はCSS変数として定義する。
 
@@ -87,7 +87,7 @@ Version: 1.0
 
 ---
 
-# 4. Typography
+## 4. Typography
 
 Font Family
 
@@ -118,7 +118,7 @@ Line Height
 
 ---
 
-# 5. Radius
+## 5. Radius
 
 統一する。
 
@@ -133,7 +133,7 @@ Line Height
 
 ---
 
-# 6. Shadow
+## 6. Shadow
 
 Card
 
@@ -153,9 +153,26 @@ Dialog
 0 24px 80px rgba(0,0,0,.45)
 ```
 
+### Scrollbar
+
+ページ全体・モーダル・リストなど、スクロール可能な領域のスクロールバーはデザインシステムに合わせる。
+
+| 項目 | 値 |
+| ---- | -- |
+| Width / Height | 8px |
+| Track | transparent |
+| Thumb（dark） | `rgba(255, 255, 255, 0.12)` |
+| Thumb hover（dark） | `rgba(255, 255, 255, 0.22)` |
+| Radius | pill（`999px`） |
+
+Firefox は `scrollbar-width: thin` と `scrollbar-color` を使用する。
+実装は `app/globals.css` のトークン `--scrollbar-*` に集約する。
+
+既定の OS / ブラウザの太いグレーバーは使わない。
+
 ---
 
-# 7. Spacing
+## 7. Spacing
 
 8px Gridを採用する。
 
@@ -187,7 +204,7 @@ Dialog
 
 ---
 
-# 8. Layout
+## 8. Layout
 
 Container
 
@@ -215,7 +232,7 @@ Header
 
 ---
 
-# 9. Grid
+## 9. Grid
 
 Desktop
 
@@ -243,7 +260,7 @@ Gap
 
 ---
 
-# 10. Icon
+## 10. Icon
 
 Lucide React を採用する。
 
@@ -263,7 +280,7 @@ Stroke
 
 ---
 
-# 11. Motion
+## 11. Motion
 
 GSAPを採用する。
 
@@ -290,7 +307,7 @@ power2.out
 
 ---
 
-# 12. Hover
+## 12. Hover
 
 Card
 
@@ -310,7 +327,7 @@ Border Color変更
 
 ---
 
-# 13. Loading
+## 13. Loading
 
 すべてSkeletonを使用する。
 
@@ -318,7 +335,7 @@ Spinnerのみは禁止。
 
 ---
 
-# 14. Empty State
+## 14. Empty State
 
 必須要素
 
@@ -331,7 +348,7 @@ Spinnerのみは禁止。
 
 ---
 
-# 15. Toast
+## 15. Toast
 
 右上表示
 
@@ -343,7 +360,7 @@ Auto Close
 
 ---
 
-# 16. Dialog
+## 16. Dialog
 
 最大幅
 
@@ -365,7 +382,7 @@ Backdrop Blur
 
 ---
 
-# 17. Card
+## 17. Card
 
 Padding
 
@@ -387,7 +404,7 @@ Radius
 
 ---
 
-# 18. Input
+## 18. Input
 
 高さ
 
@@ -409,7 +426,7 @@ Radius
 
 ---
 
-# 19. Button
+## 19. Button
 
 Primary
 
@@ -433,7 +450,7 @@ Danger
 
 ---
 
-# 20. Accessibility
+## 20. Accessibility
 
 最低コントラスト
 
@@ -453,7 +470,7 @@ aria-label
 
 必須（特に icon-only コントロール）
 
-## 実装ルール
+### 実装ルール
 
 - Skip link: 「Skip to main content」→ `#main-content`
 - Landmark: 主要コンテンツは `<main>`。Settings も例外にしない
@@ -464,7 +481,7 @@ aria-label
 
 ---
 
-# 21. Responsive
+## 21. Responsive
 
 Desktop
 
@@ -480,7 +497,7 @@ Mobile
 
 ---
 
-# 22. Design Rules
+## 22. Design Rules
 
 必須
 
@@ -503,7 +520,7 @@ Mobile
 
 ---
 
-# 23. Cursor Rules
+## 23. Cursor Rules
 
 Cursorは以下を必ず守ること。
 
@@ -517,7 +534,7 @@ Cursorは以下を必ず守ること。
 
 ---
 
-# 24. Future
+## 24. Future
 
 将来的にDesign Systemを以下へ拡張予定。
 

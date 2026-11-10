@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-005
 
-## 画面名
+### 画面名
 
 Task Board
 
-## URL
+### URL
 
 ```text
 /projects/:projectId/board
 ```
 
-## 目的
+### 目的
 
 Task Board画面は、プロジェクト内のタスクをカンバン形式で管理する画面である。
 
@@ -26,7 +26,7 @@ Task Board画面は、プロジェクト内のタスクをカンバン形式で�
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ Task Board画面は、プロジェクト内のタスクをカンバン形式で�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -78,7 +78,7 @@ Kanban
 
 ---
 
-# 4. カラム構成
+## 4. カラム構成
 
 初期表示
 
@@ -98,7 +98,7 @@ Kanban
 
 ---
 
-# 5. Task Card
+## 5. Task Card
 
 表示項目
 
@@ -133,7 +133,7 @@ Kanban
 
 ---
 
-# 6. ドラッグ&ドロップ
+## 6. ドラッグ&ドロップ
 
 対象
 
@@ -158,7 +158,7 @@ Task Card
 
 ---
 
-# 7. 検索
+## 7. 検索
 
 対象
 
@@ -170,7 +170,7 @@ Task Card
 
 ---
 
-# 8. Filter
+## 8. Filter
 
 対象
 
@@ -192,7 +192,7 @@ Deadline
 
 ---
 
-# 9. Sort
+## 9. Sort
 
 並び順
 
@@ -204,7 +204,7 @@ Deadline
 
 ---
 
-# 10. New Task
+## 10. New Task
 
 Dialog表示
 
@@ -224,7 +224,7 @@ Toast表示。
 
 ---
 
-# 11. Context Menu
+## 11. Context Menu
 
 Task Card右上
 
@@ -241,7 +241,7 @@ DeleteのみDanger表示。
 
 ---
 
-# 12. Empty State
+## 12. Empty State
 
 カラム内にタスクが存在しない場合
 
@@ -261,7 +261,7 @@ Create a task to get started.
 
 ---
 
-# 13. Loading
+## 13. Loading
 
 Skeleton表示
 
@@ -273,7 +273,7 @@ Skeleton表示
 
 ---
 
-# 14. Toast
+## 14. Toast
 
 成功
 
@@ -301,7 +301,7 @@ Failed to update task.
 
 ---
 
-# 15. Command Palette
+## 15. Command Palette
 
 ショートカット
 
@@ -319,9 +319,9 @@ Failed to update task.
 
 ---
 
-# 16. アニメーション
+## 16. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -347,7 +347,7 @@ Stagger Animation
 
 ---
 
-## Hover
+### Hover
 
 Task Card
 
@@ -357,7 +357,7 @@ Task Card
 
 ---
 
-## Drag
+### Drag
 
 ドラッグ中
 
@@ -372,7 +372,7 @@ Task Card
 
 ---
 
-## Add Task
+### Add Task
 
 Dialog
 
@@ -382,13 +382,13 @@ Scale
 
 ---
 
-## Filter
+### Filter
 
 Cross Fade
 
 ---
 
-# 17. レスポンシブ
+## 17. レスポンシブ
 
 Desktop
 
@@ -416,7 +416,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 18. アクセシビリティ
+## 18. アクセシビリティ
 
 - キーボード操作対応
 - ドラッグ操作の代替手段を提供
@@ -426,7 +426,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. 使用Hooks
+## 19. 使用Hooks
 
 ```text
 useBoard()
@@ -444,7 +444,7 @@ useDragAndDrop()
 
 ---
 
-# 20. 使用Feature
+## 20. 使用Feature
 
 ```text
 features/task
@@ -454,7 +454,7 @@ features/project
 
 ---
 
-# 21. 使用予定コンポーネント
+## 21. 使用予定コンポーネント
 
 ```text
 BoardColumn
@@ -494,7 +494,7 @@ EmptyState
 
 ---
 
-# 22. 今後追加予定
+## 22. 今後追加予定
 
 - Swimlanes
 - WIP Limit

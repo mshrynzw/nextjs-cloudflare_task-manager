@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Overview
+## 1. Overview
 
 本ドキュメントは、Task Managerにおけるデータベース構造を定義する。
 
@@ -14,7 +14,7 @@ ORMにはDrizzle ORMを採用予定とする。
 
 ---
 
-# 2. Database Stack
+## 2. Database Stack
 
 | Technology    | Purpose                         |
 | ------------- | ------------------------------- |
@@ -24,7 +24,7 @@ ORMにはDrizzle ORMを採用予定とする。
 
 ---
 
-# 3. Design Principles
+## 3. Design Principles
 
 以下をデータベース設計の基本方針とする。
 
@@ -41,7 +41,7 @@ ORMにはDrizzle ORMを採用予定とする。
 
 ---
 
-# 4. Entity Overview
+## 4. Entity Overview
 
 主要Entityは以下とする。
 
@@ -75,7 +75,7 @@ User
 
 ---
 
-# 5. ER Diagram
+## 5. ER Diagram
 
 ```mermaid
 erDiagram
@@ -113,7 +113,7 @@ erDiagram
 
 ---
 
-# 6. ID Strategy
+## 6. ID Strategy
 
 すべての主要Entityでは、アプリケーション側で生成した一意な文字列IDを使用する。
 
@@ -132,7 +132,7 @@ IDはClientから推測可能な連番を使用しない。
 
 ---
 
-# 7. Timestamp Strategy
+## 7. Timestamp Strategy
 
 日時はUTCを基本とする。
 
@@ -152,17 +152,17 @@ deleted_at
 
 ---
 
-# 8. Users
+## 8. Users
 
 ユーザー情報を管理する。
 
-## Table
+### Table
 
 ```text
 users
 ```
 
-## Columns
+### Columns
 
 | Column         | Type    | Nullable | Description                  |
 | -------------- | ------- | -------: | ---------------------------- |
@@ -183,9 +183,9 @@ users
 
 ---
 
-# 9. User Constraints
+## 9. User Constraints
 
-## Email
+### Email
 
 一意であること。
 
@@ -193,7 +193,7 @@ users
 UNIQUE(email)
 ```
 
-## Username
+### Username
 
 設定されている場合、一意であること。
 
@@ -203,7 +203,7 @@ UNIQUE(username)
 
 ---
 
-# 10. Authentication Tables
+## 10. Authentication Tables
 
 Auth.jsを利用する場合、Auth.js / Drizzle Adapterの仕様に合わせて認証関連テーブルを用意する。
 
@@ -221,17 +221,17 @@ verification_tokens
 
 ---
 
-# 11. Workspaces
+## 11. Workspaces
 
 将来的なチーム利用を考慮し、Workspaceを定義する。
 
-## Table
+### Table
 
 ```text
 workspaces
 ```
 
-## Columns
+### Columns
 
 | Column      | Type    | Nullable | Description       |
 | ----------- | ------- | -------: | ----------------- |
@@ -245,17 +245,17 @@ workspaces
 
 ---
 
-# 12. Workspace Members
+## 12. Workspace Members
 
 WorkspaceとUserの多対多関係を管理する。
 
-## Table
+### Table
 
 ```text
 workspace_members
 ```
 
-## Columns
+### Columns
 
 | Column       | Type    | Nullable | Description             |
 | ------------ | ------- | -------: | ----------------------- |
@@ -268,7 +268,7 @@ workspace_members
 
 ---
 
-# 13. Workspace Member Constraints
+## 13. Workspace Member Constraints
 
 同じUserが同じWorkspaceに複数登録されないようにする。
 
@@ -278,17 +278,17 @@ UNIQUE(workspace_id, user_id)
 
 ---
 
-# 14. Projects
+## 14. Projects
 
 プロジェクト情報を管理する。
 
-## Table
+### Table
 
 ```text
 projects
 ```
 
-## Columns
+### Columns
 
 | Column       | Type    | Nullable | Description          |
 | ------------ | ------- | -------: | -------------------- |
@@ -302,14 +302,15 @@ projects
 | start_date   | INTEGER |      Yes | Start Date           |
 | deadline     | INTEGER |      Yes | Deadline             |
 | created_by   | TEXT    |       No | Creator User ID      |
-| visibility   | TEXT    |       No | workspace / members  |
-| created_at   | INTEGER |       No | Created timestamp    |
-| updated_at   | INTEGER |       No | Updated timestamp    |
-| archived_at  | INTEGER |      Yes | Archived timestamp   |
+| visibility         | TEXT    |       No | workspace / members  |
+| progress_weights   | TEXT    |      Yes | JSON: status → weight (0–1). NULL = defaults |
+| created_at         | INTEGER |       No | Created timestamp    |
+| updated_at         | INTEGER |       No | Updated timestamp    |
+| archived_at        | INTEGER |      Yes | Archived timestamp   |
 
 ---
 
-# 15. Project Status
+## 15. Project Status
 
 許可する値
 
@@ -323,7 +324,7 @@ archived
 
 ---
 
-# 16. Project Priority
+## 16. Project Priority
 
 許可する値
 
@@ -335,7 +336,7 @@ high
 
 ---
 
-# 16.1 Project Visibility
+## 16.1 Project Visibility
 
 許可する値
 
@@ -355,41 +356,60 @@ members
 
 ---
 
-# 17. Project Progress
+## 17. Project Progress
 
-ProjectのProgressは原則としてDatabaseへ直接保存しない。
+進捗率そのものは Database に保存しない。Task の Status 件数と、プロジェクトごとの重みから算出する。
 
-TaskのStatusから算出する。
+### 17.1 Weights
+
+`projects.progress_weights` に JSON を保存する。`NULL` のときは既定値を使う。
+
+```json
+{
+  "backlog": 0,
+  "todo": 0.2,
+  "in_progress": 0.5,
+  "review": 0.8,
+  "done": 1
+}
+```
+
+制約
+
+- 各値は `0` 以上 `1` 以下
+- ステータスが進むほど重みが下がらない（`backlog ≤ todo ≤ in_progress ≤ review ≤ done`）
+
+### 17.2 Formula
 
 ```text
 Progress =
-Completed Tasks / Total Tasks × 100
+  Σ (statusCount[status] × weight[status])
+  ÷ Total Tasks
+  × 100
 ```
 
-例
+例（既定重み）
 
 ```text
-Total Tasks: 50
-Completed: 35
-
-Progress: 70%
+backlog 2, todo 2, in_progress 2, review 2, done 2
+→ (0+0.4+1.0+1.6+2.0) / 10 × 100 = 50%
 ```
 
-これにより、Taskの状態とProject Progressの不整合を防止する。
+完了件数（`completedTaskCount` / Analytics の完了率）は従来どおり `status = done` のみを数える。
 
 ---
 
-# 18. Project Members
+## 18. Project Members
 
 ProjectとUserの多対多関係を管理する。
 
-## Table
+### Table
 
 ```text
 project_members
 ```
 
-## Columns
+### Columns
 
 | Column     | Type    | Nullable | Description             |
 | ---------- | ------- | -------: | ----------------------- |
@@ -401,7 +421,7 @@ project_members
 
 ---
 
-# 19. Project Member Constraints
+## 19. Project Member Constraints
 
 ```text
 UNIQUE(project_id, user_id)
@@ -418,17 +438,17 @@ Workspace Member を削除した場合、アプリケーション層で次を行
 
 ---
 
-# 20. Tasks
+## 20. Tasks
 
 タスク情報を管理する。
 
-## Table
+### Table
 
 ```text
 tasks
 ```
 
-## Columns
+### Columns
 
 | Column       | Type    | Nullable | Description          |
 | ------------ | ------- | -------: | -------------------- |
@@ -450,7 +470,7 @@ tasks
 
 ---
 
-# 21. Task Status
+## 21. Task Status
 
 許可する値
 
@@ -474,7 +494,7 @@ Done
 
 ---
 
-# 22. Task Priority
+## 22. Task Priority
 
 許可する値
 
@@ -486,7 +506,7 @@ high
 
 ---
 
-# 23. Task Position
+## 23. Task Position
 
 Kanban Boardの並び順を管理する。
 
@@ -518,17 +538,17 @@ Taskを2と3の間に挿入する場合
 
 ---
 
-# 24. Checklist Items
+## 24. Checklist Items
 
 Task内のチェックリストを管理する。
 
-## Table
+### Table
 
 ```text
 checklist_items
 ```
 
-## Columns
+### Columns
 
 | Column     | Type    | Nullable | Description       |
 | ---------- | ------- | -------: | ----------------- |
@@ -542,17 +562,17 @@ checklist_items
 
 ---
 
-# 25. Tags
+## 25. Tags
 
 ProjectおよびTaskで利用するタグを管理する。
 
-## Table
+### Table
 
 ```text
 tags
 ```
 
-## Columns
+### Columns
 
 | Column       | Type    | Nullable | Description       |
 | ------------ | ------- | -------: | ----------------- |
@@ -564,17 +584,17 @@ tags
 
 ---
 
-# 26. Project Tags
+## 26. Project Tags
 
 ProjectとTagの多対多関係。
 
-## Table
+### Table
 
 ```text
 project_tags
 ```
 
-## Columns
+### Columns
 
 | Column     | Type | Nullable | Description |
 | ---------- | ---- | -------: | ----------- |
@@ -589,17 +609,17 @@ PRIMARY KEY(project_id, tag_id)
 
 ---
 
-# 27. Task Tags
+## 27. Task Tags
 
 TaskとTagの多対多関係。
 
-## Table
+### Table
 
 ```text
 task_tags
 ```
 
-## Columns
+### Columns
 
 | Column  | Type | Nullable | Description |
 | ------- | ---- | -------: | ----------- |
@@ -614,17 +634,17 @@ PRIMARY KEY(task_id, tag_id)
 
 ---
 
-# 28. Comments
+## 28. Comments
 
 Taskへのコメントを管理する。
 
-## Table
+### Table
 
 ```text
 comments
 ```
 
-## Columns
+### Columns
 
 | Column     | Type    | Nullable | Description           |
 | ---------- | ------- | -------: | --------------------- |
@@ -638,17 +658,17 @@ comments
 
 ---
 
-# 29. Attachments
+## 29. Attachments
 
 Taskに添付されたファイルのMetadataを管理する。
 
-## Table
+### Table
 
 ```text
 attachments
 ```
 
-## Columns
+### Columns
 
 | Column      | Type    | Nullable | Description        |
 | ----------- | ------- | -------: | ------------------ |
@@ -669,17 +689,17 @@ D1にはMetadataのみ保存する。
 
 ---
 
-# 30. Activities
+## 30. Activities
 
 ユーザー操作履歴を管理する。
 
-## Table
+### Table
 
 ```text
 activities
 ```
 
-## Columns
+### Columns
 
 | Column       | Type    | Nullable | Description       |
 | ------------ | ------- | -------: | ----------------- |
@@ -694,7 +714,7 @@ activities
 
 ---
 
-# 31. Activity Actions
+## 31. Activity Actions
 
 例
 
@@ -723,7 +743,7 @@ member_removed
 
 ---
 
-# 32. Activity Metadata
+## 32. Activity Metadata
 
 MetadataはJSON文字列として保存する。
 
@@ -740,17 +760,17 @@ Activity本文をDatabaseに保存するのではなく、ActionとMetadataか�
 
 ---
 
-# 33. Notifications
+## 33. Notifications
 
 アプリ内通知を管理する。
 
-## Table
+### Table
 
 ```text
 notifications
 ```
 
-## Columns
+### Columns
 
 | Column      | Type    | Nullable | Description        |
 | ----------- | ------- | -------: | ------------------ |
@@ -768,17 +788,17 @@ notifications
 
 ---
 
-# 34. User Settings
+## 34. User Settings
 
 ユーザー個人の設定を管理する。
 
-## Table
+### Table
 
 ```text
 user_settings
 ```
 
-## Columns
+### Columns
 
 | Column                 | Type    | Nullable | Description          |
 | ---------------------- | ------- | -------: | -------------------- |
@@ -797,7 +817,7 @@ user_settings
 
 ---
 
-# 35. User Settings Constraints
+## 35. User Settings Constraints
 
 Userごとに1レコードのみ。
 
@@ -807,17 +827,17 @@ PRIMARY KEY(user_id)
 
 ---
 
-# 36. Time Entries
+## 36. Time Entries
 
 Analyticsで作業時間を表示するための将来拡張テーブル。
 
-## Table
+### Table
 
 ```text
 time_entries
 ```
 
-## Columns
+### Columns
 
 | Column           | Type    | Nullable | Description       |
 | ---------------- | ------- | -------: | ----------------- |
@@ -831,7 +851,7 @@ time_entries
 
 ---
 
-# 37. Time Entry Rules
+## 37. Time Entry Rules
 
 作業時間は以下で算出する。
 
@@ -846,7 +866,7 @@ ended_at - started_at
 
 ---
 
-# 38. Analytics Data
+## 38. Analytics Data
 
 Analytics専用の集計テーブルは初期実装では作成しない。
 
@@ -862,7 +882,7 @@ Project Members
 
 例
 
-## Completion Rate
+### Completion Rate
 
 ```text
 Completed Tasks
@@ -873,7 +893,7 @@ Total Tasks
 
 ---
 
-## Average Completion Time
+### Average Completion Time
 
 ```text
 completed_at - created_at
@@ -883,7 +903,7 @@ completed_at - created_at
 
 ---
 
-## Overdue Tasks
+### Overdue Tasks
 
 以下を満たすTask。
 
@@ -895,7 +915,7 @@ status != done
 
 ---
 
-# 39. Foreign Keys
+## 39. Foreign Keys
 
 主要なRelationshipにはForeign Keyを設定する。
 
@@ -920,11 +940,11 @@ comments.author_id
 
 ---
 
-# 40. Delete Strategy
+## 40. Delete Strategy
 
 原則として、関連データの削除方式をEntityごとに定義する。
 
-## Project
+### Project
 
 通常はArchiveを優先する。
 
@@ -936,13 +956,13 @@ archived_at
 
 ---
 
-## Task
+### Task
 
 通常はArchiveを優先する。
 
 ---
 
-## Comment
+### Comment
 
 Soft Deleteを使用する。
 
@@ -952,13 +972,13 @@ deleted_at
 
 ---
 
-## Membership
+### Membership
 
 Membershipレコード自体を削除する。
 
 ---
 
-# 41. Cascade Rules
+## 41. Cascade Rules
 
 Project削除などの破壊的操作では、関連データの扱いを明示する。
 
@@ -981,11 +1001,11 @@ Projectを完全削除する処理は通常のUIから提供せず、原則と�
 
 ---
 
-# 42. Index Strategy
+## 42. Index Strategy
 
 検索・一覧表示・JOINで使用するカラムにIndexを設定する。
 
-## Users
+### Users
 
 ```text
 users.email
@@ -994,7 +1014,7 @@ users.username
 
 ---
 
-## Workspaces
+### Workspaces
 
 ```text
 workspaces.slug
@@ -1003,7 +1023,7 @@ workspaces.created_by
 
 ---
 
-## Workspace Members
+### Workspace Members
 
 ```text
 workspace_members.workspace_id
@@ -1012,7 +1032,7 @@ workspace_members.user_id
 
 ---
 
-## Projects
+### Projects
 
 ```text
 projects.workspace_id
@@ -1023,7 +1043,7 @@ projects.updated_at
 
 ---
 
-## Project Members
+### Project Members
 
 ```text
 project_members.project_id
@@ -1032,7 +1052,7 @@ project_members.user_id
 
 ---
 
-## Tasks
+### Tasks
 
 ```text
 tasks.project_id
@@ -1045,7 +1065,7 @@ tasks.position
 
 ---
 
-## Comments
+### Comments
 
 ```text
 comments.task_id
@@ -1055,7 +1075,7 @@ comments.created_at
 
 ---
 
-## Activities
+### Activities
 
 ```text
 activities.workspace_id
@@ -1067,7 +1087,7 @@ activities.created_at
 
 ---
 
-## Notifications
+### Notifications
 
 ```text
 notifications.user_id
@@ -1077,7 +1097,7 @@ notifications.created_at
 
 ---
 
-# 43. Search Strategy
+## 43. Search Strategy
 
 Project Listでは以下を検索対象とする。
 
@@ -1099,7 +1119,7 @@ tasks.description
 
 ---
 
-# 44. Pagination Strategy
+## 44. Pagination Strategy
 
 大量データを取得する場合はPaginationを使用する。
 
@@ -1119,13 +1139,13 @@ Project List、Task List、Activity、Commentsなどで使用する。
 
 ---
 
-# 45. Transaction Strategy
+## 45. Transaction Strategy
 
 複数Entityを同時に変更する処理ではTransactionを使用する。
 
 例
 
-## Task Status Change
+### Task Status Change
 
 ```text
 Task Status Update
@@ -1139,7 +1159,7 @@ Task Status Update
 
 ---
 
-# 46. Task Move Transaction
+## 46. Task Move Transaction
 
 KanbanでTaskを移動する場合、
 
@@ -1155,7 +1175,7 @@ APIが成功したにもかかわらずActivityだけ作成されない状態を
 
 ---
 
-# 47. Data Integrity
+## 47. Data Integrity
 
 以下の不整合を許可しない。
 
@@ -1168,7 +1188,7 @@ APIが成功したにもかかわらずActivityだけ作成されない状態を
 
 ---
 
-# 48. Authorization Data Model
+## 48. Authorization Data Model
 
 Authorizationは以下のRelationshipから判断する。
 
@@ -1190,7 +1210,7 @@ Taskへのアクセス権限は、原則として所属ProjectおよびWorkspace
 
 ---
 
-# 49. Multi-Tenant Isolation
+## 49. Multi-Tenant Isolation
 
 Workspaceをテナント境界として扱う。
 
@@ -1212,7 +1232,7 @@ Resource
 
 ---
 
-# 50. Security Rules
+## 50. Security Rules
 
 Databaseアクセスでは以下を必須とする。
 
@@ -1229,7 +1249,7 @@ Clientから送信された `workspaceId` や `userId` をそのまま信用し�
 
 ---
 
-# 51. Database Migration
+## 51. Database Migration
 
 Database Schema変更はMigrationで管理する。
 
@@ -1245,19 +1265,21 @@ drizzle/
 
 ---
 
-# 52. Seed Data
+## 52. Seed Data
 
 開発環境ではSeed Dataを利用できるようにする。
 
-## Strategies
+### Strategies
 
 | Script | Module | Purpose |
 | ------ | ------ | ------- |
 | `pnpm db:seed:e2e` | `seedDemoData` | 最小フィクスチャ（Playwright） |
 | `pnpm db:seed:local` | `seedPortfolioData` | リッチなローカル / デモデータ |
 | `pnpm db:seed:prod` | `seedPortfolioData` | Live Demo 用本番 D1（`CONFIRM_PROD_SEED=yes` 必須） |
+| `pnpm db:refresh-portfolio-dates:prod` | 期限のみ更新 | ポートフォリオ 10 件の deadline / due_date だけを刷新（個人プロジェクト非破壊） |
 
 ポートフォリオ seed は workspace slug `portfolio-demo` を idempotent に置換する。
+**注意:** `db:seed:prod` は `portfolio-demo` ワークスペース全体を消して作り直す。個人プロジェクトが同じ workspace にある場合は消えるため、期限更新だけなら `db:refresh-portfolio-dates:prod` を使う。
 デモアカウントは `demo@example.com` / `DemoPass123!`（`lib/db/demo-credentials.ts`）。
 表示文言（ワークスペース名、プロジェクト名、タスク名、コメント、通知、役職）は日本語。
 メール・username・slug は ASCII のまま。
@@ -1279,7 +1301,7 @@ Seedには以下を含める。
 
 ---
 
-# 53. Demo Data Requirements
+## 53. Demo Data Requirements
 
 Portfolio用のDemo Dataは、実際のアプリケーションが動作しているように見える量を用意する。
 
@@ -1298,7 +1320,7 @@ Live Demo 向けは `seedPortfolioData` のみ、`CONFIRM_PROD_SEED=yes` 付き�
 
 ---
 
-# 54. Backup
+## 54. Backup
 
 Cloudflare D1のバックアップ・復旧仕様を確認し、Production運用時には適切なバックアップ戦略を採用する。
 
@@ -1306,7 +1328,7 @@ Portfolioの初期段階では、Databaseバックアップを別途設計する
 
 ---
 
-# 55. Database Performance
+## 55. Database Performance
 
 以下を避ける。
 
@@ -1321,7 +1343,7 @@ Portfolioの初期段階では、Databaseバックアップを別途設計する
 
 ---
 
-# 56. N+1 Prevention
+## 56. N+1 Prevention
 
 例えばProject ListでMembersを取得する場合、
 
@@ -1337,7 +1359,7 @@ ProjectごとにMembers Query
 
 ---
 
-# 57. Data Access Rules
+## 57. Data Access Rules
 
 UI ComponentからDatabaseへ直接アクセスしてはいけない。
 
@@ -1367,7 +1389,7 @@ D1
 
 ---
 
-# 58. Drizzle Schema
+## 58. Drizzle Schema
 
 DrizzleのSchemaは以下のようにFeatureまたはDatabase領域で管理する。
 
@@ -1397,7 +1419,7 @@ lib/db/
 
 ---
 
-# 59. Type Safety
+## 59. Type Safety
 
 Database SchemaからTypeScriptの型を推論する。
 
@@ -1407,7 +1429,7 @@ Application内でDatabase Entityの型を重複定義しない。
 
 ---
 
-# 60. Validation
+## 60. Validation
 
 Database Schemaだけに入力値検証を依存しない。
 
@@ -1427,7 +1449,7 @@ D1
 
 ---
 
-# 61. API Relationship
+## 61. API Relationship
 
 DatabaseとAPIの主要なRelationshipは以下。
 
@@ -1459,7 +1481,7 @@ tasks
 
 ---
 
-# 62. Screen Relationship
+## 62. Screen Relationship
 
 | Screen         | Main Tables                                                   |
 | -------------- | ------------------------------------------------------------- |
@@ -1476,7 +1498,7 @@ tasks
 
 ---
 
-# 63. Analytics Query Principles
+## 63. Analytics Query Principles
 
 Analyticsでは可能な限り既存データから算出する。
 
@@ -1493,7 +1515,7 @@ Analyticsでは可能な限り既存データから算出する。
 
 ---
 
-# 64. Future Extensions
+## 64. Future Extensions
 
 将来的に以下のTableを追加する可能性がある。
 
@@ -1512,7 +1534,7 @@ custom_fields
 
 ---
 
-# 65. Initial Implementation Scope
+## 65. Initial Implementation Scope
 
 初期実装では以下を優先する。
 
@@ -1550,7 +1572,7 @@ audit_logs
 
 ---
 
-# 66. Implementation Rules
+## 66. Implementation Rules
 
 CursorがDatabaseを実装する場合、以下を必ず守る。
 
@@ -1572,39 +1594,39 @@ CursorがDatabaseを実装する場合、以下を必ず守る。
 
 ---
 
-# 67. Test Requirements
+## 67. Test Requirements
 
 Database関連の変更では以下をテストする。
 
-## Create
+### Create
 
 - User作成
 - Workspace作成
 - Project作成
 - Task作成
 
-## Relationship
+### Relationship
 
 - Workspace Member
 - Project Member
 - Task Assignee
 - Task Tag
 
-## Constraint
+### Constraint
 
 - Duplicate Membership
 - Invalid Foreign Key
 - Invalid Status
 - Invalid Priority
 
-## Query
+### Query
 
 - Project List
 - Task List
 - Task Detail
 - Analytics
 
-## Authorization
+### Authorization
 
 - 他Workspaceへのアクセス
 - 他Projectへのアクセス
@@ -1621,7 +1643,7 @@ tests/
 
 ---
 
-# 68. Migration Rules
+## 68. Migration Rules
 
 Migrationを作成した場合、以下を必ず確認する。
 
@@ -1639,7 +1661,7 @@ Migration適用後に既存データが壊れないことを確認する。
 
 ---
 
-# 69. Current Status
+## 69. Current Status
 
 Phase 2 で以下を実装済み。
 
@@ -1663,7 +1685,7 @@ Attachments / Time Entries は未実装（将来拡張）。
 
 ---
 
-# 70. Final Database Principles
+## 70. Final Database Principles
 
 本プロジェクトでは以下を最重要原則とする。
 

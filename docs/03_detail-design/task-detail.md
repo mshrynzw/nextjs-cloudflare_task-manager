@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-006
 
-## 画面名
+### 画面名
 
 Task Detail
 
-## URL
+### URL
 
 ```text
 /projects/:projectId/tasks/:taskId
 ```
 
-## 目的
+### 目的
 
 Task Detail画面は、タスクの詳細情報を表示・編集し、コメントやチェックリストなどを管理する画面である。
 
@@ -26,7 +26,7 @@ Task Boardから遷移し、タスクに関するすべての情報を一元的�
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ Task Boardから遷移し、タスクに関するすべての情報を一元的�
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -86,7 +86,7 @@ Activity
 
 ---
 
-# 4. Breadcrumb
+## 4. Breadcrumb
 
 表示例
 
@@ -96,7 +96,7 @@ Dashboard / Website Renewal / Task Board / Landing Page Design
 
 ---
 
-# 5. Task Header
+## 5. Task Header
 
 表示内容
 
@@ -115,7 +115,7 @@ Context Menu
 
 ---
 
-# 6. Description
+## 6. Description
 
 表示内容
 
@@ -128,7 +128,7 @@ Context Menu
 
 ---
 
-# 7. Task Information
+## 7. Task Information
 
 表示内容
 
@@ -145,7 +145,7 @@ Context Menu
 
 ---
 
-# 8. Checklist
+## 8. Checklist
 
 表示内容
 
@@ -167,7 +167,7 @@ Progressを表示する。
 
 ---
 
-# 9. Attachments
+## 9. Attachments
 
 表示内容
 
@@ -184,7 +184,7 @@ Progressを表示する。
 
 ---
 
-# 10. Comments
+## 10. Comments
 
 表示件数
 
@@ -208,7 +208,7 @@ Comment Editor
 
 ---
 
-# 11. Activity Timeline
+## 11. Activity Timeline
 
 表示内容
 
@@ -234,7 +234,7 @@ In Progress
 
 ---
 
-# 12. Dialog
+## 12. Dialog
 
 Edit Task
 
@@ -254,7 +254,7 @@ Toast表示。
 
 ---
 
-# 13. Empty State
+## 13. Empty State
 
 Checklist
 
@@ -280,7 +280,7 @@ No attachments.
 
 ---
 
-# 14. Loading
+## 14. Loading
 
 Skeleton表示
 
@@ -294,7 +294,7 @@ Skeleton表示
 
 ---
 
-# 15. Toast
+## 15. Toast
 
 成功
 
@@ -322,9 +322,9 @@ Failed to update task.
 
 ---
 
-# 16. アニメーション
+## 16. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -360,7 +360,7 @@ Timeline
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -383,7 +383,7 @@ Comment追加
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -391,7 +391,7 @@ Scale
 
 ---
 
-# 17. レスポンシブ
+## 17. レスポンシブ
 
 Desktop
 
@@ -422,7 +422,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 18. アクセシビリティ
+## 18. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -432,7 +432,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 19. 使用Hooks
+## 19. 使用Hooks
 
 ```text
 useTask()
@@ -448,7 +448,7 @@ useActivity()
 
 ---
 
-# 20. 使用Feature
+## 20. 使用Feature
 
 ```text
 features/task
@@ -462,7 +462,7 @@ features/file
 
 ---
 
-# 21. 使用予定コンポーネント
+## 21. 使用予定コンポーネント
 
 ```text
 TaskHeader
@@ -502,7 +502,7 @@ EmptyState
 
 ---
 
-# 22. 将来追加予定
+## 22. 将来追加予定
 
 - Markdown Editor
 - @Mention

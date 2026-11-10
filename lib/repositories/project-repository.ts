@@ -5,6 +5,7 @@ import {
   desc,
   eq,
   inArray,
+  isNotNull,
   isNull,
   like,
   sql,
@@ -24,6 +25,8 @@ import {
   workspaceMembers,
 } from "@/lib/db/schema";
 
+export type ProjectListScope = "mine" | "all";
+
 export interface ListProjectsQuery {
   page: number;
   limit: number;
@@ -32,6 +35,8 @@ export interface ListProjectsQuery {
   priority?: string;
   sort?: "updatedAt" | "deadline" | "name";
   order?: "asc" | "desc";
+  /** Default mine: only projects the user joined. all: any readable in workspace. */
+  scope?: ProjectListScope;
 }
 
 export async function listProjectsForUser(
@@ -40,7 +45,11 @@ export async function listProjectsForUser(
   query: ListProjectsQuery,
 ) {
   const offset = (query.page - 1) * query.limit;
-  const conditions = [canReadProjectSql()];
+  const scope = query.scope ?? "mine";
+  const conditions =
+    scope === "mine"
+      ? [isNotNull(projectMembers.id)]
+      : [canReadProjectSql()];
 
   if (query.status === "archived") {
     conditions.push(eq(projects.status, "archived"));
@@ -111,6 +120,7 @@ export async function createProject(
     deadline?: number | null;
     createdBy: string;
     visibility?: string;
+    progressWeights?: string | null;
   },
 ) {
   const timestamp = nowUnix();
@@ -129,6 +139,7 @@ export async function createProject(
       deadline: input.deadline ?? null,
       createdBy: input.createdBy,
       visibility: input.visibility ?? "workspace",
+      progressWeights: input.progressWeights ?? null,
       createdAt: timestamp,
       updatedAt: timestamp,
     })
@@ -158,6 +169,7 @@ export async function updateProject(
     deadline: number | null;
     archivedAt: number | null;
     visibility: string;
+    progressWeights: string | null;
   }>,
 ) {
   return db
@@ -312,6 +324,11 @@ export async function getTaskCountsByProject(
       projectId: string;
       total: number;
       completed: number;
+      backlog: number;
+      todo: number;
+      inProgress: number;
+      review: number;
+      done: number;
     }>;
   }
 
@@ -320,6 +337,11 @@ export async function getTaskCountsByProject(
       projectId: tasks.projectId,
       total: count(),
       completed: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
+      backlog: sql<number>`sum(case when ${tasks.status} = 'backlog' then 1 else 0 end)`,
+      todo: sql<number>`sum(case when ${tasks.status} = 'todo' then 1 else 0 end)`,
+      inProgress: sql<number>`sum(case when ${tasks.status} = 'in_progress' then 1 else 0 end)`,
+      review: sql<number>`sum(case when ${tasks.status} = 'review' then 1 else 0 end)`,
+      done: sql<number>`sum(case when ${tasks.status} = 'done' then 1 else 0 end)`,
     })
     .from(tasks)
     .where(

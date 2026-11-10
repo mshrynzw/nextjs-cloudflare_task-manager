@@ -1,6 +1,12 @@
 import { fromUnixDate } from "@/lib/api/schemas";
 import type { AppDatabase } from "@/lib/db/client";
 import {
+  calculateProjectProgress,
+  emptyTaskStatusCounts,
+  resolveProgressWeights,
+  type TaskStatusCounts,
+} from "@/lib/project/progress";
+import {
   getAccessibleTaskKpis,
   getTaskCountsByProjectIds,
   listAccessibleOpenTasksDueBetween,
@@ -8,7 +14,17 @@ import {
   listAccessibleProjectsForUser,
   listAccessibleUpcomingTasks,
   listRecentActivitiesForUser,
+  type DashboardListScope,
 } from "@/lib/repositories/insights-repository";
+
+export type { DashboardListScope };
+
+export function parseDashboardListScope(
+  value: string | string[] | undefined,
+): DashboardListScope {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "all" ? "all" : "mine";
+}
 
 function startOfDayUnix(date = new Date()): number {
   const d = new Date(date);
@@ -22,17 +38,43 @@ function endOfDayUnix(date = new Date()): number {
   return Math.floor(d.getTime() / 1000);
 }
 
-function calcProgress(total: number, completed: number): number {
+function calcCompletionRate(total: number, completed: number): number {
   if (total === 0) {
     return 0;
   }
   return Math.round((completed / total) * 100);
 }
 
+function toStatusCounts(stats: {
+  backlog?: number;
+  todo?: number;
+  inProgress?: number;
+  review?: number;
+  done?: number;
+  completed?: number;
+}): TaskStatusCounts {
+  const counts = emptyTaskStatusCounts();
+  counts.backlog = Number(stats.backlog ?? 0);
+  counts.todo = Number(stats.todo ?? 0);
+  counts.in_progress = Number(stats.inProgress ?? 0);
+  counts.review = Number(stats.review ?? 0);
+  counts.done = Number(stats.done ?? stats.completed ?? 0);
+  return counts;
+}
+
 /** Personal work overview: KPIs and task lists are assignee-scoped. */
-export async function getDashboardOverview(db: AppDatabase, userId: string) {
+export async function getDashboardOverview(
+  db: AppDatabase,
+  userId: string,
+  options?: {
+    progressScope?: DashboardListScope;
+    activityScope?: DashboardListScope;
+  },
+) {
   const todayStart = startOfDayUnix();
   const todayEnd = endOfDayUnix();
+  const progressScope = options?.progressScope ?? "mine";
+  const activityScope = options?.activityScope ?? "mine";
 
   const [kpis, todayTasks, overdueTasks, upcomingTasks, projects, activities] =
     await Promise.all([
@@ -40,8 +82,8 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
       listAccessibleOpenTasksDueBetween(db, userId, todayStart, todayEnd, 8),
       listAccessibleOverdueTasks(db, userId, todayStart, 8),
       listAccessibleUpcomingTasks(db, userId, todayEnd, 8),
-      listAccessibleProjectsForUser(db, userId, 6),
-      listRecentActivitiesForUser(db, userId, 8),
+      listAccessibleProjectsForUser(db, userId, 6, progressScope),
+      listRecentActivitiesForUser(db, userId, 8, activityScope),
     ]);
 
   const counts = await getTaskCountsByProjectIds(
@@ -54,6 +96,7 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
       {
         total: Number(item.total),
         completed: Number(item.completed),
+        statuses: toStatusCounts(item),
       },
     ]),
   );
@@ -62,7 +105,7 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
     kpis: {
       todayTasks: kpis.todayDue,
       completedToday: kpis.completedToday,
-      completionRate: calcProgress(kpis.total, kpis.completed),
+      completionRate: calcCompletionRate(kpis.total, kpis.completed),
       overdueTasks: kpis.overdue,
       openTasks: kpis.open,
       totalProjects: projects.length,
@@ -71,10 +114,16 @@ export async function getDashboardOverview(db: AppDatabase, userId: string) {
     upcomingTasks: upcomingTasks.map(serializeTaskSummary),
     overdueTasks: overdueTasks.map(serializeTaskSummary),
     projects: projects.map((project) => {
-      const stats = countMap.get(project.id) ?? { total: 0, completed: 0 };
+      const stats = countMap.get(project.id) ?? {
+        total: 0,
+        completed: 0,
+        statuses: emptyTaskStatusCounts(),
+      };
+      const progressWeights = resolveProgressWeights(project.progressWeights);
       return {
         ...project,
-        progress: calcProgress(stats.total, stats.completed),
+        progress: calculateProjectProgress(stats.statuses, progressWeights),
+        progressWeights,
         taskCount: stats.total,
         completedTaskCount: stats.completed,
       };

@@ -2,17 +2,17 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-002
 
-## 画面名
+### 画面名
 
 Dashboard
 
-## URL
+### URL
 
 ```
 /
@@ -22,7 +22,7 @@ Dashboard
 
 ---
 
-# 2. 目的
+## 2. 目的
 
 Dashboardはログイン後に最初に表示される画面であり、ユーザーが現在の作業状況を短時間で把握できることを目的とする。
 
@@ -35,11 +35,12 @@ Dashboardはログイン後に最初に表示される画面であり、ユー�
 - クイックアクション
 
 KPI Cards、Today's Tasks、Overdue、Upcoming は `tasks.assignee_id = 現在のユーザー` に限定する。
-プロジェクト進捗と Recent Activity は閲覧可能なプロジェクト全体を対象とする。
+プロジェクト進捗と Recent Activity は既定で `project_members` に現在のユーザーがいるプロジェクトに限定する。
+各パネル右上の Select（`progressScope` / `activityScope`）で `mine`（参加中）と `all`（閲覧可能な全体）を切り替える。
 
 ---
 
-# 3. レイアウト
+## 3. レイアウト
 
 ```
 +------------------------------------------------------------+
@@ -59,9 +60,9 @@ KPI Cards、Today's Tasks、Overdue、Upcoming は `tasks.assignee_id = 現在�
 
 ---
 
-# 4. 使用コンポーネント
+## 4. 使用コンポーネント
 
-## 共通
+### 共通
 
 - Sidebar
 - Header
@@ -69,35 +70,35 @@ KPI Cards、Today's Tasks、Overdue、Upcoming は `tasks.assignee_id = 現在�
 - NotificationButton
 - UserMenu
 
-## KPI
+### KPI
 
 - StatCard
 
-## Project
+### Project
 
 - ProjectCard
 
-## Task
+### Task
 
 - TaskCard
 
-## Activity
+### Activity
 
 - ActivityItem
 
-## Calendar
+### Calendar
 
 - MiniCalendar
 
-## Action
+### Action
 
 - ActionButton
 
 ---
 
-# 5. セクション構成
+## 5. セクション構成
 
-## 5.1 Header
+### 5.1 Header
 
 表示内容
 
@@ -109,7 +110,7 @@ KPI Cards、Today's Tasks、Overdue、Upcoming は `tasks.assignee_id = 現在�
 
 ---
 
-## 5.2 Welcome
+### 5.2 Welcome
 
 表示内容
 
@@ -123,11 +124,11 @@ Let's make today productive.
 
 ---
 
-## 5.3 KPI Cards
+### 5.3 KPI Cards
 
 4枚表示する。
 
-### Open Tasks
+#### Open Tasks
 
 表示
 
@@ -141,7 +142,7 @@ Let's make today productive.
 
 ---
 
-### Due Today
+#### Due Today
 
 表示
 
@@ -155,7 +156,7 @@ Let's make today productive.
 
 ---
 
-### Completion Rate
+#### Completion Rate
 
 表示
 
@@ -167,7 +168,7 @@ Let's make today productive.
 
 ---
 
-### Overdue
+#### Overdue
 
 表示
 
@@ -179,7 +180,7 @@ Let's make today productive.
 
 ---
 
-# 6. Project Section
+## 6. Project Section
 
 表示件数
 
@@ -204,7 +205,7 @@ Project Detail
 
 ---
 
-# 7. Today's Tasks
+## 7. Today's Tasks
 
 自分が担当者の、期限が今日の未完了タスク。
 
@@ -222,7 +223,7 @@ Project Detail
 
 ---
 
-# 8. Recent Activity
+## 8. Recent Activity
 
 表示件数
 
@@ -245,7 +246,7 @@ to Done.
 
 ---
 
-# 9. Mini Calendar
+## 9. Mini Calendar
 
 表示
 
@@ -262,7 +263,7 @@ Calendar画面へ遷移。
 
 ---
 
-# 10. Quick Actions
+## 10. Quick Actions
 
 ボタン一覧
 
@@ -273,7 +274,7 @@ Calendar画面へ遷移。
 
 ---
 
-# 11. サイドバー
+## 11. サイドバー
 
 項目
 
@@ -291,7 +292,7 @@ Calendar画面へ遷移。
 
 ---
 
-# 12. 検索
+## 12. 検索
 
 リアルタイム検索を想定。
 
@@ -310,7 +311,7 @@ Command Paletteを表示する。
 
 ---
 
-# 13. 通知
+## 13. 通知
 
 表示
 
@@ -326,7 +327,7 @@ Dropdown表示
 
 ---
 
-# 14. User Menu
+## 14. User Menu
 
 表示
 
@@ -344,7 +345,7 @@ Dropdown
 
 ---
 
-# 15. Empty State
+## 15. Empty State
 
 Projectが0件の場合
 
@@ -356,7 +357,7 @@ Projectが0件の場合
 
 ---
 
-# 16. Loading
+## 16. Loading
 
 Skeleton
 
@@ -370,7 +371,7 @@ Skeleton
 
 ---
 
-# 17. Toast
+## 17. Toast
 
 成功
 
@@ -386,9 +387,9 @@ Failed to load projects.
 
 ---
 
-# 18. アニメーション
+## 18. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -432,7 +433,7 @@ Quick Actions
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -450,7 +451,7 @@ Shadowを強くする。
 
 ---
 
-## KPI
+### KPI
 
 数字
 
@@ -458,13 +459,13 @@ Count Up Animation
 
 ---
 
-## Progress
+### Progress
 
 Barが左から伸びる。
 
 ---
 
-## Sidebar
+### Sidebar
 
 Expand
 
@@ -474,7 +475,7 @@ Animation
 
 ---
 
-## Dropdown
+### Dropdown
 
 Fade
 
@@ -482,7 +483,7 @@ Scale
 
 ---
 
-# 19. レスポンシブ
+## 19. レスポンシブ
 
 Desktop
 
@@ -506,7 +507,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 20. アクセシビリティ
+## 20. アクセシビリティ
 
 - キーボード操作
 - Skip Navigation
@@ -516,7 +517,7 @@ Bottom Navigationを表示する。
 
 ---
 
-# 21. 使用Hooks
+## 21. 使用Hooks
 
 ```
 useDashboard()
@@ -532,7 +533,7 @@ useCommandPalette()
 
 ---
 
-# 22. 使用Feature
+## 22. 使用Feature
 
 ```
 features/dashboard
@@ -548,7 +549,7 @@ features/notification
 
 ---
 
-# 23. 今後追加予定
+## 23. 今後追加予定
 
 - AI Summary
 - Productivity Score

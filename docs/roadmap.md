@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Overview
+## 1. Overview
 
 本ドキュメントは、Task Managerの開発ロードマップを定義する。
 
@@ -25,7 +25,7 @@ Roadmapでは、単純な実装順ではなく、
 
 ---
 
-# 2. Roadmap Principles
+## 2. Roadmap Principles
 
 以下を基本方針とする。
 
@@ -40,7 +40,7 @@ Roadmapでは、単純な実装順ではなく、
 
 ---
 
-# 3. Development Phases
+## 3. Development Phases
 
 全体を以下のPhaseに分割する。
 
@@ -74,7 +74,7 @@ Phase 12 Portfolio Release
 
 ---
 
-# 4. Status Definition
+## 4. Status Definition
 
 Statusは以下の4種類を使用する。
 
@@ -87,7 +87,7 @@ Statusは以下の4種類を使用する。
 
 ---
 
-# 5. Priority Definition
+## 5. Priority Definition
 
 Priorityは以下の3段階とする。
 
@@ -99,17 +99,17 @@ Priorityは以下の3段階とする。
 
 ---
 
-# 6. Phase 0 — Project Foundation
+## 6. Phase 0 — Project Foundation
 
-## Goal
+### Goal
 
 プロジェクトの基本方針と設計を確定する。
 
-## Status
+### Status
 
 `DONE`
 
-## Tasks
+### Tasks
 
 - [x] Project concept決定
 - [x] Requirements作成
@@ -126,19 +126,19 @@ Priorityは以下の3段階とする。
 
 ---
 
-# 7. Phase 1 — Development Environment
+## 7. Phase 1 — Development Environment
 
-## Goal
+### Goal
 
 ローカル開発環境と開発ルールを完成させる。
 
-## Status
+### Status
 
 `DONE`
 
-## Tasks
+### Tasks
 
-### Project
+#### Project
 
 - [x] Next.js project creation
 - [x] TypeScript
@@ -150,7 +150,7 @@ Priorityは以下の3段階とする。
 - [x] React Hook Form
 - [x] Zod
 
-### Development Rules
+#### Development Rules
 
 - [x] AGENTS.md
 - [x] Cursor Rules
@@ -159,7 +159,7 @@ Priorityは以下の3段階とする。
 - [x] Environment variable strategy
 - [x] Git workflow
 
-### Testing
+#### Testing
 
 - [x] Test runner configuration
 - [x] Unit test configuration
@@ -168,19 +168,19 @@ Priorityは以下の3段階とする。
 
 ---
 
-# 8. Phase 2 — Database Foundation
+## 8. Phase 2 — Database Foundation
 
-## Goal
+### Goal
 
 Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 
-## Status
+### Status
 
 `DONE`
 
-## Tasks
+### Tasks
 
-### Cloudflare
+#### Cloudflare
 
 - [x] Cloudflare account configuration
 - [x] D1 database creation (`task-manager-dev`)
@@ -188,7 +188,7 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 - [x] Development database
 - [ ] Production database (`task-manager-prod` — create at deployment)
 
-### Drizzle
+#### Drizzle
 
 - [x] Install Drizzle ORM
 - [x] Configure Drizzle
@@ -196,7 +196,7 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 - [x] Configure migrations
 - [x] Configure seed
 
-### Schema
+#### Schema
 
 - [x] Users
 - [x] Workspaces
@@ -213,7 +213,7 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 - [x] Notifications
 - [x] User Settings
 
-### Tests
+#### Tests
 
 - [x] Database connection test
 - [x] Migration test
@@ -223,17 +223,17 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 
 ---
 
-# 9. Phase 3 — Authentication
+## 9. Phase 3 — Authentication
 
-## Goal
+### Goal
 
 安全なAuthentication / Authorizationを実装する。
 
-## Status
+### Status
 
 `DONE`
 
-## Authentication
+### Authentication
 
 実装順: GitHub → Google → Email
 
@@ -245,7 +245,7 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 - [x] Logout
 - [x] Session expiration
 
-## Authorization
+### Authorization
 
 - [x] Workspace membership
 - [x] Project membership
@@ -253,7 +253,7 @@ Cloudflare D1 + Drizzleを利用したDatabase基盤を構築する。
 - [x] Permission checks
 - [x] Protected routes
 
-## Roles
+### Roles
 
 ```text
 owner
@@ -263,21 +263,21 @@ viewer
 
 ---
 
-# 10. Phase 4 — Backend / API
+## 10. Phase 4 — Backend / API
 
-## Goal
+### Goal
 
 ApplicationのBackend Layerを完成させる。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
-## Architecture
+### Architecture
 
 ```text
 Route Handler
@@ -293,14 +293,14 @@ Drizzle
 D1 / SQLite
 ```
 
-## API
+### API
 
-### Users
+#### Users
 
 - [x] GET user
 - [x] UPDATE user
 
-### Projects
+#### Projects
 
 - [x] GET projects
 - [x] GET project
@@ -308,7 +308,7 @@ D1 / SQLite
 - [x] PATCH project
 - [x] DELETE / archive project
 
-### Tasks
+#### Tasks
 
 - [x] GET tasks
 - [x] GET task
@@ -319,21 +319,21 @@ D1 / SQLite
 - [x] Update position
 - [x] Assign user
 
-### Comments
+#### Comments
 
 - [x] GET comments
 - [x] POST comment
 - [x] PATCH comment
 - [x] DELETE comment
 
-### Checklist
+#### Checklist
 
 - [x] GET checklist
 - [x] POST checklist item
 - [x] PATCH checklist item
 - [x] DELETE checklist item
 
-### Notifications
+#### Notifications
 
 - [x] GET notifications
 - [x] Mark as read
@@ -341,23 +341,23 @@ D1 / SQLite
 
 ---
 
-# 11. Phase 5 — Core Project Management
+## 11. Phase 5 — Core Project Management
 
-## Goal
+### Goal
 
 Project Managementのコア機能を完成させる。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-## 11.1 Project List
+### 11.1 Project List
 
 - [x] Project List
 - [x] Search
@@ -372,7 +372,7 @@ Project Managementのコア機能を完成させる。
 
 ---
 
-## 11.2 Project Detail
+### 11.2 Project Detail
 
 - [x] Project information
 - [x] Project description
@@ -380,14 +380,14 @@ Project Managementのコア機能を完成させる。
 - [x] Task overview
 - [x] Progress
 - [x] Activity
-- [ ] Project settings
+- [x] Project settings
 
 > Activity は Empty State を配置。詳細タイムラインは Activity データ連携後に拡張する。
-> Project settings（編集フォーム）は Archive メニューを先行実装。フル設定 UI は後続で拡張する。
+> Project settings（編集フォーム）は Name / Description / Color / Status / Priority / Deadline / Progress weights を Dialog で更新可能。Duplicate などは後続で拡張する。
 
 ---
 
-## 11.3 Project Progress
+### 11.3 Project Progress
 
 ProgressはTaskから算出する。
 
@@ -402,23 +402,23 @@ DatabaseへProgressを重複保存しない。
 
 ---
 
-# 12. Phase 6 — Task Management
+## 12. Phase 6 — Task Management
 
-## Goal
+### Goal
 
 Task Managementの主要機能を完成させる。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-# 12.1 Task Board
+## 12.1 Task Board
 
 - [x] Kanban Board
 - [x] Drag & Drop
@@ -443,7 +443,7 @@ Done
 
 ---
 
-# 12.2 Task Detail
+## 12.2 Task Detail
 
 - [x] Task title
 - [x] Description
@@ -461,7 +461,7 @@ Done
 
 ---
 
-# 12.3 Task Search
+## 12.3 Task Search
 
 - [x] Search by title
 - [x] Search by description
@@ -475,23 +475,23 @@ Done
 
 ---
 
-# 13. Phase 7 — Supporting Features
+## 13. Phase 7 — Supporting Features
 
-## Goal
+### Goal
 
 Project / Task Managementを補完する機能を実装する。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P1`
 
 ---
 
-# 13.1 Calendar
+## 13.1 Calendar
 
 - [x] Monthly Calendar
 - [x] Weekly Calendar
@@ -504,7 +504,7 @@ Project / Task Managementを補完する機能を実装する。
 
 ---
 
-# 13.2 Dashboard
+## 13.2 Dashboard
 
 - [x] Today's Tasks
 - [x] Completed Tasks
@@ -520,7 +520,7 @@ Project / Task Managementを補完する機能を実装する。
 
 ---
 
-# 13.3 Analytics
+## 13.3 Analytics
 
 - [x] Completion Rate
 - [x] Completed Tasks
@@ -534,7 +534,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 13.4 Notifications
+## 13.4 Notifications
 
 - [x] Notification list
 - [x] Unread state
@@ -549,23 +549,23 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 14. Phase 8 — Settings / Profile
+## 14. Phase 8 — Settings / Profile
 
-## Goal
+### Goal
 
 ユーザーおよびWorkspaceの設定機能を完成させる。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P1`
 
 ---
 
-# 14.1 Profile
+## 14.1 Profile
 
 - [x] Display name
 - [x] Username
@@ -580,9 +580,9 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 14.2 Settings
+## 14.2 Settings
 
-### Account
+#### Account
 
 - [x] Profile settings
 - [x] Email
@@ -590,7 +590,7 @@ Analyticsは初期段階では既存データから算出する。
 
 > Email は表示のみ。変更・削除は後続。
 
-### Appearance
+#### Appearance
 
 - [x] Theme
 - [x] Accent color
@@ -599,7 +599,7 @@ Analyticsは初期段階では既存データから算出する。
 
 > 設定値の永続化まで実装。画面全体へのテーマ適用は Phase 9 Polish で強化。
 
-### Notifications
+#### Notifications
 
 - [x] Email notifications
 - [x] In-app notifications
@@ -607,7 +607,7 @@ Analyticsは初期段階では既存データから算出する。
 - [x] Mention notifications
 - [x] Due date notifications
 
-### Workspace
+#### Workspace
 
 - [x] Workspace information
 - [ ] Members
@@ -618,23 +618,23 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 15. Phase 9 — UI / UX Polish
+## 15. Phase 9 — UI / UX Polish
 
-## Goal
+### Goal
 
 ポートフォリオとして高いVisual Qualityを実現する。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-# 15.1 Design System
+## 15.1 Design System
 
 - [x] Design Tokens
 - [x] Colors
@@ -648,7 +648,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 15.2 Components
+## 15.2 Components
 
 共通Componentを整理する。
 
@@ -668,7 +668,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 15.3 Animation
+## 15.3 Animation
 
 - [x] Initial Load（page-enter / ambient）
 - [x] Page Transition（軽量 CSS）
@@ -685,20 +685,20 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 15.4 Responsive
+## 15.4 Responsive
 
-### Desktop
+#### Desktop
 
 - [x] Sidebar
 - [x] Multi-column layout
 - [x] Dense information（density setting）
 
-### Tablet
+#### Tablet
 
 - [x] Adaptive layout
 - [x] Sidebar optimization（md 以上で固定 Sidebar）
 
-### Mobile
+#### Mobile
 
 - [x] Mobile navigation（Drawer）
 - [x] Single-column layout
@@ -708,23 +708,23 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 16. Phase 10 — Loading / Error / Empty States
+## 16. Phase 10 — Loading / Error / Empty States
 
-## Goal
+### Goal
 
 すべての主要画面で状態変化を適切に表示する。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-## Loading
+### Loading
 
 - [x] Page Skeleton
 - [x] Card Skeleton
@@ -734,7 +734,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-## Empty
+### Empty
 
 - [x] Empty Project
 - [x] Empty Task
@@ -744,7 +744,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-## Error
+### Error
 
 - [x] API Error（`getUserFacingError` + ErrorState）
 - [x] Database / Internal Error
@@ -754,7 +754,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-## Recovery
+### Recovery
 
 - [x] Retry（`error.tsx` reset）
 - [x] Refresh / Try again
@@ -762,23 +762,23 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 17. Phase 11 — Testing
+## 17. Phase 11 — Testing
 
-## Goal
+### Goal
 
 主要機能が安定して動作する状態にする。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-# 17.1 Unit Tests
+## 17.1 Unit Tests
 
 対象
 
@@ -790,7 +790,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 17.2 Integration Tests
+## 17.2 Integration Tests
 
 対象
 
@@ -803,7 +803,7 @@ Analyticsは初期段階では既存データから算出する。
 
 ---
 
-# 17.3 E2E Tests
+## 17.3 E2E Tests
 
 主要User Flow
 
@@ -833,7 +833,7 @@ Logout
 
 ---
 
-# 17.4 Test Directory
+## 17.4 Test Directory
 
 すべてのテストはプロジェクト直下の
 
@@ -861,21 +861,21 @@ SQLITE_DB_PATH=.data/e2e.sqlite
 
 ---
 
-# 18. Phase 12 — Security
+## 18. Phase 12 — Security
 
-## Goal
+### Goal
 
 Productionで安全に運用できる状態にする。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
-## Tasks
+### Tasks
 
 - [x] Authentication review
 - [x] Authorization review
@@ -889,7 +889,7 @@ Productionで安全に運用できる状態にする。
 - [x] Secret management
 - [x] Environment variable review
 
-## Notes
+### Notes
 
 - Secure headers via `next.config.ts`（CSP / XFO / nosniff / Referrer-Policy / Permissions-Policy / HSTS in production）
 - Auth mutation rate limiting（login / register / password change）— in-memory（single process）
@@ -901,23 +901,23 @@ Productionで安全に運用できる状態にする。
 
 ---
 
-# 19. Phase 13 — Performance
+## 19. Phase 13 — Performance
 
-## Goal
+### Goal
 
 初回アクセスと主要操作を高速化する。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-# 19.1 Initial Load
+## 19.1 Initial Load
 
 - [x] Server Components optimization
 - [x] Client Component reduction
@@ -928,7 +928,7 @@ Productionで安全に運用できる状態にする。
 
 ---
 
-# 19.2 Database
+## 19.2 Database
 
 - [x] Query optimization
 - [x] Index review
@@ -938,7 +938,7 @@ Productionで安全に運用できる状態にする。
 
 ---
 
-# 19.3 API
+## 19.3 API
 
 - [x] Response size optimization
 - [x] Caching
@@ -947,7 +947,7 @@ Productionで安全に運用できる状態にする。
 
 ---
 
-# 19.4 Performance Targets
+## 19.4 Performance Targets
 
 目標値
 
@@ -961,7 +961,7 @@ Productionで安全に運用できる状態にする。
 
 実際のProduction環境では計測結果を基準に改善する。
 
-## Notes
+### Notes
 
 - Dashboard: SQL KPI + limit 付きリスト（全タスク hydrate 廃止）
 - Analytics: `getAnalyticsPageData` でフルスキャン 1 回に集約
@@ -976,17 +976,17 @@ Image / Font の追加最適化と Production Web Vitals 計測はデプロイ�
 
 ---
 
-# 20. Phase 14 — Accessibility
+## 20. Phase 14 — Accessibility
 
-## Goal
+### Goal
 
 Keyboard / Screen Reader / Reduced Motionなどを考慮したUIを実現する。
 
-## Status
+### Status
 
 `DONE`
 
-## Tasks
+### Tasks
 
 - [x] Semantic HTML
 - [x] Keyboard navigation
@@ -999,7 +999,7 @@ Keyboard / Screen Reader / Reduced Motionなどを考慮したUIを実現する�
 - [x] Command Palette accessibility
 - [x] Reduced motion
 
-## Notes
+### Notes
 
 - Skip link + `#main-content`、Settings `<main>`
 - Command Palette: focus trap / 矢印キー / Escape / フォーカス復帰
@@ -1010,17 +1010,17 @@ Keyboard / Screen Reader / Reduced Motionなどを考慮したUIを実現する�
 - `--text-muted` を AA 寄りに調整、ヘッダー説明は `--text-secondary`
 - Unit: focus-trap helpers / E2E: a11y-smoke（skip + palette）
 
-# 21. Phase 15 — CI/CD
+## 21. Phase 15 — CI/CD
 
-## Goal
+### Goal
 
 GitHubへのPush / Pull Requestから自動的に品質チェックを行えるようにする。
 
-## Status
+### Status
 
 `DONE`
 
-## Tasks
+### Tasks
 
 - [x] GitHub Actions
 - [x] Lint
@@ -1031,7 +1031,7 @@ GitHubへのPush / Pull Requestから自動的に品質チェックを行える�
 - [x] Build
 - [ ] Deployment（Phase 16 で実施）
 
-## Notes
+### Notes
 
 - Workflow: `.github/workflows/ci.yml`
 - `quality` job: lint → typecheck → unit → integration → build
@@ -1041,7 +1041,7 @@ GitHubへのPush / Pull Requestから自動的に品質チェックを行える�
 
 ---
 
-# 22. CI Pipeline
+## 22. CI Pipeline
 
 ```text
 Pull Request
@@ -1065,23 +1065,23 @@ E2E
 
 ---
 
-# 23. Phase 16 — Deployment
+## 23. Phase 16 — Deployment
 
-## Goal
+### Goal
 
 Production環境へDeployする。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-## Infrastructure
+### Infrastructure
 
 - [x] Cloudflare account
 - [x] D1（`task-manager-prod`）
@@ -1092,7 +1092,7 @@ Production環境へDeployする。
 - [x] HTTPS（workers.dev / Cloudflare 標準）
 - [x] Security configuration（既存セキュリティヘッダ + production HSTS）
 
-## Notes
+### Notes
 
 - Live: `https://task-manager.iq87io25.workers.dev`
 - Local: `pnpm dev`（SQLite） / Preview: `pnpm preview:cf`（Workers runtime）
@@ -1103,7 +1103,7 @@ Production環境へDeployする。
 
 ---
 
-# 24. Production Environment
+## 24. Production Environment
 
 環境を以下に分離する。
 
@@ -1119,23 +1119,23 @@ Production Databaseへ開発用Seed Dataを投入しない。
 
 ---
 
-# 25. Phase 17 — Demo / Portfolio Preparation
+## 25. Phase 17 — Demo / Portfolio Preparation
 
-## Goal
+### Goal
 
 案件獲得用ポートフォリオとして公開できる状態にする。
 
-## Status
+### Status
 
 `DONE`
 
-## Priority
+### Priority
 
 `P0`
 
 ---
 
-# 25.1 Demo Data
+## 25.1 Demo Data
 
 Demo環境には適切なデータを用意する。
 
@@ -1158,7 +1158,7 @@ Activities
 100+
 ```
 
-### Implementation
+#### Implementation
 
 - [x] `seedPortfolioData`（`lib/db/seed-portfolio.ts`）— リッチ・idempotent（slug `portfolio-demo`）
 - [x] E2E 用 `seedDemoData` は維持
@@ -1166,7 +1166,7 @@ Activities
 
 ---
 
-# 25.2 Demo Account
+## 25.2 Demo Account
 
 必要に応じてDemo Accountを用意する。
 
@@ -1180,14 +1180,14 @@ Demo Projects
 Demo Tasks
 ```
 
-### Implementation
+#### Implementation
 
 - [x] `demo@example.com` / `DemoPass123!`
 - [x] Login 画面 + README に案内
 
 ---
 
-# 25.3 Portfolio Page
+## 25.3 Portfolio Page
 
 ポートフォリオサイトから以下へ誘導できるようにする。
 
@@ -1203,13 +1203,13 @@ GitHub
 Technical Documentation
 ```
 
-### Implementation
+#### Implementation
 
 - [x] README に Live Demo / Demo login / Docs リンク（ルート `/` は login redirect のまま）
 
 ---
 
-# 26. README Preparation
+## 26. README Preparation
 
 READMEには以下を記載する。
 
@@ -1225,13 +1225,13 @@ READMEには以下を記載する。
 - Design Decisions
 - Live Demo
 
-### Implementation
+#### Implementation
 
 - [x] README 刷新（Live Demo / Demo login / Docs / セットアップ）
 
 ---
 
-# 27. Documentation Review
+## 27. Documentation Review
 
 公開前に以下を確認する。
 
@@ -1253,20 +1253,20 @@ docs/
 
 明らかな古さのみ修正（全面監査はスコープ外）。
 
-### Implementation
+#### Implementation
 
 - [x] roadmap / development-log / database（seed 戦略）を同期
 
 ---
 
-# 28. Final Quality Gate
+## 28. Final Quality Gate
 
 Production公開前に以下を確認する。
 
 手動 Formal QA（Live Demo）は 2026-08-09 に実施済み。  
 Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
-## Functional
+### Functional
 
 - [x] Login（ユーザー確認）
 - [x] Dashboard
@@ -1280,7 +1280,7 @@ Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
 ---
 
-## Visual
+### Visual
 
 - [x] Design Token consistency
 - [x] Typography
@@ -1293,7 +1293,7 @@ Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
 ---
 
-## Engineering
+### Engineering
 
 - [x] Type Check
 - [x] ESLint
@@ -1305,7 +1305,7 @@ Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
 ---
 
-## Security
+### Security
 
 - [x] Authentication（Login / Logout / 不正パスワード）
 - [x] Authorization（未ログインで保護ルート拒否）
@@ -1316,7 +1316,7 @@ Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
 ---
 
-## Performance
+### Performance
 
 - [x] Initial Load（Live Demo 目視）
 - [ ] LCP（Lighthouse）
@@ -1327,13 +1327,13 @@ Lighthouse 計測と Web Vitals の Formal 記録は任意の後続作業。
 
 ---
 
-# 29. Portfolio Quality Gate
+## 29. Portfolio Quality Gate
 
 案件獲得用ポートフォリオとして、以下を満たすことを目標とする。
 
 Status: **PASS**（2026-08-09 手動確認 + README スクリーンショット）
 
-### 5 Second Test
+#### 5 Second Test
 
 初めてアクセスした人が5秒以内に、
 
@@ -1345,7 +1345,7 @@ Status: **PASS**（2026-08-09 手動確認 + README スクリーンショット�
 
 ---
 
-### 30 Second Test
+#### 30 Second Test
 
 30秒程度操作した人が、
 
@@ -1357,7 +1357,7 @@ Status: **PASS**（2026-08-09 手動確認 + README スクリーンショット�
 
 ---
 
-### 3 Minute Test
+#### 3 Minute Test
 
 RepositoryやDocumentationを確認した人が、
 
@@ -1369,9 +1369,9 @@ RepositoryやDocumentationを確認した人が、
 
 ---
 
-# 30. Release Milestones
+## 30. Release Milestones
 
-## Milestone 1 — Foundation
+### Milestone 1 — Foundation
 
 ```text
 Requirements
@@ -1389,7 +1389,7 @@ Status:
 
 ---
 
-## Milestone 2 — Infrastructure
+### Milestone 2 — Infrastructure
 
 ```text
 Next.js
@@ -1406,7 +1406,7 @@ Status:
 
 ---
 
-## Milestone 3 — Core MVP
+### Milestone 3 — Core MVP
 
 ```text
 Login
@@ -1423,7 +1423,7 @@ Status:
 
 ---
 
-## Milestone 4 — Product Complete
+### Milestone 4 — Product Complete
 
 ```text
 Calendar
@@ -1439,7 +1439,7 @@ Status:
 
 ---
 
-## Milestone 5 — Production Ready
+### Milestone 5 — Production Ready
 
 ```text
 Testing
@@ -1470,11 +1470,11 @@ Status:
 
 ---
 
-# 31. Future Features
+## 31. Future Features
 
 MVP完成後に検討する。
 
-## P1
+### P1
 
 - [ ] Task Dependencies
 - [ ] Recurring Tasks
@@ -1484,7 +1484,7 @@ MVP完成後に検討する。
 - [ ] Advanced Search
 - [ ] Saved Views
 
-## P2
+### P2
 
 - [ ] AI Task Summary
 - [ ] AI Project Summary
@@ -1498,7 +1498,7 @@ MVP完成後に検討する。
 
 ---
 
-# 32. Features Explicitly Deferred
+## 32. Features Explicitly Deferred
 
 初期Versionでは以下を実装しない。
 
@@ -1515,7 +1515,7 @@ Real-time Collaboration
 
 ---
 
-# 33. Roadmap Change Policy
+## 33. Roadmap Change Policy
 
 Roadmapは固定された計画ではない。
 
@@ -1532,7 +1532,7 @@ Roadmapは固定された計画ではない。
 
 ---
 
-# 34. Cursor Development Rule
+## 34. Cursor Development Rule
 
 CursorがFeatureを実装する場合、Roadmapを確認する。
 
@@ -1553,7 +1553,7 @@ CursorがFeatureを実装する場合、Roadmapを確認する。
 
 ---
 
-# 35. Definition of Done
+## 35. Definition of Done
 
 Roadmap上のTaskを`DONE`にする条件。
 
@@ -1574,9 +1574,9 @@ Roadmap上のTaskを`DONE`にする条件。
 
 ---
 
-# 36. Current Progress
+## 36. Current Progress
 
-## Completed
+### Completed
 
 ```text
 Requirements
@@ -1615,7 +1615,7 @@ Roadmap
 
 ---
 
-## In Progress
+### In Progress
 
 ```text
 （なし — Phase 17 DONE。Formal QA 手動確認済み。Lighthouse は任意）
@@ -1623,7 +1623,7 @@ Roadmap
 
 ---
 
-## Planned
+### Planned
 
 ```text
 Phase 18+（roadmap 後半）
@@ -1632,7 +1632,7 @@ Custom domain（任意）
 
 ---
 
-# 37. Recommended Development Order
+## 37. Recommended Development Order
 
 今後の実装は以下の順序を基本とする。
 
@@ -1696,7 +1696,7 @@ Custom domain（任意）
 
 ---
 
-# 38. Final Goal
+## 38. Final Goal
 
 Task Managerの最終目標は、
 

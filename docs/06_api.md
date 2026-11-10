@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Overview
+## 1. Overview
 
 本ドキュメントは、Task ManagerにおけるAPIの仕様を定義する。
 
@@ -14,7 +14,7 @@ APIはUIコンポーネントから直接データベースへアクセスせず
 
 ---
 
-# 2. API Architecture
+## 2. API Architecture
 
 基本的なデータフローは以下とする。
 
@@ -59,7 +59,7 @@ API層では以下の責務を持つ。
 
 ---
 
-# 3. Base URL
+## 3. Base URL
 
 開発環境
 
@@ -81,7 +81,7 @@ API Base Path
 
 ---
 
-# 4. API Versioning
+## 4. API Versioning
 
 APIはURLによるバージョニングを採用する。
 
@@ -101,7 +101,7 @@ APIはURLによるバージョニングを採用する。
 
 ---
 
-# 5. Authentication
+## 5. Authentication
 
 認証にはAuth.jsを使用する。
 
@@ -129,17 +129,17 @@ Session Check
 
 ---
 
-# 6. Authentication API
+## 6. Authentication API
 
 Auth.jsが提供する認証エンドポイントについては、Auth.jsの仕様に従う。
 
 アプリケーション独自のAPIとして、認証状態確認APIを提供する。
 
-## GET /api/v1/auth/session
+### GET /api/v1/auth/session
 
 現在のログインユーザー情報を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -154,13 +154,13 @@ Auth.jsが提供する認証エンドポイントについては、Auth.jsの仕
 
 未認証の場合は `401 Unauthorized` を返す。
 
-## POST /api/v1/auth/register
+### POST /api/v1/auth/register
 
 Email + Password で新規ユーザーを作成する（セッションは発行しない）。
 
 クライアントは成功後に `next-auth/react` の `signIn("credentials")` でログインする。
 
-### Request
+#### Request
 
 ```json
 {
@@ -169,7 +169,7 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 }
 ```
 
-### Response `201`
+#### Response `201`
 
 ```json
 {
@@ -179,7 +179,7 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 }
 ```
 
-### Errors
+#### Errors
 
 | Status | 条件 |
 | ------ | ---- |
@@ -189,19 +189,19 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 
 ---
 
-# 7. Users API
+## 7. Users API
 
-## GET /api/v1/users/:userId
+### GET /api/v1/users/:userId
 
 ユーザー情報を取得する。
 
-### Path Parameters
+#### Path Parameters
 
 | Parameter | Type   | Required |
 | --------- | ------ | -------- |
 | userId    | string | Yes      |
 
-### Response
+#### Response
 
 ```json
 {
@@ -219,11 +219,11 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 
 ---
 
-## PATCH /api/v1/users/:userId
+### PATCH /api/v1/users/:userId
 
 プロフィールを更新する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -234,7 +234,7 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 }
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -249,13 +249,13 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 
 ---
 
-# 8. Projects API
+## 8. Projects API
 
-## GET /api/v1/projects
+### GET /api/v1/projects
 
 プロジェクト一覧を取得する。
 
-### Query Parameters
+#### Query Parameters
 
 | Parameter | Type   | Description |
 | --------- | ------ | ----------- |
@@ -264,18 +264,19 @@ Email + Password で新規ユーザーを作成する（セッションは発行
 | search    | string | 検索文字列  |
 | status    | string | ステータス  |
 | priority  | string | 優先度      |
+| scope     | string | `mine`（参加中・既定） / `all`（読取可能なすべて） |
 | memberId  | string | メンバー    |
 | tag       | string | タグ        |
 | sort      | string | ソート項目  |
 | order     | string | asc / desc  |
 
-### Example
+#### Example
 
 ```text
-GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
+GET /api/v1/projects?page=1&limit=20&scope=mine&status=active&sort=updatedAt&order=desc
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -288,6 +289,13 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
       "priority": "high",
       "visibility": "workspace",
       "progress": 72,
+      "progressWeights": {
+        "backlog": 0,
+        "todo": 0.2,
+        "in_progress": 0.5,
+        "review": 0.8,
+        "done": 1
+      },
       "deadline": "2026-09-30",
       "taskCount": 48,
       "completedTaskCount": 31,
@@ -305,11 +313,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## POST /api/v1/projects
+### POST /api/v1/projects
 
 新しいプロジェクトを作成する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -331,7 +339,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 `memberIds` は省略可能。作成者は自動で Owner になる。指定したユーザーは同じワークスペースのメンバーである必要があり、`member` ロールで追加される。
 
-### Response
+#### Response
 
 ```json
 {
@@ -346,11 +354,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## GET /api/v1/projects/:projectId
+### GET /api/v1/projects/:projectId
 
 プロジェクト詳細を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -362,6 +370,13 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
     "priority": "high",
     "visibility": "workspace",
     "progress": 72,
+    "progressWeights": {
+      "backlog": 0,
+      "todo": 0.2,
+      "in_progress": 0.5,
+      "review": 0.8,
+      "done": 1
+    },
     "deadline": "2026-09-30",
     "members": [],
     "taskSummary": {
@@ -374,13 +389,15 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 }
 ```
 
+`progress` は Task Status 件数 × `progressWeights` から算出する。`progressWeights` 未設定のプロジェクトは既定値を返す。
+
 ---
 
-## PATCH /api/v1/projects/:projectId
+### PATCH /api/v1/projects/:projectId
 
 プロジェクトを更新する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -388,13 +405,22 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
   "status": "active",
   "priority": "high",
   "deadline": "2026-10-15",
-  "visibility": "members"
+  "visibility": "members",
+  "progressWeights": {
+    "backlog": 0,
+    "todo": 0.25,
+    "in_progress": 0.5,
+    "review": 0.75,
+    "done": 1
+  }
 }
 ```
 
+`progressWeights` は任意。送る場合は 5 ステータスすべて必須。各値は 0–1 で、ステータスが進むほど下がってはならない。Member 以上が更新できる。
+
 ---
 
-## DELETE /api/v1/projects/:projectId
+### DELETE /api/v1/projects/:projectId
 
 プロジェクトをアーカイブする。
 
@@ -402,7 +428,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 実装では物理削除ではなく `archived_at` / `status=archived` による Soft Archive を行う。
 
-### Response
+#### Response
 
 ```json
 {
@@ -414,13 +440,13 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-# 9. Project Members API
+## 9. Project Members API
 
-## GET /api/v1/projects/:projectId/members
+### GET /api/v1/projects/:projectId/members
 
 プロジェクトメンバーを取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -441,11 +467,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## POST /api/v1/projects/:projectId/members
+### POST /api/v1/projects/:projectId/members
 
 プロジェクトへユーザーを追加する。Owner のみ実行可能。対象ユーザーは同じワークスペースのメンバーである必要がある。既に参加している場合は 409 を返す。
 
-### Request
+#### Request
 
 ```json
 {
@@ -456,21 +482,21 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## DELETE /api/v1/projects/:projectId/members/:userId
+### DELETE /api/v1/projects/:projectId/members/:userId
 
 プロジェクトからユーザーを削除する。Owner のみ実行可能。最後の Owner は削除できない。
 
 ---
 
-# 9.1 Workspace Members API
+## 9.1 Workspace Members API
 
-## GET /api/v1/workspaces/:workspaceId/members
+### GET /api/v1/workspaces/:workspaceId/members
 
 ワークスペースメンバーを取得する。プロジェクトメンバー追加の候補一覧と設定画面で使う。メールアドレスは返さない。
 
 ワークスペースメンバーのみ実行可能。
 
-### Response
+#### Response
 
 ```json
 {
@@ -487,11 +513,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## POST /api/v1/workspaces/:workspaceId/members
+### POST /api/v1/workspaces/:workspaceId/members
 
 ワークスペースへ登録済みユーザーを追加する。Workspace Owner のみ実行可能。対象は既存アカウントで、メールアドレスで指定する。未登録ユーザーへの招待は行わない。既に参加している場合は 409 を返す。ユーザーが存在しない場合は 404 を返す。
 
-### Request
+#### Request
 
 ```json
 {
@@ -502,7 +528,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 `role` は `owner` / `member` / `viewer`。省略時は `member`。
 
-### Response
+#### Response
 
 ```json
 {
@@ -517,11 +543,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## PATCH /api/v1/workspaces/:workspaceId/members/:userId
+### PATCH /api/v1/workspaces/:workspaceId/members/:userId
 
 ワークスペースメンバーのロールを変更する。Workspace Owner のみ実行可能。最後の Owner のロールは変更できない。
 
-### Request
+#### Request
 
 ```json
 {
@@ -531,7 +557,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## DELETE /api/v1/workspaces/:workspaceId/members/:userId
+### DELETE /api/v1/workspaces/:workspaceId/members/:userId
 
 ワークスペースからユーザーを削除する。Workspace Owner のみ実行可能。最後の Owner は削除できない。
 
@@ -539,13 +565,13 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-# 10. Tasks API
+## 10. Tasks API
 
-## GET /api/v1/projects/:projectId/tasks
+### GET /api/v1/projects/:projectId/tasks
 
 プロジェクト内のタスクを取得する。
 
-### Query Parameters
+#### Query Parameters
 
 | Parameter  | Type   | Description |
 | ---------- | ------ | ----------- |
@@ -559,7 +585,7 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 | sort       | string | ソート      |
 | order      | string | asc / desc  |
 
-### Response
+#### Response
 
 ```json
 {
@@ -585,11 +611,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## POST /api/v1/projects/:projectId/tasks
+### POST /api/v1/projects/:projectId/tasks
 
 タスクを作成する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -605,13 +631,13 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-# 11. Task Detail API
+## 11. Task Detail API
 
-## GET /api/v1/tasks/:taskId
+### GET /api/v1/tasks/:taskId
 
 タスク詳細を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -633,11 +659,11 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## PATCH /api/v1/tasks/:taskId
+### PATCH /api/v1/tasks/:taskId
 
 タスクを更新する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -651,19 +677,19 @@ GET /api/v1/projects?page=1&limit=20&status=active&sort=updatedAt&order=desc
 
 ---
 
-## DELETE /api/v1/tasks/:taskId
+### DELETE /api/v1/tasks/:taskId
 
 タスクを削除する。
 
 ---
 
-# 12. Task Status API
+## 12. Task Status API
 
 Kanban Boardでのステータス変更に使用する。
 
-## PATCH /api/v1/tasks/:taskId/status
+### PATCH /api/v1/tasks/:taskId/status
 
-### Request
+#### Request
 
 ```json
 {
@@ -671,7 +697,7 @@ Kanban Boardでのステータス変更に使用する。
 }
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -686,13 +712,13 @@ Kanban Boardでのステータス変更に使用する。
 
 ---
 
-# 13. Task Position API
+## 13. Task Position API
 
 Kanban Boardでのドラッグ&ドロップに使用する。
 
-## PATCH /api/v1/tasks/:taskId/position
+### PATCH /api/v1/tasks/:taskId/position
 
-### Request
+#### Request
 
 ```json
 {
@@ -701,7 +727,7 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 }
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -717,19 +743,19 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 
 ---
 
-# 14. Checklist API
+## 14. Checklist API
 
-## GET /api/v1/tasks/:taskId/checklist
+### GET /api/v1/tasks/:taskId/checklist
 
 チェックリストを取得する。
 
 ---
 
-## POST /api/v1/tasks/:taskId/checklist
+### POST /api/v1/tasks/:taskId/checklist
 
 チェックリスト項目を追加する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -739,11 +765,11 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 
 ---
 
-## PATCH /api/v1/checklist/:checklistId
+### PATCH /api/v1/checklist/:checklistId
 
 チェックリスト項目を更新する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -753,25 +779,25 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 
 ---
 
-## DELETE /api/v1/checklist/:checklistId
+### DELETE /api/v1/checklist/:checklistId
 
 チェックリスト項目を削除する。
 
 ---
 
-# 15. Comments API
+## 15. Comments API
 
-## GET /api/v1/tasks/:taskId/comments
+### GET /api/v1/tasks/:taskId/comments
 
 コメント一覧を取得する。
 
 ---
 
-## POST /api/v1/tasks/:taskId/comments
+### POST /api/v1/tasks/:taskId/comments
 
 コメントを追加する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -779,7 +805,7 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 }
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -797,13 +823,13 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 
 ---
 
-## PATCH /api/v1/comments/:commentId
+### PATCH /api/v1/comments/:commentId
 
 コメントを編集する。
 
 ---
 
-## DELETE /api/v1/comments/:commentId
+### DELETE /api/v1/comments/:commentId
 
 コメントを削除する。
 
@@ -811,13 +837,13 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 
 ---
 
-# 16. Calendar API
+## 16. Calendar API
 
-## GET /api/v1/calendar/events
+### GET /api/v1/calendar/events
 
 カレンダー表示用のイベントを取得する。
 
-### Query Parameters
+#### Query Parameters
 
 | Parameter  | Type   | Description  |
 | ---------- | ------ | ------------ |
@@ -826,13 +852,13 @@ Kanban Boardでのドラッグ&ドロップに使用する。
 | projectId  | string | プロジェクト |
 | assigneeId | string | 担当者       |
 
-### Example
+#### Example
 
 ```text
 GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 ```
 
-### Response
+#### Response
 
 ```json
 {
@@ -852,13 +878,13 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ---
 
-# 17. Analytics API
+## 17. Analytics API
 
-## GET /api/v1/analytics/overview
+### GET /api/v1/analytics/overview
 
 分析用のKPIを取得する。
 
-### Query Parameters
+#### Query Parameters
 
 | Parameter | Type   | Description  |
 | --------- | ------ | ------------ |
@@ -866,7 +892,7 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 | to        | string | 終了日       |
 | projectId | string | プロジェクト |
 
-### Response
+#### Response
 
 ```json
 {
@@ -883,11 +909,11 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ---
 
-## GET /api/v1/analytics/completion-trend
+### GET /api/v1/analytics/completion-trend
 
 タスク完了数の推移を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -908,11 +934,11 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ---
 
-## GET /api/v1/analytics/task-distribution
+### GET /api/v1/analytics/task-distribution
 
 タスクのステータス別分布を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -943,11 +969,11 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ---
 
-## GET /api/v1/analytics/member-workload
+### GET /api/v1/analytics/member-workload
 
 メンバーごとの作業量を取得する。
 
-### Response
+#### Response
 
 ```json
 {
@@ -964,13 +990,13 @@ GET /api/v1/calendar/events?start=2026-08-01&end=2026-08-31
 
 ---
 
-# 18. Notifications API
+## 18. Notifications API
 
-## GET /api/v1/notifications
+### GET /api/v1/notifications
 
 通知一覧を取得する。タスクに紐づく通知は、対象プロジェクトを閲覧できる場合のみ返す。非公開プロジェクト（`visibility = members`）の通知は、プロジェクトメンバー以外には返さない。
 
-### Query Parameters
+#### Query Parameters
 
 ```text
 page
@@ -980,31 +1006,31 @@ unreadOnly
 
 ---
 
-## PATCH /api/v1/notifications/:notificationId/read
+### PATCH /api/v1/notifications/:notificationId/read
 
 通知を既読にする。
 
 ---
 
-## POST /api/v1/notifications/read-all
+### POST /api/v1/notifications/read-all
 
 すべての通知を既読にする。
 
 ---
 
-# 19. Settings API
+## 19. Settings API
 
-## GET /api/v1/settings
+### GET /api/v1/settings
 
 現在のユーザー設定を取得する。
 
 ---
 
-## PATCH /api/v1/settings
+### PATCH /api/v1/settings
 
 ユーザー設定を更新する。
 
-### Request
+#### Request
 
 ```json
 {
@@ -1020,11 +1046,11 @@ unreadOnly
 
 ---
 
-# 20. Profile API
+## 20. Profile API
 
 Profile画面で使用するAPI。
 
-## GET /api/v1/users/:userId/profile
+### GET /api/v1/users/:userId/profile
 
 プロフィール情報を取得する。
 
@@ -1041,7 +1067,7 @@ Profile画面で使用するAPI。
 
 ---
 
-# 21. Error Response
+## 21. Error Response
 
 APIエラーは統一された形式で返す。
 
@@ -1062,7 +1088,7 @@ APIエラーは統一された形式で返す。
 
 ---
 
-# 22. HTTP Status Codes
+## 22. HTTP Status Codes
 
 | Status | 用途                 |
 | ------ | -------------------- |
@@ -1080,7 +1106,7 @@ APIエラーは統一された形式で返す。
 
 ---
 
-# 23. Error Codes
+## 23. Error Codes
 
 | Code             | Description          |
 | ---------------- | -------------------- |
@@ -1094,7 +1120,7 @@ APIエラーは統一された形式で返す。
 
 ---
 
-# 24. Validation
+## 24. Validation
 
 すべての外部入力はZodで検証する。
 
@@ -1121,15 +1147,15 @@ Zod Schema
 
 ---
 
-# 25. Authorization
+## 25. Authorization
 
 認証（Authentication）と認可（Authorization）を分離する。
 
-## Authentication
+### Authentication
 
 「誰なのか」を確認する。
 
-## Authorization
+### Authorization
 
 「そのユーザーが操作してよいか」を確認する。
 
@@ -1155,7 +1181,7 @@ Operation
 
 ---
 
-# 26. Permission
+## 26. Permission
 
 基本ロール
 
@@ -1165,7 +1191,7 @@ member
 viewer
 ```
 
-## Owner
+### Owner
 
 - Project閲覧
 - Project編集
@@ -1176,7 +1202,7 @@ viewer
 - Project Member管理
 - Workspace Member管理（Workspace Owner）
 
-## Member
+### Member
 
 - Project閲覧
 - Task作成
@@ -1184,7 +1210,7 @@ viewer
 - コメント
 - 自分のプロフィール編集
 
-## Viewer
+### Viewer
 
 - Project閲覧
 - Task閲覧
@@ -1192,7 +1218,7 @@ viewer
 
 ---
 
-# 27. Pagination
+## 27. Pagination
 
 一覧APIではPaginationを使用する。
 
@@ -1213,7 +1239,7 @@ limit = 100
 
 ---
 
-# 28. Filtering
+## 28. Filtering
 
 FilterはQuery Parameterで指定する。
 
@@ -1231,7 +1257,7 @@ FilterはQuery Parameterで指定する。
 
 ---
 
-# 29. Sorting
+## 29. Sorting
 
 形式
 
@@ -1244,7 +1270,7 @@ order=desc
 
 ---
 
-# 30. Date / Time
+## 30. Date / Time
 
 APIでは日時をISO 8601形式で扱う。
 
@@ -1264,7 +1290,7 @@ APIでは日時をISO 8601形式で扱う。
 
 ---
 
-# 31. API Security
+## 31. API Security
 
 以下を必須とする。
 
@@ -1281,7 +1307,7 @@ APIでは日時をISO 8601形式で扱う。
 
 ---
 
-# 32. Database Access
+## 32. Database Access
 
 Route Handlerから直接SQLを大量に記述しない。
 
@@ -1299,25 +1325,25 @@ Drizzle
 D1
 ```
 
-### Route Handler
+#### Route Handler
 
 HTTP処理。
 
-### Service
+#### Service
 
 ビジネスロジック。
 
-### Repository
+#### Repository
 
 データアクセス。
 
-### Drizzle
+#### Drizzle
 
 ORM。
 
 ---
 
-# 33. Transaction
+## 33. Transaction
 
 複数のデータを同時に更新する処理ではTransactionを使用する。
 
@@ -1336,7 +1362,7 @@ Project
 
 ---
 
-# 34. Optimistic Update
+## 34. Optimistic Update
 
 Task Boardのドラッグ&ドロップなど、ユーザー操作に対して即座にUIを反映したい処理ではOptimistic Updateを検討する。
 
@@ -1360,7 +1386,7 @@ Failure
 
 ---
 
-# 35. Caching
+## 35. Caching
 
 読み取り頻度が高く変更頻度が低いデータについてはキャッシュを利用する。
 
@@ -1375,7 +1401,7 @@ Failure
 
 ---
 
-# 36. TanStack Query
+## 36. TanStack Query
 
 Client Componentで頻繁にデータ更新が発生する画面ではTanStack Queryを利用する。
 
@@ -1405,7 +1431,7 @@ Query Keyは一貫した命名規則を採用する。
 
 ---
 
-# 37. API and UI Mapping
+## 37. API and UI Mapping
 
 | 画面           | 主要API                                       |
 | -------------- | --------------------------------------------- |
@@ -1422,7 +1448,7 @@ Query Keyは一貫した命名規則を採用する。
 
 ---
 
-# 38. API Naming Rules
+## 38. API Naming Rules
 
 URLは複数形の名詞を基本とする。
 
@@ -1447,7 +1473,7 @@ HTTP Methodによって操作を表現する。
 
 ---
 
-# 39. API Response Rules
+## 39. API Response Rules
 
 成功時は原則として以下の形式を使用する。
 
@@ -1480,7 +1506,7 @@ HTTP Methodによって操作を表現する。
 
 ---
 
-# 40. Logging
+## 40. Logging
 
 サーバー側でAPIエラーを記録する。
 
@@ -1497,7 +1523,7 @@ HTTP Methodによって操作を表現する。
 
 ---
 
-# 41. Request ID
+## 41. Request ID
 
 APIリクエストにはRequest IDを付与する。
 
@@ -1511,7 +1537,7 @@ Request ID: req_xxxxx
 
 ---
 
-# 42. Rate Limiting
+## 42. Rate Limiting
 
 将来的にCloudflare側でRate Limitingを導入する。
 
@@ -1526,7 +1552,7 @@ Request ID: req_xxxxx
 
 ---
 
-# 43. API Documentation
+## 43. API Documentation
 
 将来的にOpenAPI Specificationを導入する。
 
@@ -1548,7 +1574,7 @@ API仕様と実装が乖離しないようにする。
 
 ---
 
-# 44. Implementation Rules
+## 44. Implementation Rules
 
 CursorがAPIを実装する場合、以下を必ず守る。
 
@@ -1567,41 +1593,41 @@ CursorがAPIを実装する場合、以下を必ず守る。
 
 ---
 
-# 45. Test Requirements
+## 45. Test Requirements
 
 APIを追加・変更した場合はテストを追加する。
 
 最低限以下をテストする。
 
-## Success
+### Success
 
 - 正常なRequest
 - 正常なResponse
 
-## Validation
+### Validation
 
 - 必須項目不足
 - 不正な型
 - 不正な値
 
-## Authentication
+### Authentication
 
 - 未認証
 
-## Authorization
+### Authorization
 
 - 権限不足
 - 他ユーザーのリソースへのアクセス
 
-## Not Found
+### Not Found
 
 - 存在しないID
 
-## Conflict
+### Conflict
 
 - 重複データ
 
-## Error
+### Error
 
 - Database Error
 - Internal Error
@@ -1616,7 +1642,7 @@ tests/
 
 ---
 
-# 46. API Implementation Status
+## 46. API Implementation Status
 
 現在、本ドキュメントに定義されているAPIの多くは設計段階であり、すべてが実装済みではない。
 
@@ -1632,7 +1658,7 @@ APIを実装した場合は、このドキュメントと実装状況を更新�
 
 ---
 
-# 47. Future API
+## 47. Future API
 
 将来的に以下のAPIを追加する可能性がある。
 

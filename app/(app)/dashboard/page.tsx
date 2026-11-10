@@ -1,22 +1,39 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { auth } from "@/auth";
 import { AppHeader } from "@/components/layout/app-header";
 import { StatCard } from "@/components/feedback/stat-card";
 import { buttonVariants } from "@/components/ui/button";
+import { DashboardScopeSelect } from "@/features/dashboard/components/dashboard-scope-select";
 import { ProgressBar } from "@/features/project/components/progress-bar";
 import { getDb } from "@/lib/db/server";
 import { getI18n, intlLocale } from "@/lib/i18n/get-i18n";
 import { interpolate } from "@/lib/i18n/interpolate";
 import { activityLabel } from "@/lib/i18n/labels";
-import { getDashboardOverview } from "@/lib/services/dashboard-service";
+import {
+  getDashboardOverview,
+  parseDashboardListScope,
+} from "@/lib/services/dashboard-service";
 import { cn } from "@/lib/utils";
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
   const session = await auth();
   const userId = session!.user!.id!;
+  const raw = await searchParams;
+  const progressScope = parseDashboardListScope(raw.progressScope);
+  const activityScope = parseDashboardListScope(raw.activityScope);
   const [{ locale, t }, data] = await Promise.all([
     getI18n(),
-    getDashboardOverview(getDb(), userId),
+    getDashboardOverview(getDb(), userId, {
+      progressScope,
+      activityScope,
+    }),
   ]);
   const firstName =
     session?.user?.name?.split(" ")[0] ??
@@ -64,10 +81,24 @@ export default async function DashboardPage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-          <Panel title={t.dashboard.projectProgress}>
+          <Panel
+            title={t.dashboard.projectProgress}
+            action={
+              <Suspense fallback={null}>
+                <DashboardScopeSelect
+                  param="progressScope"
+                  value={progressScope}
+                />
+              </Suspense>
+            }
+          >
             {data.projects.length === 0 ? (
               <Empty
-                text={t.dashboard.emptyProjects}
+                text={
+                  progressScope === "mine"
+                    ? t.dashboard.emptyProjectsMine
+                    : t.dashboard.emptyProjects
+                }
                 href="/projects"
                 label={t.dashboard.createOne}
               />
@@ -106,10 +137,22 @@ export default async function DashboardPage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-          <Panel title={t.dashboard.recentActivity}>
+          <Panel
+            title={t.dashboard.recentActivity}
+            action={
+              <Suspense fallback={null}>
+                <DashboardScopeSelect
+                  param="activityScope"
+                  value={activityScope}
+                />
+              </Suspense>
+            }
+          >
             {data.activities.length === 0 ? (
               <p className="text-sm text-zinc-500">
-                {t.dashboard.emptyActivity}
+                {activityScope === "mine"
+                  ? t.dashboard.emptyActivityMine
+                  : t.dashboard.emptyActivity}
               </p>
             ) : (
               <ul className="space-y-3">
@@ -186,14 +229,19 @@ export default async function DashboardPage() {
 
 function Panel({
   title,
+  action,
   children,
 }: {
   title: string;
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-      <h2 className="mb-4 text-sm font-medium text-zinc-200">{title}</h2>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="text-sm font-medium text-zinc-200">{title}</h2>
+        {action}
+      </div>
       {children}
     </section>
   );

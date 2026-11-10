@@ -8,6 +8,7 @@ import {
   taskPrioritySchema,
   taskStatusSchema,
 } from "@/lib/api/schemas";
+import { areProgressWeightsValid } from "@/lib/project/progress";
 
 const hexColorSchema = z
   .string()
@@ -27,7 +28,21 @@ export const listProjectsQuerySchema = paginationSchema.extend({
   priority: projectPrioritySchema.optional(),
   sort: z.enum(["updatedAt", "deadline", "name"]).optional(),
   order: z.enum(["asc", "desc"]).optional(),
+  scope: z.enum(["mine", "all"]).default("mine"),
 });
+
+const progressWeightsSchema = z
+  .object({
+    backlog: z.number(),
+    todo: z.number(),
+    in_progress: z.number(),
+    review: z.number(),
+    done: z.number(),
+  })
+  .refine(areProgressWeightsValid, {
+    message:
+      "Progress weights must be between 0 and 1 and non-decreasing by status",
+  });
 
 export const createProjectBodySchema = z.object({
   workspaceId: z.string().min(1).optional(),
@@ -38,6 +53,7 @@ export const createProjectBodySchema = z.object({
   color: hexColorSchema.default("#4f7cff"),
   deadline: z.string().optional().nullable(),
   visibility: projectVisibilitySchema.default("workspace"),
+  progressWeights: progressWeightsSchema.optional(),
   memberIds: z.array(z.string().min(1).max(64)).max(50).optional(),
 });
 
@@ -49,6 +65,7 @@ export const updateProjectBodySchema = z.object({
   color: hexColorSchema.optional(),
   deadline: z.string().nullable().optional(),
   visibility: projectVisibilitySchema.optional(),
+  progressWeights: progressWeightsSchema.optional(),
 });
 
 export const addMemberBodySchema = z.object({

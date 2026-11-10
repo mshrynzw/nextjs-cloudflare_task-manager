@@ -53,10 +53,21 @@ describe("authorization boundaries", () => {
       color: "#111111",
     });
 
-    const listed = await getProjects(db, memberId, { page: 1, limit: 20 });
-    expect(listed.data).toHaveLength(1);
-    expect(listed.data[0]?.visibility).toBe("workspace");
-    expect(listed.data[0]?.canEdit).toBe(false);
+    const listedAll = await getProjects(db, memberId, {
+      page: 1,
+      limit: 20,
+      scope: "all",
+    });
+    expect(listedAll.data).toHaveLength(1);
+    expect(listedAll.data[0]?.visibility).toBe("workspace");
+    expect(listedAll.data[0]?.canEdit).toBe(false);
+
+    const listedMine = await getProjects(db, memberId, {
+      page: 1,
+      limit: 20,
+      scope: "mine",
+    });
+    expect(listedMine.data).toHaveLength(0);
 
     const detail = await getProject(db, memberId, project.id!);
     expect(detail.name).toBe("Public");
@@ -78,7 +89,11 @@ describe("authorization boundaries", () => {
       visibility: "members",
     });
 
-    const listed = await getProjects(db, memberId, { page: 1, limit: 20 });
+    const listed = await getProjects(db, memberId, {
+      page: 1,
+      limit: 20,
+      scope: "all",
+    });
     expect(listed.data).toHaveLength(0);
 
     await expect(getProject(db, memberId, project.id!)).rejects.toMatchObject({
@@ -128,7 +143,7 @@ describe("authorization boundaries", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
-  it("includes public projects on the dashboard without counting unassigned tasks", async () => {
+  it("defaults dashboard progress to joined projects and allows all-accessible scope", async () => {
     const { db, userId, memberId, workspaceId } =
       await seedWorkspaceOwnerAndMember();
     const project = await createProjectForUser(db, userId, {
@@ -142,11 +157,22 @@ describe("authorization boundaries", () => {
       title: "Visible task",
     });
 
-    const overview = await getDashboardOverview(db, memberId);
-    expect(overview.projects.some((item) => item.id === project.id)).toBe(true);
-    expect(overview.kpis.totalProjects).toBe(1);
-    expect(overview.kpis.openTasks).toBe(0);
-    expect(overview.todayTasks).toHaveLength(0);
+    const mineOverview = await getDashboardOverview(db, memberId);
+    expect(mineOverview.projects.some((item) => item.id === project.id)).toBe(
+      false,
+    );
+    expect(mineOverview.kpis.totalProjects).toBe(0);
+    expect(mineOverview.kpis.openTasks).toBe(0);
+    expect(mineOverview.todayTasks).toHaveLength(0);
+
+    const allOverview = await getDashboardOverview(db, memberId, {
+      progressScope: "all",
+      activityScope: "all",
+    });
+    expect(allOverview.projects.some((item) => item.id === project.id)).toBe(
+      true,
+    );
+    expect(allOverview.kpis.totalProjects).toBe(1);
   });
 
   it("counts dashboard KPIs for tasks assigned to the current user", async () => {

@@ -4,7 +4,7 @@ Version: 1.0
 
 ---
 
-# 1. Purpose
+## 1. Purpose
 
 本ドキュメントは、Task Managerの開発過程における重要な意思決定、技術選定、問題、改善、変更履歴を記録する。
 
@@ -20,7 +20,7 @@ Version: 1.0
 
 ---
 
-# 2. Development Principles
+## 2. Development Principles
 
 開発では以下を基本方針とする。
 
@@ -36,13 +36,13 @@ Version: 1.0
 
 ---
 
-# 3. Project Start
+## 3. Project Start
 
-## Date
+### Date
 
 2026-08-08
 
-## Initial Goal
+### Initial Goal
 
 案件獲得用のポートフォリオとして、実用的なTask Manager Web Applicationを開発する。
 
@@ -61,13 +61,13 @@ Version: 1.0
 
 ---
 
-# 4. Portfolio Objective
+## 4. Portfolio Objective
 
 本アプリケーションは単に機能を実装することを目的としない。
 
 以下の能力をポートフォリオとして示す。
 
-### Frontend
+#### Frontend
 
 - Next.js
 - React
@@ -77,7 +77,7 @@ Version: 1.0
 - Animation
 - State Management
 
-### Backend
+#### Backend
 
 - API Design
 - Authentication
@@ -85,7 +85,7 @@ Version: 1.0
 - Validation
 - Business Logic
 
-### Database
+#### Database
 
 - Relational Database Design
 - ORM
@@ -93,7 +93,7 @@ Version: 1.0
 - Transaction
 - Index Design
 
-### Engineering
+#### Engineering
 
 - Testing
 - Git
@@ -103,9 +103,9 @@ Version: 1.0
 
 ---
 
-# 5. Technology Selection
+## 5. Technology Selection
 
-## Next.js
+### Next.js
 
 採用理由
 
@@ -120,7 +120,7 @@ Version: 1.0
 
 ---
 
-# 6. React
+## 6. React
 
 UI LayerとしてReactを使用する。
 
@@ -128,7 +128,7 @@ Componentベースの設計により、UIの再利用性と保守性を高める
 
 ---
 
-# 7. TypeScript
+## 7. TypeScript
 
 Type Safetyを重視するためTypeScriptを採用する。
 
@@ -144,7 +144,7 @@ Type Safetyを重視するためTypeScriptを採用する。
 
 ---
 
-# 8. Styling
+## 8. Styling
 
 Tailwind CSSを採用する。
 
@@ -158,7 +158,7 @@ Tailwind CSSを採用する。
 
 ---
 
-# 9. UI Components
+## 9. UI Components
 
 Base UI / shadcn/uiを利用する。
 
@@ -174,7 +174,7 @@ Base UI / shadcn/uiを利用する。
 
 ---
 
-# 10. Icon
+## 10. Icon
 
 Lucide Reactを使用する。
 
@@ -188,7 +188,7 @@ Lucide Reactを使用する。
 
 ---
 
-# 11. State Management
+## 11. State Management
 
 Server State
 
@@ -218,7 +218,7 @@ React useState / useReducer
 
 ---
 
-# 12. Database Decision
+## 12. Database Decision
 
 DatabaseにはCloudflare D1を採用予定とする。
 
@@ -238,7 +238,7 @@ D1
 
 ---
 
-# 13. Database Decision Reason
+## 13. Database Decision Reason
 
 ポートフォリオでは、
 
@@ -252,7 +252,7 @@ Cloudflare Edgeとの組み合わせにより、ユーザーに近い場所で�
 
 ---
 
-# 14. ORM Decision
+## 14. ORM Decision
 
 Drizzle ORMを採用予定とする。
 
@@ -267,7 +267,7 @@ Drizzle ORMを採用予定とする。
 
 ---
 
-# 15. Authentication Decision
+## 15. Authentication Decision
 
 AuthenticationにはAuth.jsを採用予定とする。
 
@@ -285,7 +285,7 @@ Authorization
 What are you allowed to do?
 ```
 
-### Provider Rollout Order
+#### Provider Rollout Order
 
 Phase 3 では次の順で有効化する。
 
@@ -303,7 +303,7 @@ Phase 3 では次の順で有効化する。
 
 ---
 
-# 16. Workspace Architecture
+## 16. Workspace Architecture
 
 将来的なTeam利用を考慮し、Workspaceを導入する。
 
@@ -321,7 +321,7 @@ Task
 
 ---
 
-# 17. Feature First
+## 17. Feature First
 
 Feature First Architectureを採用する。
 
@@ -346,7 +346,7 @@ Feature単位でコードをまとめることで、機能追加・削除・保�
 
 ---
 
-# 18. UI Design Decision
+## 18. UI Design Decision
 
 UIは以下のデザイン思想を参考にする。
 
@@ -369,7 +369,7 @@ UIは以下のデザイン思想を参考にする。
 
 ---
 
-# 19. UI Reference
+## 19. UI Reference
 
 各画面のデザイン検討用として、
 
@@ -385,7 +385,7 @@ ReferenceコードをそのままProductionへコピーしない。
 
 ---
 
-# 20. Design System
+## 20. Design System
 
 UIの一貫性を保つため、
 
@@ -408,7 +408,7 @@ docs/ui-guideline.md
 
 ---
 
-# 21. Component Design
+## 21. Component Design
 
 共通Componentの設計ルールを
 
@@ -427,7 +427,7 @@ docs/07_component_design.md
 
 ---
 
-# 22. API Architecture
+## 22. API Architecture
 
 APIはNext.js Route Handlersを使用する。
 
@@ -451,7 +451,7 @@ Route HandlerへBusiness Logicを集中させない。
 
 ---
 
-# 23. Service Layer
+## 23. Service Layer
 
 Business LogicはService Layerへ分離する。
 
@@ -472,7 +472,7 @@ analytics-service.ts
 
 ---
 
-# 24. Repository Layer
+## 24. Repository Layer
 
 Database AccessはRepository Layerへ分離する。
 
@@ -488,7 +488,7 @@ UIから直接Databaseへアクセスしない。
 
 ---
 
-# 25. Validation
+## 25. Validation
 
 外部入力はZodで検証する。
 
@@ -508,7 +508,7 @@ Server-sideでも必ずValidationする。
 
 ---
 
-# 26. Testing Policy
+## 26. Testing Policy
 
 新しいFeatureを追加する場合、テストを同時に追加する。
 
@@ -524,7 +524,7 @@ E2E Test
 
 ---
 
-# 27. Test Directory
+## 27. Test Directory
 
 テストコードはプロジェクト直下の
 
@@ -547,7 +547,7 @@ Feature追加時に必要なテストを追加する。
 
 ---
 
-# 28. Initial Load Performance
+## 28. Initial Load Performance
 
 本プロジェクトでは初回アクセス速度を重要視する。
 
@@ -569,7 +569,7 @@ Login Page表示だけのためにD1へ接続しない。
 
 ---
 
-# 29. Client JavaScript
+## 29. Client JavaScript
 
 Client Componentは必要最小限にする。
 
@@ -587,7 +587,7 @@ Server Componentをデフォルトとし、
 
 ---
 
-# 30. Animation
+## 30. Animation
 
 GSAPを使用予定。
 
@@ -606,7 +606,7 @@ GSAPを使用予定。
 
 ---
 
-# 31. Kanban Architecture
+## 31. Kanban Architecture
 
 Task BoardではDrag & Dropを実装する。
 
@@ -620,7 +620,7 @@ Task PositionはDatabaseの`position`を利用する。
 
 ---
 
-# 32. Task Position Decision
+## 32. Task Position Decision
 
 TaskのPositionにはREAL値を使用する。
 
@@ -644,7 +644,7 @@ TaskのPositionにはREAL値を使用する。
 
 ---
 
-# 33. Project Progress
+## 33. Project Progress
 
 Project ProgressはTaskから算出する。
 
@@ -665,7 +665,7 @@ ProgressをDatabaseに重複保存しない。
 
 ---
 
-# 34. Analytics
+## 34. Analytics
 
 Analytics専用Database Tableは初期実装では作成しない。
 
@@ -682,7 +682,7 @@ Time Entries
 
 ---
 
-# 35. Caching
+## 35. Caching
 
 Cache可能なデータについてはCacheを利用する。
 
@@ -696,7 +696,7 @@ Cache可能なデータについてはCacheを利用する。
 
 ---
 
-# 36. Security
+## 36. Security
 
 最低限以下を実装する。
 
@@ -713,7 +713,7 @@ Clientから送信されたUser IDやWorkspace IDをそのまま信用しない�
 
 ---
 
-# 37. Multi-Tenant Security
+## 37. Multi-Tenant Security
 
 WorkspaceをTenant Boundaryとして扱う。
 
@@ -733,7 +733,7 @@ Userが所属していないWorkspaceのDataへアクセスできないように
 
 ---
 
-# 38. Documentation Driven Development
+## 38. Documentation Driven Development
 
 実装だけを変更して設計書を放置しない。
 
@@ -765,7 +765,7 @@ ui-guideline.md
 
 ---
 
-# 39. Cursor Development Policy
+## 39. Cursor Development Policy
 
 Cursorに実装を依頼する場合、以下の設計書を参照させる。
 
@@ -787,7 +787,7 @@ Cursorは実装前に関連する設計書を確認する。
 
 ---
 
-# 40. Change Log Format
+## 40. Change Log Format
 
 重要な変更は以下の形式で記録する。
 
@@ -821,19 +821,19 @@ Cursorは実装前に関連する設計書を確認する。
 
 ---
 
-# 41. Development Log Entries
+## 41. Development Log Entries
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Task Managerの基本開発方針を決定。
 
-### Reason
+#### Reason
 
 案件獲得用ポートフォリオとして、単純なTodoアプリではなく、実際のSaaSを想定したWeb Applicationを制作するため。
 
-### Decision
+#### Decision
 
 以下の画面を実装対象とする。
 
@@ -850,23 +850,23 @@ Settings
 Profile
 ```
 
-### Impact
+#### Impact
 
 Frontend / Backend / Database / Authentication / Testingを含む総合的なWeb Applicationとなる。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 1（Development Environment）を完了した。
 
-### Reason
+#### Reason
 
 実装フェーズに入る前に、開発ルール・環境変数戦略・テスト基盤・Git運用を固定するため。
 
-### Decision
+#### Decision
 
 - AGENTS.md / Cursor Rules / VS Code settings を開発標準とする
 - テストは `tests/{unit,integration,e2e}` + Vitest / Playwright
@@ -874,28 +874,28 @@ Phase 1（Development Environment）を完了した。
 - Auth 実装順は GitHub → Google → Email
 - Git は Conventional Commits + feature branch（`.cursor/rules/git.mdc`）
 
-### Impact
+#### Impact
 
 Phase 2（D1 / Drizzle）以降の実装を、同じ検証コマンドとドキュメント方針で進められる。
 
-### Follow-up
+#### Follow-up
 
 - Phase 2: Cloudflare D1 作成と Drizzle セットアップ
 - Phase 3: Auth.js（GitHub から）
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 2（Database Foundation）を完了した。
 
-### Reason
+#### Reason
 
 Auth / API / UI 実装の前に、D1 と Drizzle のスキーマ・Migration・Seed・テスト基盤を固定するため。
 
-### Decision
+#### Decision
 
 - 開発用 D1 名: `task-manager-dev`（database_id: `ecc7cba5-daef-4e4e-b6a2-e2eb031d89eb`）
 - Binding 名: `DB`
@@ -905,28 +905,28 @@ Auth / API / UI 実装の前に、D1 と Drizzle のスキーマ・Migration・S
 - 本番用 `task-manager-prod` は Deployment 時に作成
 - ローカルテストは better-sqlite3 + 同一 Migration（`foreign_keys=ON`）
 
-### Impact
+#### Impact
 
 Repository / Service / Auth 実装を同じ Schema 上で進められる。
 
-### Follow-up
+#### Follow-up
 
 - Phase 3: Auth.js（GitHub → Google → Email）と Auth tables
 - Deployment: `task-manager-prod` 作成
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 3（Authentication / Authorization）を完了した。
 
-### Reason
+#### Reason
 
 保護ルートと Workspace / Project 認可の土台を、API・画面実装前に固定するため。
 
-### Decision
+#### Decision
 
 - Auth.js v5 (`next-auth` beta) + `@auth/drizzle-adapter`
 - Session strategy: JWT（Credentials 互換）
@@ -936,11 +936,11 @@ Phase 3（Authentication / Authorization）を完了した。
 - ローカル Next.js は SQLite（`.data/local.sqlite`）、D1 は migration 済み
 - Forgot Password は未実装（後続）
 
-### Impact
+#### Impact
 
 `/login` / `/dashboard` / logout / membership helpers が利用可能。
 
-### Follow-up
+#### Follow-up
 
 - Phase 4: Backend / API
 - OAuth Client ID を `.env.local` に設定して GitHub / Google を有効化
@@ -948,17 +948,17 @@ Phase 3（Authentication / Authorization）を完了した。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 4（Backend / API）を完了した。
 
-### Reason
+#### Reason
 
 UI 実装前に `/api/v1` の契約・認可・Service/Repository 境界を固定するため。
 
-### Decision
+#### Decision
 
 - Route Handler → Zod → Service → Repository → Drizzle
 - Project / Task の DELETE は Soft Archive（`archived_at`）
@@ -966,28 +966,28 @@ UI 実装前に `/api/v1` の契約・認可・Service/Repository 境界を固�
 - POST `/projects` は `workspaceId` 省略時に所属 Workspace を自動選択
 - Settings / Notifications / Comments / Checklist も同レイヤーで実装
 
-### Impact
+#### Impact
 
 Phase 5 以降の UI は API 経由でデータ操作できる。
 
-### Follow-up
+#### Follow-up
 
 - Phase 5: Project List / Detail UI
 - Calendar / Analytics API は後続 Phase
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 5（Core Project Management UI）を実装した。
 
-### Reason
+#### Reason
 
 Phase 4 API を利用し、認証後の Project List / Detail 画面を提供するため。
 
-### Decision
+#### Decision
 
 - `app/(app)` レイアウトで Sidebar / Header を共通化
 - Server Components で Service 層を直接呼び出し（初期表示）
@@ -997,30 +997,30 @@ Phase 4 API を利用し、認証後の Project List / Detail 画面を提供す
 - 既定の Project List は Soft Archive 済みを除外
 - Activity / フル Project Settings は Empty / 簡易メニューで先行対応
 
-### Impact
+#### Impact
 
 `/projects` と `/projects/[projectId]` が利用可能。次は Phase 6 Task Board。
 
-### Follow-up
+#### Follow-up
 
 - Phase 6: Task Board / Task Detail
-- Project Settings 編集 UI
+- Project Settings 編集 UI（Phase 25 / 26 で基本項目と進捗重み UI を実装。Duplicate は後続）
 - Activity Timeline 連携
 - Card / List View 切替
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 6（Task Management UI）を実装した。
 
-### Reason
+#### Reason
 
 Project 配下で Kanban によるタスク運用と、詳細編集（Checklist / Comments）を提供するため。
 
-### Decision
+#### Decision
 
 - ルートは詳細設計に合わせ `/projects/[projectId]/board` と `/projects/[projectId]/tasks/[taskId]`
 - Stub の `dnd-kit@0.0.2` を削除し、`@dnd-kit/core` / `sortable` / `utilities` を導入
@@ -1028,11 +1028,11 @@ Project 配下で Kanban によるタスク運用と、詳細編集（Checklist 
 - キーボード利用者向けにカード上の Status select を併設
 - Tags / Attachments / Activity Timeline / 一部フィルタは後続
 
-### Impact
+#### Impact
 
 Task Board / Task Detail が利用可能。次は Phase 7 Supporting Features。
 
-### Follow-up
+#### Follow-up
 
 - Phase 7: Calendar / Dashboard / Analytics
 - Tags / Attachments
@@ -1041,17 +1041,17 @@ Task Board / Task Detail が利用可能。次は Phase 7 Supporting Features。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 7（Supporting Features）を実装した。
 
-### Reason
+#### Reason
 
 Project / Task を補完する Dashboard・Calendar・Analytics・Notifications を提供するため。
 
-### Decision
+#### Decision
 
 - 既存 Task / Project / Activity / Notification から Server 側で集計（専用集計テーブルなし）
 - Calendar / Analytics API（`/api/v1/calendar/events`, `/api/v1/analytics/*`）を追加
@@ -1059,11 +1059,11 @@ Project / Task を補完する Dashboard・Calendar・Analytics・Notifications 
 - Notifications は既存 Service + Server Actions で既読操作
 - Mini Calendar / Day view / 通知自動生成の一部は後続
 
-### Impact
+#### Impact
 
 `/dashboard` `/calendar` `/analytics` `/notifications` が利用可能。次は Phase 8 Settings / Profile。
 
-### Follow-up
+#### Follow-up
 
 - Phase 8: Settings / Profile
 - Mini Calendar on Dashboard
@@ -1072,17 +1072,17 @@ Project / Task を補完する Dashboard・Calendar・Analytics・Notifications 
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Phase 8（Settings / Profile）を実装した。
 
-### Reason
+#### Reason
 
 ユーザープロフィール閲覧・編集と、Appearance / Notifications / Security 設定を提供するため。
 
-### Decision
+#### Decision
 
 - `/profile/[userId]` で公開プロフィール + 統計 / 担当タスク / Activity
 - `/settings/*` でカテゴリ別設定（Profile / Appearance / Notifications / Security / Account / Workspace / About）
@@ -1091,11 +1091,11 @@ Phase 8（Settings / Profile）を実装した。
 - Avatar は URL 入力、Workspace Members 管理は後続
 - Appearance の永続化は実装、グローバルテーマ適用は Phase 9 で強化
 
-### Impact
+#### Impact
 
 Settings / Profile が利用可能。次は Phase 9 UI / UX Polish。
 
-### Follow-up
+#### Follow-up
 
 - Phase 9: Design System / Visual Polish
 - Avatar file upload
@@ -1105,46 +1105,46 @@ Settings / Profile が利用可能。次は Phase 9 UI / UX Polish。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Vercel + Supabase構成からCloudflare D1を中心とした構成へ方針変更。
 
-### Reason
+#### Reason
 
 Supabase無料枠のDatabaseがスリープ状態になった場合、初回Databaseアクセス時に遅延が発生する可能性があるため。
 
 ポートフォリオでは初回アクセス時のUXを重視する。
 
-### Alternatives
+#### Alternatives
 
 - Vercel + Supabase
 - Vercel + Neon
 - Next.js + Cloudflare D1
 - Cloudflare Workers + D1
 
-### Decision
+#### Decision
 
 Cloudflare D1を採用予定。
 
-### Impact
+#### Impact
 
 Database Architecture / ORM / Deployment Architectureに影響する。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Design Referenceを導入。
 
-### Reason
+#### Reason
 
 画面ごとのUI品質とデザインの一貫性を確保するため。
 
-### Decision
+#### Decision
 
 Claude等を利用してHTML / CSS / JavaScriptのデザインPrototypeを作成し、
 
@@ -1154,23 +1154,23 @@ ui-reference/
 
 へ保存する。
 
-### Impact
+#### Impact
 
 Production UIの実装時にDesign Referenceを参照できる。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Design Tokenを`ui-guideline.md`へ集約。
 
-### Reason
+#### Reason
 
 画面ごとのCSSにColor、Spacing、Radiusなどが分散すると、UIの一貫性が失われるため。
 
-### Decision
+#### Decision
 
 以下を共通Design Tokenとして管理する。
 
@@ -1181,43 +1181,43 @@ Design Tokenを`ui-guideline.md`へ集約。
 - Shadow
 - Motion
 
-### Impact
+#### Impact
 
 全画面のUI実装に影響する。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Component Designを導入。
 
-### Reason
+#### Reason
 
 同じUI Componentを画面ごとに作り直すことを防止するため。
 
-### Decision
+#### Decision
 
 共通ComponentとFeature Componentを分離する。
 
-### Impact
+#### Impact
 
 Frontend Architectureに影響する。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 WorkspaceをDatabase Architectureへ導入。
 
-### Reason
+#### Reason
 
 将来的にTeam / SaaS利用へ拡張できる構造にするため。
 
-### Decision
+#### Decision
 
 ```text
 User
@@ -1231,23 +1231,23 @@ Task
 
 を基本構造とする。
 
-### Impact
+#### Impact
 
 Database / API / Authorizationに影響する。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Project ProgressをTaskから算出する方式を採用。
 
-### Reason
+#### Reason
 
 Project ProgressをDatabaseへ保存するとTask Statusとの不整合が発生する可能性があるため。
 
-### Decision
+#### Decision
 
 ```text
 Completed Tasks
@@ -1258,33 +1258,33 @@ Total Tasks
 
 で算出する。
 
-### Impact
+#### Impact
 
 Project Dashboard / Analytics / APIに影響する。
 
 ---
 
-## 2026-08-08
+### 2026-08-08
 
-### Change
+#### Change
 
 Kanban PositionにREAL値を使用する設計を採用。
 
-### Reason
+#### Reason
 
 Drag & Drop時に大量のTask Positionを更新する処理を減らすため。
 
-### Decision
+#### Decision
 
 Task Positionを小数値として管理する。
 
-### Impact
+#### Impact
 
 Task Board / Database / APIに影響する。
 
 ---
 
-# 42. Problem / Solution Log
+## 42. Problem / Solution Log
 
 開発中に発生した問題は以下の形式で記録する。
 
@@ -1312,7 +1312,7 @@ Task Board / Database / APIに影響する。
 
 ---
 
-# 43. Performance Log
+## 43. Performance Log
 
 Performanceに関する重要な変更は記録する。
 
@@ -1330,7 +1330,7 @@ Performanceに関する重要な変更は記録する。
 
 ---
 
-# 44. Security Log
+## 44. Security Log
 
 Security上重要な変更を記録する。
 
@@ -1345,7 +1345,7 @@ Security上重要な変更を記録する。
 
 ---
 
-# 45. Database Migration Log
+## 45. Database Migration Log
 
 Database Schema変更時はMigrationを記録する。
 
@@ -1377,7 +1377,7 @@ Rollback方法
 
 ---
 
-# 46. API Change Log
+## 46. API Change Log
 
 API変更時は記録する。
 
@@ -1407,7 +1407,7 @@ Yes / No
 
 ---
 
-# 47. UI Change Log
+## 47. UI Change Log
 
 重要なUI変更を記録する。
 
@@ -1422,7 +1422,7 @@ Yes / No
 
 ---
 
-# 48. Decision Record
+## 48. Decision Record
 
 技術的に重要なDecisionは記録する。
 
@@ -1438,13 +1438,13 @@ Consequences
 
 ---
 
-# 49. Architecture Decision Example
+## 49. Architecture Decision Example
 
-## Context
+### Context
 
 Database選定。
 
-## Alternatives
+### Alternatives
 
 ```text
 Supabase
@@ -1452,21 +1452,21 @@ Neon
 Cloudflare D1
 ```
 
-## Decision
+### Decision
 
 Cloudflare D1。
 
-## Reason
+### Reason
 
 Portfolioとして初回アクセス速度と低コスト運用を重視するため。
 
-## Consequences
+### Consequences
 
 D1 / SQLiteの制約を考慮したDatabase Designが必要になる。
 
 ---
 
-# 50. Future Improvements
+## 50. Future Improvements
 
 今後検討する項目。
 
@@ -1489,9 +1489,9 @@ Offline Support
 
 ---
 
-# 51. Development Status
+## 51. Development Status
 
-## Current
+### Current
 
 ```text
 Requirements       ✓
@@ -1513,7 +1513,7 @@ Phase 7 Support    ✓
 Phase 8 Settings   ✓
 ```
 
-## Planned
+### Planned
 
 ```text
 Phase 9 UI / UX Polish
@@ -1524,7 +1524,7 @@ Deployment (includes task-manager-prod D1)
 
 ---
 
-# 52. Definition of Done
+## 52. Definition of Done
 
 Featureを完成とする条件。
 
@@ -1545,7 +1545,7 @@ Featureを完成とする条件。
 
 ---
 
-# 53. Final Principle
+## 53. Final Principle
 
 本プロジェクトでは、
 
@@ -1579,40 +1579,40 @@ Security
 
 ---
 
-# Phase 9 — UI / UX Polish（開始）
+## Phase 9 — UI / UX Polish（開始）
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 Phase 9 を開始し、Design Token・Appearance 適用・共有 UI・モバイル Drawer・Command Palette・CSS motion 基盤を実装した。
 
-## Decisions
+### Decisions
 
-### Design tokens
+#### Design tokens
 
 - UI guideline / `docs/ui-reference` の Vantage トークンを `app/globals.css` に導入。
 - shadcn セマンティック変数を dark-first に合わせ、`--accent-1` / `--accent-soft` などで accent 切替。
 
-### Appearance wiring
+#### Appearance wiring
 
 - Phase 8 の user settings（theme / accent / density / animations）を App shell の `AppearanceProvider` 経由で `document.documentElement` に反映。
 - `data-animations="off"` と `prefers-reduced-motion` の両方でモーションを抑制。
 
-### Motion without GSAP
+#### Motion without GSAP
 
 - GSAP を導入せず CSS keyframes / transitions で page enter・drawer・card hover を実装。
 - 理由: 依存追加コスト、Edge バンドル、現状のモーション要件が CSS で十分。
 
-### Shared components
+#### Shared components
 
 - `components/ui`: Input / Select / Badge / Avatar / Card（Button は accent 連携強化）
 - `components/feedback`: Skeleton / EmptyState / Toast
 - `components/layout`: MobileNav drawer / CommandPalette / 共通 nav items
 
-## Follow-ups
+### Follow-ups
 
 - Dialog / Dropdown / Tooltip / Popover の専用 primitive
 - List stagger animation（必要時）
@@ -1621,17 +1621,17 @@ Phase 9 を開始し、Design Token・Appearance 適用・共有 UI・モバイ�
 
 ---
 
-# Phase 9 — UI / UX Polish（完了）
+## Phase 9 — UI / UX Polish（完了）
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip / Popover、リスト stagger、Mobile Kanban を実装した。
 
-## Details
+### Details
 
 - Create Project / Create Task を `components/ui/dialog` に移行
 - Board priority filter と task status 変更を Dropdown Menu 化
@@ -1639,23 +1639,23 @@ Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip
 - Project list に `StaggerItem` 入場アニメーション
 - Mobile Kanban: タブで単一カラム切替、TouchSensor、フル幅カラム
 
-## Follow-ups
+### Follow-ups
 
 - Phase 10 Loading / Error / Empty の全面統一
 
 ---
 
-# Phase 10 — Loading / Error / Empty States
+## Phase 10 — Loading / Error / Empty States
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 主要画面の Loading / Empty / Error / Recovery を共有コンポーネントと route 境界で統一した。
 
-## Details
+### Details
 
 - `EmptyState` / `ErrorState` / `SearchEmptyState` / 各種 Skeleton
 - `app/(app)/error.tsx` · `not-found.tsx` · `app/global-error.tsx`
@@ -1664,23 +1664,23 @@ Phase 9 残タスクを完了。Base UI ベースの Dialog / Dropdown / Tooltip
 - Button `loading` prop
 - FORBIDDEN は引き続き `notFound()`（存在秘匿）。ErrorState は境界エラー・メッセージ表示用
 
-## Follow-ups
+### Follow-ups
 
 - Phase 11 Testing（Unit / Integration / E2E の拡充）
 
 ---
 
-# Phase 11 — Testing
+## Phase 11 — Testing
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 Unit / Integration / E2E を拡充し、主要フローの回帰テスト基盤を整えた。
 
-## Details
+### Details
 
 - Unit: request schemas, HTTP error mapping, roles/ids
 - Integration: outsider authorization, task move + comment
@@ -1689,27 +1689,27 @@ Unit / Integration / E2E を拡充し、主要フローの回帰テスト基盤�
 - E2E は `NEXT_DIST_DIR=.next-e2e` + `next build` / `next start`（port 3100）で、ローカル `pnpm dev` と共存可能
 - `AUTH_URL` / `NEXT_PUBLIC_APP_URL` を E2E baseURL に上書き
 
-## Notes
+### Notes
 
 - Create Project / Create Task / DnD の UI E2E は対話 UI が重いため、サービス層 Integration で代替。必要なら後続で追加。
 
-## Follow-ups
+### Follow-ups
 
 - Phase 12 Security
 
 ---
 
-# Phase 12 — Security
+## Phase 12 — Security
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 Portfolio release 前のセキュリティ硬化として、ヘッダー・セッション・レート制限・Origin 検証・入力厳格化・秘密情報の起動時検証を実施した。
 
-## Details
+### Details
 
 - `next.config.ts` に Secure Headers（CSP / X-Frame-Options / nosniff / Referrer-Policy / Permissions-Policy / HSTS）
 - Auth.js cookie 属性を明示（HttpOnly / SameSite=Lax / Secure in production）
@@ -1720,29 +1720,29 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 - Project color hex / Appearance enums / http(s) URL を Zod で厳格化
 - Register の既存メールメッセージを曖昧化し、authorize に dummy bcrypt 比較を追加
 
-## Notes
+### Notes
 
 - Rate limit は単一プロセス向け。Workers 水平展開時は Durable Object / KV へ置換予定
 - CSP は Next.js App Router 都合で `unsafe-inline` / `unsafe-eval` を暫定許可。nonce 化は後続
 
-## Follow-ups
+### Follow-ups
 
 - Phase 13 Performance
 - CSP nonce / Workers 向け分散 rate limit
 
 ---
 
-# Phase 13 — Performance
+## Phase 13 — Performance
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 初回アクセスと主要画面のデータ取得を見直し、全タスク hydrate / 多重スキャン / ウォーターフォールを削減した。
 
-## Details
+### Details
 
 - Dashboard: `getAccessibleTaskKpis` + limit 付き today/overdue/upcoming クエリ
 - Analytics: `getAnalyticsPageData` でタスク取得を 1 回に集約（ページ側）
@@ -1754,29 +1754,29 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 - Command Palette を `next/dynamic`（ssr: false）
 - 未使用 deps 削除（TanStack Query / react-hook-form）。shadcn を devDependency へ
 
-## Notes
+### Notes
 
 - Image / Font の追加最適化と Production での Web Vitals 計測は Phase 15 Deployment 前後で継続
 - Profile の全タスク集計は後続で assignee 限定クエリへ置換可
 
-## Follow-ups
+### Follow-ups
 
 - Phase 14 Accessibility
 - Production Web Vitals / bundle 計測
 
 ---
 
-# Phase 14 — Accessibility
+## Phase 14 — Accessibility
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 キーボード・スクリーンリーダー・フォーカス管理を中心に、主要 UI のアクセシビリティを強化した。
 
-## Details
+### Details
 
 - Skip link + `#main-content`、Settings を `<main>` 化
 - `focusRingClass` をナビ / リンクに適用
@@ -1788,24 +1788,24 @@ Portfolio release 前のセキュリティ硬化として、ヘッダー・セ�
 - `--text-muted` コントラスト改善
 - focus-trap helpers + Playwright a11y smoke
 
-## Follow-ups
+### Follow-ups
 
 - Phase 15 CI/CD
 - axe ベースの自動監査（任意）
 
 ---
 
-# Phase 15 — CI/CD
+## Phase 15 — CI/CD
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 GitHub Actions で PR / Push 時の品質ゲート（Lint・Typecheck・Test・Build・E2E）を導入した。
 
-## Details
+### Details
 
 - `.github/workflows/ci.yml`
   - `quality`: pnpm lint / typecheck / test:unit / test:integration / build
@@ -1814,24 +1814,24 @@ GitHub Actions で PR / Push 時の品質ゲート（Lint・Typecheck・Test・B
 - 失敗時に Playwright report / test-results を artifact アップロード
 - 本番デプロイ（CD）は Phase 16 に分離
 
-## Follow-ups
+### Follow-ups
 
 - Branch protection で required checks を有効化
 - 必要なら `format:check` を CI に追加（現状はリポジトリ全体の Prettier 差分が大きいため未導入）
 
 ---
 
-# Phase 16 — Deployment
+## Phase 16 — Deployment
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 production・Secrets・workers.dev HTTPS まで到達した。
 
-## Details
+### Details
 
 - `@opennextjs/cloudflare` + Next.js 16.3.0
 - `wrangler.jsonc`: Worker `task-manager`、本番 D1 `task-manager-prod`、`env.production`
@@ -1843,7 +1843,7 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 - Windows OpenNext ビルド用: `scripts/patch-opennext.mjs`（junction + sharp shim）
 - CD: `.github/workflows/deploy.yml`（CI 成功後の自動 Deploy + `workflow_dispatch`）
 
-## Follow-ups
+### Follow-ups
 
 - カスタムドメインの接続（任意）
 - GitHub Environment `production` に `CLOUDFLARE_API_TOKEN` / `APP_URL` を設定して Actions デプロイを有効化
@@ -1852,17 +1852,17 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 
 ---
 
-# Phase 16 — Login redirect fix（Workers）
+## Phase 16 — Login redirect fix（Workers）
 
-## Date
+### Date
 
 2026-08-08
 
-## Summary
+### Summary
 
 本番ログイン後に Server Action が「unexpected response」エラーになる問題を修正した。
 
-## Details
+### Details
 
 - 症状: Sign In 後に「Something went wrong / An unexpected response was received from the server」。Cookie は付与され、リロードすると Dashboard に入れる
 - 原因:
@@ -1879,17 +1879,17 @@ OpenNext + Cloudflare Workers で本番デプロイ基盤を構築し、D1 produ
 
 ---
 
-# Phase 17 — Demo / Portfolio Preparation
+## Phase 17 — Demo / Portfolio Preparation
 
-## Date
+### Date
 
 2026-08-09
 
-## Summary
+### Summary
 
 Live Demo 向けのリッチなデモデータ、README、デモログイン案内を整備した。
 
-## Details
+### Details
 
 - `lib/db/seed-portfolio.ts`: Projects 10 / Tasks 75+ / Members 7 / Comments・Activities を seed（idempotent, slug `portfolio-demo`）
 - E2E 用 `seedDemoData` は維持
@@ -1902,17 +1902,17 @@ Live Demo 向けのリッチなデモデータ、README、デモログイン案�
 
 ---
 
-# Phase 18 — Japanese / English UI
+## Phase 18 — Japanese / English UI
 
-## Date
+### Date
 
 2026-08-15
 
-## Summary
+### Summary
 
 UI 文言を日本語既定にし、Settings → Appearance で English に切り替えられるようにした。日本語時は M PLUS 2、英語時は Geist を使う。
 
-## Details
+### Details
 
 - 依存追加なし。`lib/i18n` の辞書 + Cookie `vantage_locale` + `users.language`
 - 未ログイン含む初回表示は日本語（Cookie 未設定時）
@@ -1924,17 +1924,17 @@ UI 文言を日本語既定にし、Settings → Appearance で English に切�
 
 ---
 
-# Phase 19 — Project visibility
+## Phase 19 — Project visibility
 
-## Date
+### Date
 
 2026-08-15
 
-## Summary
+### Summary
 
 プロジェクトに公開範囲（`visibility`）を追加した。既定はワークスペース内公開で、メンバー限定に切り替えられる。
 
-## Details
+### Details
 
 - `projects.visibility`: `workspace`（既定）/ `members`
 - 閲覧: プロジェクトメンバー、または `workspace` かつ同一ワークスペースメンバー
@@ -1944,17 +1944,17 @@ UI 文言を日本語既定にし、Settings → Appearance で English に切�
 
 ---
 
-# Phase 20 — Project member management
+## Phase 20 — Project member management
 
-## Date
+### Date
 
 2026-08-15
 
-## Summary
+### Summary
 
 プロジェクトの作成画面と詳細画面から、メンバーの追加・削除ができるようにした。
 
-## Details
+### Details
 
 - Owner のみがメンバーを管理できる
 - 追加できるのは同じワークスペースのメンバーのみ
@@ -1964,17 +1964,17 @@ UI 文言を日本語既定にし、Settings → Appearance で English に切�
 
 ---
 
-# Phase 21 — Workspace member management
+## Phase 21 — Workspace member management
 
-## Date
+### Date
 
 2026-08-15
 
-## Summary
+### Summary
 
 Settings → Workspace から、ワークスペースメンバーの追加・ロール変更・削除ができるようにした。
 
-## Details
+### Details
 
 - Workspace Owner のみがメンバーを管理できる
 - 追加は登録済みユーザーのメールアドレス指定。未登録への招待は行わない
@@ -1985,39 +1985,152 @@ Settings → Workspace から、ワークスペースメンバーの追加・ロ
 
 ---
 
-# Phase 22 — Private project visibility gaps
+## Phase 22 — Private project visibility gaps
 
-## Date
+### Date
 
 2026-08-15
 
-## Summary
+### Summary
 
 非公開プロジェクトの情報が、メンバー以外の通知やデモデータ上で漏れないようにした。
 
-## Details
+### Details
 
 - 通知一覧は関連タスクのプロジェクト閲覧権限でフィルタする
 - ポートフォリオ seed は全員を全プロジェクトのメンバーにしない。1 件を `visibility = members` にする
 
 ---
 
-# Phase 23 — Dashboard assignee scope
+## Phase 23 — Dashboard assignee scope
 
-## Date
+### Date
 
 2026-08-16
 
-## Summary
+### Summary
 
 Dashboard の KPI・今日のタスク・期限切れ・今後の予定を、閲覧可能なプロジェクトのうち自分が担当者のタスクに限定した。
 
-## Details
+### Details
 
 - `getAccessibleTaskKpis` / today / overdue / upcoming に `tasks.assignee_id = userId`
-- プロジェクト進捗と Recent Activity はチーム全体のまま
+- プロジェクト進捗と Recent Activity は当時チーム全体のまま（Phase 27 で参加中既定 + 切替を追加）
 - 未割り当てタスクは Dashboard の個人指標に含めない
 - Analytics / Calendar は従来どおり閲覧可能な全タスク
 - 追記: KPI 1枚目を未完了件数、2枚目を本日締め切りの未完了件数に変更。期限切れカードの未完了ヒントは重複のため削除
+
+---
+
+## Phase 24 — Project progress weights
+
+### Date
+
+2026-11-10
+
+### Summary
+
+プロジェクト進捗を「完了件数 ÷ 全件数」から、ステータスごとの重み付き算出に変更した。重みはプロジェクトごとに上書きできる。
+
+### Details
+
+- `projects.progress_weights`（JSON、NULL = 既定）を追加（migration `0003_project_progress_weights`）
+- 既定: backlog 0 / todo 0.2 / in_progress 0.5 / review 0.8 / done 1
+- 制約: 各値 0–1、ステータスが進むほど非減少
+- 一覧・詳細・Dashboard のプロジェクト進捗バーに適用。完了件数と Analytics の完了率は `done` のみ
+- API の create/update/get に `progressWeights` を追加（編集 UI は次タスク）
+
+---
+
+## Phase 25 — Project edit form
+
+### Date
+
+2026-11-10
+
+### Summary
+
+Project Detail の操作メニューから、プロジェクト基本情報を Dialog で編集できるようにした。
+
+### Details
+
+- 対象項目: Name / Description / Color / Status / Priority / Deadline
+- `canEdit`（member 以上）で Edit を表示。Visibility / Archive は従来どおり `canManage`（owner）
+- 既存の `updateProjectAction` をフォームから呼び出し、成功時は Toast + 再検証
+
+---
+
+## Phase 26 — Progress weights UI
+
+### Date
+
+2026-11-10
+
+### Summary
+
+Project 編集 Dialog から、ステータスごとの進捗重みを設定できるようにした。
+
+### Details
+
+- UI は 0–100% 入力。保存時に 0–1 へ変換して `progressWeights` を更新
+- 非減少制約は既存 Zod / `areProgressWeightsValid` で検証
+- 「既定値に戻す」で backlog 0 / todo 20 / in_progress 50 / review 80 / done 100
+- Duplicate は未実装（後続）
+
+---
+
+## Phase 27 — Dashboard membership scope
+
+### Date
+
+2026-11-10
+
+### Summary
+
+Dashboard のプロジェクト進捗と最近のアクティビティを、既定で参加プロジェクトのみ表示し、プルダウンで閲覧可能な全体へ切り替えられるようにした。
+
+### Details
+
+- 既定: `project_members` に自分がいるプロジェクト
+- `all`: 従来どおり閲覧可能なプロジェクト全体
+- URL params: `progressScope` / `activityScope`（`mine` | `all`）
+- KPI / 担当タスク一覧のスコープは変更なし
+
+---
+
+## Phase 28 — Safe portfolio date refresh (prod)
+
+### Date
+
+2026-11-10
+
+### Summary
+
+本番 D1 でポートフォリオ 10 プロジェクトの期限だけを「今」基準へ更新する安全スクリプトを追加・実行した。`seedPortfolioData` による workspace 全消しは使わない。
+
+### Details
+
+- `scripts/refresh-portfolio-dates-prod.ts`
+- `pnpm db:refresh-portfolio-dates:prod`（dry-run）
+- `CONFIRM_PROD_PORTFOLIO_DATES=yes` で適用
+- 個人プロジェクト件数は更新前後とも 13 のまま
+
+---
+
+## Phase 29 — Projects list membership scope
+
+### Date
+
+2026-11-10
+
+### Summary
+
+Projects 一覧を Dashboard と同様に、既定「参加中」、切替「すべて」にした。
+
+### Details
+
+- `GET /api/v1/projects` / `/projects` に `scope=mine|all`（既定 `mine`）
+- Toolbar: 検索の右・Status の左に Scope セレクト
+- `mine` は `project_members` 参加のみ。`all` は従来の `canReadProjectSql`
 
 ---

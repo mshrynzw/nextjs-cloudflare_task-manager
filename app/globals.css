@@ -84,6 +84,10 @@ html[lang="ja"] {
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --density-gap: 1rem;
   --density-pad: 1.25rem;
+  --scrollbar-size: 8px;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.22);
+  --scrollbar-track: transparent;
 
   /* shadcn semantic tokens — dark-first product default */
   --background: #08090d;
@@ -161,6 +165,9 @@ html[lang="ja"] {
   --sidebar-accent-foreground: #18181b;
   --sidebar-border: rgba(9, 9, 11, 0.08);
   --sidebar-ring: rgba(110, 86, 232, 0.4);
+  --scrollbar-thumb: rgba(9, 9, 11, 0.18);
+  --scrollbar-thumb-hover: rgba(9, 9, 11, 0.32);
+  --scrollbar-track: transparent;
 }
 
 html[data-accent="blue"] {
@@ -221,7 +228,34 @@ html[data-animations="off"] *::after {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
+
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   body {
     @apply bg-background text-foreground;
     background-color: var(--bg-base);
@@ -229,6 +263,10 @@ html[data-animations="off"] *::after {
   }
   html {
     @apply font-sans;
+    color-scheme: dark;
+  }
+  html.light {
+    color-scheme: light;
   }
   ::selection {
     background: var(--accent-soft);

@@ -2,23 +2,23 @@
 
 ---
 
-# 1. 画面概要
+## 1. 画面概要
 
-## 画面ID
+### 画面ID
 
 SCR-009
 
-## 画面名
+### 画面名
 
 Settings
 
-## URL
+### URL
 
 ```text
 /settings
 ```
 
-## 目的
+### 目的
 
 Settings画面は、ユーザーアカウントおよびアプリケーション全体の設定を管理する画面である。
 
@@ -26,7 +26,7 @@ Settings画面は、ユーザーアカウントおよびアプリケーション
 
 ---
 
-# 2. レイアウト
+## 2. レイアウト
 
 ```text
 +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ Settings画面は、ユーザーアカウントおよびアプリケーション
 
 ---
 
-# 3. 使用コンポーネント
+## 3. 使用コンポーネント
 
 共通
 
@@ -76,7 +76,7 @@ Settings
 
 ---
 
-# 4. 設定カテゴリ
+## 4. 設定カテゴリ
 
 左ナビゲーション
 
@@ -100,7 +100,7 @@ Settings
 
 ---
 
-# 5. Profile
+## 5. Profile
 
 表示項目
 
@@ -118,7 +118,7 @@ Settings
 
 ---
 
-# 6. Appearance
+## 6. Appearance
 
 設定項目
 
@@ -158,7 +158,7 @@ Language
 
 ---
 
-# 7. Notifications
+## 7. Notifications
 
 通知方法
 
@@ -178,7 +178,7 @@ Language
 
 ---
 
-# 8. Security
+## 8. Security
 
 設定項目
 
@@ -206,7 +206,7 @@ Current Session
 
 ---
 
-# 9. Account
+## 9. Account
 
 表示内容
 
@@ -225,7 +225,7 @@ Danger Zone
 
 ---
 
-# 9.1 Workspace
+## 9.1 Workspace
 
 表示内容
 
@@ -253,7 +253,7 @@ Owner 以外はメンバー一覧を閲覧できるが、追加・ロール変�
 
 ---
 
-# 10. Integrations
+## 10. Integrations
 
 将来対応
 
@@ -273,7 +273,7 @@ Owner 以外はメンバー一覧を閲覧できるが、追加・ロール変�
 
 ---
 
-# 11. About
+## 11. About
 
 表示内容
 
@@ -287,7 +287,7 @@ Repositoryはリンク表示する。
 
 ---
 
-# 12. Dialog
+## 12. Dialog
 
 Change Password
 
@@ -309,7 +309,7 @@ DELETE
 
 ---
 
-# 13. Validation
+## 13. Validation
 
 Password
 
@@ -331,7 +331,7 @@ Bio
 
 ---
 
-# 14. Loading
+## 14. Loading
 
 Skeleton表示
 
@@ -343,7 +343,7 @@ Skeleton表示
 
 ---
 
-# 15. Toast
+## 15. Toast
 
 成功
 
@@ -371,9 +371,9 @@ Failed to save settings.
 
 ---
 
-# 16. アニメーション
+## 16. アニメーション
 
-## 初回表示
+### 初回表示
 
 GSAP
 
@@ -393,13 +393,13 @@ Fade + Stagger
 
 ---
 
-## タブ切替
+### タブ切替
 
 Cross Fade
 
 ---
 
-## Hover
+### Hover
 
 Card
 
@@ -416,7 +416,7 @@ Smooth Toggle Animation
 
 ---
 
-## Dialog
+### Dialog
 
 Fade
 
@@ -424,7 +424,7 @@ Scale
 
 ---
 
-# 17. レスポンシブ
+## 17. レスポンシブ
 
 Desktop
 
@@ -446,7 +446,7 @@ Mobile
 
 ---
 
-# 18. アクセシビリティ
+## 18. アクセシビリティ
 
 - キーボード操作対応
 - Focus Ring表示
@@ -456,7 +456,7 @@ Mobile
 
 ---
 
-# 19. 使用Hooks
+## 19. 使用Hooks
 
 ```text
 useSettings()
@@ -472,7 +472,7 @@ useSecuritySettings()
 
 ---
 
-# 20. 使用Feature
+## 20. 使用Feature
 
 ```text
 features/settings
@@ -484,7 +484,7 @@ features/user
 
 ---
 
-# 21. 使用予定コンポーネント
+## 21. 使用予定コンポーネント
 
 ```text
 SettingsNav
@@ -514,7 +514,7 @@ Skeleton
 
 ---
 
-# 22. 将来追加予定
+## 22. 将来追加予定
 
 - API Token管理
 - Webhook設定
