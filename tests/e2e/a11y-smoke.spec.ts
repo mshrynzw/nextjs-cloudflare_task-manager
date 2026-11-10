@@ -25,13 +25,17 @@ test.describe("accessibility smoke", () => {
     await page.getByRole("button", { name: "サインイン" }).click();
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
 
-    await page.keyboard.press("Control+KeyK");
-    await expect(
-      page.getByRole("dialog", { name: "コマンドパレット" }),
-    ).toBeVisible();
+    // CommandPalette is dynamically imported; retry until the listener is ready.
+    const dialog = page.getByRole("dialog", { name: "コマンドパレット" });
+    await expect(async () => {
+      if (await dialog.isVisible()) {
+        return;
+      }
+      await page.keyboard.press("Control+KeyK");
+      await expect(dialog).toBeVisible({ timeout: 500 });
+    }).toPass({ timeout: 15_000 });
+
     await page.keyboard.press("Escape");
-    await expect(
-      page.getByRole("dialog", { name: "コマンドパレット" }),
-    ).toHaveCount(0);
+    await expect(dialog).toHaveCount(0);
   });
 });
